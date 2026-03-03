@@ -7,7 +7,7 @@
     
     <script>
         if (!localStorage.getItem('sqd_user')) {
-            window.location.replace('login.html'); // Chuyển hướng ngay lập tức
+            window.location.replace('login.html');
         }
     </script>
 
@@ -34,7 +34,7 @@
         .listing-img { width: 100%; height: 160px; object-fit: cover; }
         @media (min-width: 768px) { .listing-img { width: 220px; height: auto; } .listing-card { flex-direction: row; } }
 
-        /* VIP BADGE TRONG BẢNG ĐIỀU KHIỂN */
+        /* VIP BADGE */
         .badge-vip { position: absolute; top: 12px; left: 12px; background: var(--gold-vip); color: #fff; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; box-shadow: 0 4px 15px rgba(246, 211, 101, 0.5); z-index: 10; animation: pulseVip 2s infinite; }
         @keyframes pulseVip { 0% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(246, 211, 101, 0); } 100% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0); } }
 
@@ -43,6 +43,10 @@
         .modal-box { background: white; border-radius: 24px; width: 100%; max-width: 400px; padding: 32px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); transform: scale(0.9); opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .modal-overlay.active { display: flex; }
         .modal-overlay.active .modal-box { transform: scale(1); opacity: 1; }
+
+        /* INPUTS TRONG MODAL */
+        .sqd-input { width: 100%; padding: 14px 20px; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; font-weight: 600; font-size: 14px; outline: none; transition: 0.3s; margin-bottom: 12px; }
+        .sqd-input:focus { border-color: var(--sqd-red); background: white; box-shadow: 0 0 0 4px rgba(224, 60, 49, 0.05); }
 
         /* COPY BOX (Dành cho chức năng Nạp tiền) */
         .copy-box { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
@@ -94,12 +98,15 @@
                 
                 <div class="flex flex-wrap gap-3 w-full md:w-auto">
                     <button onclick="openModal('modal-topup')" class="flex-1 md:flex-none text-center bg-blue-50 text-blue-700 px-6 py-3 rounded-xl font-bold text-sm uppercase hover:bg-blue-100 transition shadow-sm border border-blue-200">
-                        <i class="fa-solid fa-wallet mr-2"></i> Nạp tiền (Sepay)
+                        <i class="fa-solid fa-wallet mr-2"></i> Nạp tiền
                     </button>
                     <a href="user-post-ad.html" class="flex-1 md:flex-none text-center bg-red-600 text-white px-6 py-3 rounded-xl font-bold text-sm uppercase hover:bg-red-700 transition shadow-lg shadow-red-600/20">
                         <i class="fa-solid fa-plus mr-2"></i> Niêm yết mới
                     </a>
-                    <button onclick="logout()" class="w-full md:w-auto text-center bg-slate-100 text-slate-600 px-6 py-3 rounded-xl font-bold text-sm uppercase hover:bg-slate-200 transition">
+                    <button onclick="openModal('modal-password')" class="flex-1 md:flex-none text-center bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-bold text-sm uppercase hover:bg-gray-200 transition">
+                        <i class="fa-solid fa-key mr-2"></i> Đổi mật khẩu
+                    </button>
+                    <button onclick="logout()" class="w-full md:w-auto text-center bg-slate-900 text-white px-6 py-3 rounded-xl font-bold text-sm uppercase hover:bg-slate-800 transition">
                         Đăng xuất
                     </button>
                 </div>
@@ -161,21 +168,21 @@
             <div class="text-center mb-6">
                 <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4"><i class="fa-solid fa-building-columns"></i></div>
                 <h2 class="text-xl font-black text-slate-900 uppercase">Nạp Tiền Tự Động</h2>
-                <p class="text-sm text-gray-500 mt-2">Hệ thống Sepay sẽ tự động cộng số dư vào ngân sách của bạn trong 30 giây.</p>
+                <p class="text-sm text-gray-500 mt-2">Hệ thống giao dịch sẽ tự động đối soát và cộng số dư vào ngân sách của bạn trong 30 giây.</p>
             </div>
             
             <div class="mb-6">
                 <p class="text-[11px] font-bold text-gray-500 uppercase mb-2">Thông tin Ngân hàng</p>
                 <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 mb-4">
-                    <p class="text-sm text-gray-600 mb-1">Ngân hàng: <strong>MB Bank</strong></p>
-                    <p class="text-sm text-gray-600 mb-1">Chủ tài khoản: <strong>PHAM VAN QUAN</strong></p>
-                    <p class="text-sm text-gray-600">Số tài khoản: <strong class="text-slate-900">0981593935</strong></p>
+                    <p class="text-sm text-gray-600 mb-1">Ngân hàng: <strong id="bank-name">MB Bank</strong></p>
+                    <p class="text-sm text-gray-600 mb-1">Chủ tài khoản: <strong id="bank-account-name">PHAM VAN QUAN</strong></p>
+                    <p class="text-sm text-gray-600">Số tài khoản: <strong id="bank-account-number" class="text-slate-900">0981593935</strong></p>
                 </div>
 
                 <p class="text-[11px] font-bold text-gray-500 uppercase mb-2">Nội dung chuyển khoản (Bắt buộc ghi đúng)</p>
                 <div class="copy-box">
-                    <span class="copy-text" id="sepay-content">NAP SQDLand ...</span>
-                    <button class="copy-btn" onclick="copyText('sepay-content', this)" title="Copy nội dung"><i class="fa-regular fa-copy"></i></button>
+                    <span class="copy-text" id="transfer-content">NAP SQDLand ...</span>
+                    <button class="copy-btn" onclick="copyText('transfer-content', this)" title="Copy nội dung"><i class="fa-regular fa-copy"></i></button>
                 </div>
             </div>
 
@@ -209,6 +216,25 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="modal-password">
+        <div class="modal-box">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-black text-slate-900 uppercase">Đổi Mật Khẩu</h2>
+                <button onclick="closeModal('modal-password')" class="text-gray-400 hover:text-red-600 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <form id="form-change-password">
+                <input type="password" id="old-pass" class="sqd-input" placeholder="Mật khẩu hiện tại" required>
+                <input type="password" id="new-pass" class="sqd-input" placeholder="Mật khẩu mới (Tối thiểu 6 ký tự)" required minlength="6">
+                <input type="password" id="confirm-pass" class="sqd-input" placeholder="Nhập lại mật khẩu mới" required minlength="6">
+                
+                <button type="submit" id="btn-change-pass" class="w-full bg-slate-900 text-white py-3 mt-2 rounded-xl font-bold text-sm uppercase hover:bg-slate-800 transition">
+                    Xác nhận đổi mật khẩu
+                </button>
+            </form>
+        </div>
+    </div>
+
     <footer class="bg-white border-t border-gray-200 pt-12 pb-6 lg:pb-12 mt-auto">
         <div class="container mx-auto px-4 lg:px-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10 text-sm text-gray-600">
@@ -231,7 +257,7 @@
                     <p class="font-bold text-slate-900 mb-4 uppercase">Hỗ trợ đối tác</p>
                     <ul class="space-y-3 font-medium">
                         <li><a href="user-post-ad.html" class="hover:text-red-600 transition">Hướng dẫn niêm yết tài sản</a></li>
-                        <li><a href="#" onclick="openModal('modal-topup')" class="hover:text-red-600 transition text-blue-600 font-bold"><i class="fa-solid fa-wallet mr-1"></i> Nạp tiền tự động (Sepay)</a></li>
+                        <li><a href="#" onclick="openModal('modal-topup')" class="hover:text-red-600 transition text-blue-600 font-bold"><i class="fa-solid fa-wallet mr-1"></i> Nạp tiền tự động</a></li>
                     </ul>
                 </div>
             </div>
@@ -269,7 +295,7 @@
 
         // --- KHỞI TẠO DỮ LIỆU ---
         document.addEventListener('DOMContentLoaded', async () => {
-            // Lấy thông tin User (Đã check tồn tại ở thẻ Script trên cùng)
+            // Lấy thông tin User từ bộ nhớ trình duyệt
             const user = JSON.parse(localStorage.getItem('sqd_user'));
             currentUserId = user.id;
 
@@ -277,8 +303,14 @@
             document.getElementById('user-name').innerText = user.full_name;
             document.getElementById('user-id').innerText = 'SQD-' + String(user.phone).slice(-4);
             
-            // Cập nhật Nội dung chuyển khoản Sepay theo số điện thoại
-            document.getElementById('sepay-content').innerText = `NAP SQDLand ${user.phone}`;
+            // Cập nhật Nội dung chuyển khoản theo SĐT cá nhân
+            document.getElementById('transfer-content').innerText = `NAP SQDLand ${user.phone}`;
+            
+            // Lấy thông tin Ngân hàng từ cấu hình của Admin (hoặc mặc định nếu Admin chưa tạo)
+            const bankConfig = JSON.parse(localStorage.getItem('sqd_sepay_config')) || { bank: 'MB Bank', name: 'PHAM VAN QUAN', number: '0981593935' };
+            document.getElementById('bank-name').innerText = bankConfig.bank;
+            document.getElementById('bank-account-name').innerText = bankConfig.name;
+            document.getElementById('bank-account-number').innerText = bankConfig.number;
             
             const balanceFmt = new Intl.NumberFormat('vi-VN').format(user.balance || 0);
             document.getElementById('user-balance').innerText = balanceFmt;
@@ -287,7 +319,6 @@
                 document.getElementById('user-role').innerHTML = '<i class="fa-solid fa-shield-halved mr-1"></i>Giám đốc hệ thống';
             }
 
-            // Tải rổ hàng
             loadMyListings();
         });
 
@@ -382,10 +413,9 @@
         }
 
         function confirmVipUpgrade() {
-            // (Thực tế sẽ gọi API update DB)
             alert(`✅ Hệ thống đã ghi nhận yêu cầu nâng cấp VIP cho bài viết ID: ${selectedAdId}.`);
             closeModal('modal-vip');
-            loadMyListings(); // Load lại để làm mới giao diện
+            loadMyListings(); // Load lại
         }
 
         // XỬ LÝ XÓA TIN
@@ -395,7 +425,6 @@
         }
 
         function confirmDeleteAd() {
-            // (Thực tế sẽ gọi API DELETE)
             const adElement = document.getElementById(`ad-item-${selectedAdId}`);
             if(adElement) {
                 adElement.style.opacity = '0';
@@ -414,6 +443,28 @@
             btn.classList.add('bg-green-100', 'text-green-700', 'border-green-200');
             btn.disabled = true;
         }
+
+        // XỬ LÝ ĐỔI MẬT KHẨU
+        document.getElementById('form-change-password').onsubmit = (e) => {
+            e.preventDefault();
+            const newPass = document.getElementById('new-pass').value;
+            const confirmPass = document.getElementById('confirm-pass').value;
+
+            if (newPass !== confirmPass) {
+                alert("Mật khẩu mới không trùng khớp. Vui lòng nhập lại!");
+                return;
+            }
+
+            const btn = document.getElementById('btn-change-pass');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang xử lý...';
+
+            setTimeout(() => {
+                alert("✅ Đổi mật khẩu thành công!");
+                document.getElementById('form-change-password').reset();
+                btn.innerHTML = 'Xác nhận đổi mật khẩu';
+                closeModal('modal-password');
+            }, 800);
+        };
 
         // ĐĂNG XUẤT
         function logout() {
