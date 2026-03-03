@@ -9,7 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        :root { --sqd-red: #E03C31; --sqd-navy: #111827; --sqd-bg: #F8FAFC; }
+        :root { --sqd-red: #E03C31; --sqd-navy: #111827; --sqd-bg: #F8FAFC; --gold-vip: linear-gradient(135deg, #F6D365 0%, #FDA085 100%); }
         body { font-family: 'Lexend', sans-serif; background-color: var(--sqd-bg); color: var(--sqd-navy); margin: 0; padding-bottom: 80px; display: flex; flex-direction: column; min-height: 100vh; }
 
         /* HEADER PC */
@@ -24,11 +24,18 @@
         
         select { -webkit-appearance: none; appearance: none; background: transparent; }
 
-        /* PROPERTY CARD */
-        .prop-card { background: white; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; transition: all 0.3s ease; display: flex; flex-direction: column; height: 100%; }
+        /* PROPERTY CARD & VIP BADGE */
+        .prop-card { background: white; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; transition: all 0.3s ease; display: flex; flex-direction: column; height: 100%; position: relative; }
         .prop-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--sqd-red); }
+        .prop-card.vip-card { border: 2px solid #FDA085; box-shadow: 0 10px 30px rgba(253, 160, 133, 0.15); }
+        .prop-card.vip-card:hover { border-color: #F6D365; box-shadow: 0 20px 40px rgba(253, 160, 133, 0.3); }
+        
         .prop-img { height: 220px; width: 100%; object-fit: cover; }
-        .badge { position: absolute; top: 12px; left: 12px; background: var(--sqd-red); color: white; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .badge { position: absolute; top: 12px; left: 12px; background: var(--sqd-red); color: white; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; z-index: 10; }
+        
+        /* HIỆU ỨNG VIP BADGE */
+        .badge-vip { right: 12px; left: auto; background: var(--gold-vip); color: #fff; box-shadow: 0 4px 15px rgba(246, 211, 101, 0.5); animation: pulseVip 2s infinite; }
+        @keyframes pulseVip { 0% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(246, 211, 101, 0); } 100% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0); } }
 
         /* CHATBOT TƯ VẤN PHÁP LÝ */
         .chatbot-btn { position: fixed; bottom: 100px; right: 24px; width: 60px; height: 60px; background: var(--sqd-navy); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 10px 25px rgba(17,24,39,0.3); cursor: pointer; z-index: 999; transition: 0.3s; }
@@ -96,13 +103,18 @@
                         </div>
                         
                         <div class="grid grid-cols-2 lg:flex gap-3">
-                            <div class="relative border border-gray-200 rounded-xl bg-white flex items-center px-4 py-3 lg:w-40">
+                            <div class="relative border border-gray-200 rounded-xl bg-white flex items-center px-4 py-3 lg:w-48">
                                 <i class="fa-solid fa-building text-gray-400 mr-2"></i>
                                 <select class="w-full outline-none text-slate-700 text-sm font-medium cursor-pointer">
                                     <option value="">Loại hình</option>
-                                    <option value="dat-nen">Đất nền</option>
-                                    <option value="nha-pho">Nhà phố</option>
-                                    <option value="chung-cu">Chung cư</option>
+                                    <option value="datnen">1. Đất nền</option>
+                                    <option value="nhapho">2. Nhà phố</option>
+                                    <option value="bietthu">3. Biệt thự</option>
+                                    <option value="chungcu">4. Chung cư</option>
+                                    <option value="shophouse">5. Shophouse</option>
+                                    <option value="vanphong">6. Văn phòng / Officetel</option>
+                                    <option value="khoxuong">7. Kho – xưởng</option>
+                                    <option value="khac">8. Khác</option>
                                 </select>
                                 <i class="fa-solid fa-chevron-down text-gray-400 text-xs absolute right-4"></i>
                             </div>
@@ -133,8 +145,8 @@
         <main class="container mx-auto px-4 lg:px-6 py-16">
             <div class="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-slate-900 uppercase">Tin Đăng Mới Nhất</h2>
-                    <p class="text-sm text-gray-500 mt-1">Các sản phẩm vừa được kiểm duyệt và niêm yết</p>
+                    <h2 class="text-2xl font-bold text-slate-900 uppercase">Tin Đăng & Ưu Tiên VIP</h2>
+                    <p class="text-sm text-gray-500 mt-1">Các sản phẩm vừa được kiểm duyệt và tài trợ vị trí hiển thị.</p>
                 </div>
                 <a href="listing.html" class="text-sm font-bold text-red-600 hover:text-red-800 transition flex items-center gap-1">
                     Xem tất cả <i class="fa-solid fa-angle-right"></i>
@@ -152,8 +164,10 @@
                 <div>
                     <img src="logo.jpg" class="h-10 mb-4" alt="SQDLand">
                     <p class="mb-3 font-black text-slate-900 uppercase">CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ PHÁT TRIỂN BẤT ĐỘNG SẢN SQD LAND</p>
-                    <p class="mb-2"><i class="fa-solid fa-location-dot w-5 text-red-600"></i> Trụ sở:Tầng 01, Căn S13, Tòa SA3, Vinhomes Smart City, đường Đại lộ Thăng Long, Phường Tây Mỗ, Thành phố Hà Nội, Việt Nam</p>
-                    <p class="mb-2"><i class="fa-solid fa-phone w-5 text-red-600"></i> Hotline: 0971 82 82 36</p>
+                    <p class="mb-2"><i class="fa-solid fa-building w-5 text-red-600"></i> Mã Số Thuế: <strong>0111029283</strong></p>
+                    <p class="mb-2"><i class="fa-solid fa-location-dot w-5 text-red-600"></i> Trụ sở: Tầng 01, Căn S13, Tòa SA3, Vinhomes Smart City, Đại lộ Thăng Long, P. Tây Mỗ, TP. Hà Nội</p>
+                    <p class="mb-2"><i class="fa-solid fa-phone w-5 text-red-600"></i> SĐT Công ty: <strong>0981 593 935</strong></p>
+                    <p class="mb-2"><i class="fa-solid fa-headset w-5 text-red-600"></i> CSKH: <strong>+84 971 82 82 36</strong></p>
                     <p class="mb-2"><i class="fa-solid fa-envelope w-5 text-red-600"></i> Email: contact@sqdland.vn</p>
                 </div>
                 <div>
@@ -170,6 +184,7 @@
                     <ul class="space-y-3 font-medium">
                         <li><a href="listing.html" class="hover:text-red-600 transition">Tìm kiếm Bất động sản</a></li>
                         <li><a href="user-post-ad.html" class="hover:text-red-600 transition">Hướng dẫn niêm yết tài sản</a></li>
+                        <li><a href="#" onclick="alert('CHỨC NĂNG NẠP TIỀN TỰ ĐỘNG:\\n\\nĐể đẩy tin VIP, vui lòng chuyển khoản đến:\\nSTK: [STK_ADMIN] - Ngân hàng [TEN_NH]\\nNội dung: NAP SQDLand [SĐT_CUA_BAN]\\n\\nHệ thống Webhook Sepay sẽ tự động cộng tiền vào tài khoản của bạn trong 30 giây.')" class="hover:text-red-600 transition text-blue-600 font-bold"><i class="fa-solid fa-wallet mr-1"></i> Nạp tiền tự động (Sepay)</a></li>
                         <li><a href="#" class="hover:text-red-600 transition">Dịch vụ sang tên Sổ đỏ</a></li>
                     </ul>
                 </div>
@@ -246,21 +261,45 @@
                 // Nếu chưa bật Server backend thì sẽ văng xuống Catch, xử lý lỗi an toàn
                 if (!response.ok) throw new Error('Network error');
                 
-                const properties = await response.json();
+                let properties = await response.json();
 
                 if (properties.length === 0) {
                     container.innerHTML = `<p class="col-span-full text-center py-10 text-gray-500 font-medium text-sm">Chưa có tài sản nào được niêm yết. Hãy là người đầu tiên!</p>`;
                     return;
                 }
 
+                // Sắp xếp ưu tiên bài VIP lên đầu
+                properties.sort((a, b) => (b.is_vip === true ? 1 : 0) - (a.is_vip === true ? 1 : 0));
+
                 // Render HTML thật dựa trên Database
-                container.innerHTML = properties.slice(0, 8).map(item => `
-                    <div class="prop-card cursor-pointer" onclick="location.href='product-detail.html?id=${item.id}'">
+                container.innerHTML = properties.slice(0, 8).map(item => {
+                    // Logic màu sắc Label Loại hình (8 loại)
+                    let catLabel = 'Bất động sản';
+                    let catColor = 'bg-gray-600';
+                    switch(item.category) {
+                        case 'datnen': catLabel = '1. Đất nền'; catColor = 'bg-green-600'; break;
+                        case 'nhapho': catLabel = '2. Nhà phố'; catColor = 'bg-red-600'; break;
+                        case 'bietthu': catLabel = '3. Biệt thự'; catColor = 'bg-purple-600'; break;
+                        case 'chungcu': catLabel = '4. Chung cư'; catColor = 'bg-blue-600'; break;
+                        case 'shophouse': catLabel = '5. Shophouse'; catColor = 'bg-orange-500'; break;
+                        case 'vanphong': catLabel = '6. Văn phòng / Officetel'; catColor = 'bg-teal-600'; break;
+                        case 'khoxuong': catLabel = '7. Kho – xưởng'; catColor = 'bg-amber-700'; break;
+                        case 'khac': catLabel = '8. Khác'; catColor = 'bg-gray-600'; break;
+                    }
+
+                    // Giả lập Logic VIP (Nếu trong DB bạn có cột is_vip)
+                    // Ở đây tôi random 1 vài bài làm VIP để bạn thấy giao diện
+                    const isVip = item.is_vip || Math.random() > 0.7; // Tỷ lệ 30% bài được gắn mác VIP
+                    
+                    const vipBadgeHtml = isVip ? `<span class="badge badge-vip"><i class="fa-solid fa-crown mr-1"></i> Tin VIP</span>` : '';
+                    const vipCardClass = isVip ? 'vip-card' : '';
+
+                    return `
+                    <div class="prop-card ${vipCardClass} cursor-pointer" onclick="location.href='product-detail.html?id=${item.id}'">
                         <div class="relative">
-                            <img src="${item.images?.[0] || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&auto=format&fit=crop'}" class="prop-img" alt="${item.title}">
-                            <span class="badge ${item.category === 'datnen' ? 'bg-green-600' : (item.category === 'chungcu' ? 'bg-blue-600' : 'bg-red-600')}">
-                                ${item.category === 'datnen' ? 'Đất nền' : (item.category === 'chungcu' ? 'Chung cư' : 'Nhà phố')}
-                            </span>
+                            <img src="${item.images?.[0] || 'logo.jpg'}" class="prop-img bg-gray-100" alt="${item.title}" onerror="this.src='logo.jpg'">
+                            <span class="badge ${catColor}">${catLabel}</span>
+                            ${vipBadgeHtml}
                         </div>
                         <div class="p-5 flex flex-col flex-grow">
                             <h3 class="font-bold text-slate-900 text-base leading-snug mb-2 line-clamp-2 hover:text-red-600 transition">${item.title}</h3>
@@ -271,7 +310,7 @@
                             </div>
                         </div>
                     </div>
-                `).join('');
+                `}).join('');
 
             } catch (error) {
                 // Thông báo khi Backend chưa khởi động
