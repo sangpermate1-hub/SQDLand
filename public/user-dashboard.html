@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Tài Khoản - Mạng Lưới SQDLand</title>
+    
+    <script>
+        if (!localStorage.getItem('sqd_user')) {
+            window.location.replace('login.html'); // Chuyển hướng ngay lập tức
+        }
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -27,7 +34,7 @@
         .listing-img { width: 100%; height: 160px; object-fit: cover; }
         @media (min-width: 768px) { .listing-img { width: 220px; height: auto; } .listing-card { flex-direction: row; } }
 
-        /* VIP BADGE */
+        /* VIP BADGE TRONG BẢNG ĐIỀU KHIỂN */
         .badge-vip { position: absolute; top: 12px; left: 12px; background: var(--gold-vip); color: #fff; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; box-shadow: 0 4px 15px rgba(246, 211, 101, 0.5); z-index: 10; animation: pulseVip 2s infinite; }
         @keyframes pulseVip { 0% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(246, 211, 101, 0); } 100% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0); } }
 
@@ -167,7 +174,7 @@
 
                 <p class="text-[11px] font-bold text-gray-500 uppercase mb-2">Nội dung chuyển khoản (Bắt buộc ghi đúng)</p>
                 <div class="copy-box">
-                    <span class="copy-text" id="sepay-content">NAP SQDLand 09xxxx</span>
+                    <span class="copy-text" id="sepay-content">NAP SQDLand ...</span>
                     <button class="copy-btn" onclick="copyText('sepay-content', this)" title="Copy nội dung"><i class="fa-regular fa-copy"></i></button>
                 </div>
             </div>
@@ -258,21 +265,15 @@
 
     <script>
         let currentUserId = null;
-        let selectedAdId = null; // Dùng để nhớ ID bài viết khi mở Popup xử lý
+        let selectedAdId = null;
 
         // --- KHỞI TẠO DỮ LIỆU ---
         document.addEventListener('DOMContentLoaded', async () => {
-            const userStr = localStorage.getItem('sqd_user');
-            if(!userStr) {
-                alert("Bạn cần đăng nhập để truy cập Bảng điều khiển!");
-                window.location.href = 'login.html';
-                return;
-            }
-
-            const user = JSON.parse(userStr);
+            // Lấy thông tin User (Đã check tồn tại ở thẻ Script trên cùng)
+            const user = JSON.parse(localStorage.getItem('sqd_user'));
             currentUserId = user.id;
 
-            // Cập nhật Profile
+            // Cập nhật giao diện Profile
             document.getElementById('user-name').innerText = user.full_name;
             document.getElementById('user-id').innerText = 'SQD-' + String(user.phone).slice(-4);
             
@@ -315,12 +316,11 @@
                     return;
                 }
 
-                // Render HTML
+                // Render HTML rổ hàng
                 container.innerHTML = myProperties.map(p => {
                     const isVip = p.is_vip || false;
                     const vipBadge = isVip ? `<span class="badge-vip"><i class="fa-solid fa-crown mr-1"></i> Đang VIP</span>` : '';
                     
-                    // Nút VIP nếu chưa mua thì hiện "Nâng cấp VIP", nếu mua rồi thì làm mờ đi
                     const vipButton = isVip 
                         ? `<button disabled class="flex-1 bg-gray-100 text-gray-400 py-2 rounded-lg text-sm font-bold cursor-not-allowed border border-gray-200"><i class="fa-solid fa-check mr-1"></i> Đã VIP</button>`
                         : `<button onclick="triggerVipModal(${p.id})" class="flex-1 bg-gradient-to-r from-[#F6D365] to-[#FDA085] text-white py-2 rounded-lg text-sm font-bold shadow-md hover:opacity-90 transition"><i class="fa-solid fa-crown mr-1"></i> Lên VIP</button>`;
@@ -361,26 +361,17 @@
 
         // --- CÁC HÀM XỬ LÝ POPUP & LOGIC ---
 
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
+        function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
+        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        // COPY VĂN BẢN (Cho Popup Nạp tiền)
+        // COPY VĂN BẢN (Nạp tiền)
         function copyText(elementId, btn) {
             const textToCopy = document.getElementById(elementId).innerText;
             navigator.clipboard.writeText(textToCopy).then(() => {
                 const originalIcon = btn.innerHTML;
                 btn.innerHTML = '<i class="fa-solid fa-check"></i>';
                 btn.classList.add('copied');
-                
-                setTimeout(() => {
-                    btn.innerHTML = originalIcon;
-                    btn.classList.remove('copied');
-                }, 2000);
+                setTimeout(() => { btn.innerHTML = originalIcon; btn.classList.remove('copied'); }, 2000);
             });
         }
 
@@ -391,11 +382,10 @@
         }
 
         function confirmVipUpgrade() {
-            // Thực tế sẽ gọi API PUT /api/properties/:id/vip để cập nhật DB và trừ tiền
-            alert(`✅ Hệ thống đã ghi nhận yêu cầu nâng cấp VIP cho bài viết ID: ${selectedAdId}. Tính năng trừ tiền DB đang hoàn thiện.`);
+            // (Thực tế sẽ gọi API update DB)
+            alert(`✅ Hệ thống đã ghi nhận yêu cầu nâng cấp VIP cho bài viết ID: ${selectedAdId}.`);
             closeModal('modal-vip');
-            // Tạm thời ẩn đi để giả lập
-            loadMyListings();
+            loadMyListings(); // Load lại để làm mới giao diện
         }
 
         // XỬ LÝ XÓA TIN
@@ -405,15 +395,14 @@
         }
 
         function confirmDeleteAd() {
-            // Giả lập xóa khỏi giao diện bằng JS (Trong thực tế phải gọi API DELETE)
+            // (Thực tế sẽ gọi API DELETE)
             const adElement = document.getElementById(`ad-item-${selectedAdId}`);
             if(adElement) {
                 adElement.style.opacity = '0';
                 setTimeout(() => {
                     adElement.remove();
-                    // Cập nhật lại số đếm
                     const currentCount = parseInt(document.getElementById('my-listings-count').innerText);
-                    document.getElementById('my-listings-count').innerText = currentCount - 1;
+                    document.getElementById('my-listings-count').innerText = Math.max(0, currentCount - 1);
                 }, 300);
             }
             closeModal('modal-delete');
