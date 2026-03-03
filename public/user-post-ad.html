@@ -79,13 +79,13 @@
                     <h3 class="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2"><i class="fa-regular fa-images text-red-500"></i> Hình ảnh thực tế</h3>
                     <div class="upload-area" onclick="document.getElementById('file-input').click()">
                         <i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-300 mb-3"></i>
-                        <p class="text-sm font-bold text-slate-700">Nhấn vào đây để tải ảnh lên (Hoặc dán link ảnh)</p>
-                        <p class="text-xs text-gray-400 mt-1">Định dạng JPG, PNG. Đăng tối thiểu 3 ảnh để khách hàng dễ hình dung.</p>
+                        <p class="text-sm font-bold text-slate-700">Nhấn vào đây để tải ảnh trực tiếp từ máy</p>
+                        <p class="text-xs text-gray-400 mt-1">Định dạng JPG, PNG. Đăng tối thiểu 1 ảnh để khách hàng dễ hình dung.</p>
                         <input type="file" id="file-input" class="hidden" multiple accept="image/*" onchange="previewImages(this)">
                     </div>
                     
                     <div class="mt-4">
-                        <input type="text" id="img-urls" class="sqd-input text-sm" placeholder="Hoặc dán URL hình ảnh tại đây (ngăn cách bằng dấu phẩy)">
+                        <input type="text" id="img-urls" class="sqd-input text-sm" placeholder="Hoặc dán URL hình ảnh từ web khác tại đây (ngăn cách bằng dấu phẩy)">
                     </div>
 
                     <div id="img-preview"></div>
@@ -107,10 +107,14 @@
                                 <label class="sqd-label">Loại hình Bất động sản <span class="text-red-500">*</span></label>
                                 <select id="post-category" class="sqd-input cursor-pointer" required>
                                     <option value="" disabled selected>-- Chọn loại hình --</option>
-                                    <option value="nhapho">Nhà mặt phố</option>
-                                    <option value="datnen">Đất nền phân lô</option>
-                                    <option value="chungcu">Căn hộ chung cư</option>
-                                    <option value="bietthu">Biệt thự / Liền kề</option>
+                                    <option value="datnen">1. Đất nền</option>
+                                    <option value="nhapho">2. Nhà phố</option>
+                                    <option value="bietthu">3. Biệt thự</option>
+                                    <option value="chungcu">4. Chung cư</option>
+                                    <option value="shophouse">5. Shophouse</option>
+                                    <option value="vanphong">6. Văn phòng / Officetel</option>
+                                    <option value="khoxuong">7. Kho – xưởng</option>
+                                    <option value="khac">8. Khác</option>
                                 </select>
                             </div>
                             <div>
@@ -201,6 +205,7 @@
     <script>
         // 1. KIỂM TRA ĐĂNG NHẬP & TỰ ĐỘNG ĐIỀN THÔNG TIN
         let currentUser = null;
+        let uploadedImagesBase64 = []; // Mảng chứa ảnh dạng chuỗi văn bản
 
         document.addEventListener('DOMContentLoaded', () => {
             const userStr = localStorage.getItem('sqd_user');
@@ -221,33 +226,39 @@
             }
         });
 
-        // 2. HIỂN THỊ TRỰC QUAN HÌNH ẢNH TRƯỚC KHI ĐĂNG
+        // 2. HIỂN THỊ TRỰC QUAN HÌNH ẢNH TRƯỚC KHI ĐĂNG (Chuyển sang Base64 để lưu thẳng DB)
         function previewImages(input) {
             const preview = document.getElementById('img-preview');
-            preview.innerHTML = "";
+            
             if (input.files) {
                 Array.from(input.files).forEach(file => {
                     const reader = new FileReader();
                     reader.onload = (e) => {
+                        // Hiển thị ảnh
                         const img = document.createElement('img');
                         img.src = e.target.result;
                         img.className = 'preview-item shadow-sm';
                         preview.appendChild(img);
+
+                        // Lưu chuỗi Base64 vào mảng để chuẩn bị gửi lên Server
+                        uploadedImagesBase64.push(e.target.result);
                     }
+                    // Đọc file thành chuỗi Data URL (Base64)
                     reader.readAsDataURL(file);
                 });
             }
         }
 
-        // 3. XỬ LÝ GỬI DỮ LIỆU ĐĂNG TIN LÊN MÁY CHỦ (DATABASE)
+        // 3. XỬ LÝ GỬI DỮ LIỆU ĐĂNG TIN LÊN MÁY CHỦ
         document.getElementById('postAdForm').onsubmit = async (e) => {
             e.preventDefault();
             
-            // Xử lý hình ảnh (chuyển URL nhập tay thành mảng Array để lưu Database)
-            let imageUrls = [];
+            // Xử lý hình ảnh (Kết hợp cả ảnh upload Base64 và URL tự dán)
+            let finalImageUrls = [...uploadedImagesBase64]; 
             const urlsInput = document.getElementById('img-urls').value;
             if (urlsInput.trim() !== '') {
-                imageUrls = urlsInput.split(',').map(url => url.trim());
+                const manualUrls = urlsInput.split(',').map(url => url.trim());
+                finalImageUrls = finalImageUrls.concat(manualUrls);
             }
 
             // Gói gọn dữ liệu gửi đi
@@ -261,7 +272,8 @@
                 description: document.getElementById('post-desc').value,
                 legal_status: document.getElementById('post-legal').value,
                 phone: currentUser.phone,
-                images: imageUrls
+                images: finalImageUrls, // Mảng chứa ảnh thực tế
+                is_vip: false // Mặc định đăng tin thường
             };
 
             const btn = document.getElementById('submit-btn');
