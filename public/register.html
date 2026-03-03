@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gia Nhập Mạng Lưới - SQDLand</title>
+    
+    <script>
+        if (localStorage.getItem('sqd_user')) {
+            window.location.replace('user-dashboard.html');
+        }
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -21,6 +28,12 @@
         .sqd-input { width: 100%; padding: 16px 20px; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; font-weight: 600; font-size: 14px; outline: none; transition: 0.3s; }
         .sqd-input:focus { border-color: var(--sqd-red); background: white; box-shadow: 0 0 0 4px rgba(224, 60, 49, 0.05); }
 
+        /* MODAL POPUP CHUNG */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.7); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); padding: 16px; }
+        .modal-box { background: white; border-radius: 24px; width: 100%; max-width: 400px; padding: 32px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); transform: scale(0.9); opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-overlay.active .modal-box { transform: scale(1); opacity: 1; }
+
         /* MOBILE BOTTOM NAV */
         .mobile-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; height: 70px; border-top: 1px solid #e2e8f0; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
         .nav-item-m { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; flex: 1; transition: 0.2s; }
@@ -28,13 +41,8 @@
         .nav-item-m span { font-size: 10px; font-weight: 600; text-transform: uppercase; }
 
         /* RESPONSIVE */
-        @media (min-width: 1024px) { 
-            .mobile-bottom-nav { display: none; } 
-        }
-        @media (max-width: 1023px) { 
-            /* ẨN TOÀN BỘ HEADER TRÊN MOBILE */
-            header { display: none !important; } 
-        }
+        @media (min-width: 1024px) { .mobile-bottom-nav { display: none; } }
+        @media (max-width: 1023px) { header { display: none !important; } }
     </style>
 </head>
 <body>
@@ -42,7 +50,6 @@
     <header>
         <div class="container mx-auto px-6 flex justify-between items-center">
             <a href="index.html"><img src="logo.jpg" class="h-10" alt="SQDLand"></a>
-            
             <nav class="desktop-nav flex gap-2 items-center">
                 <a href="index.html" class="nav-link">Trang chủ</a>
                 <a href="listing.html" class="nav-link">Mua bán</a>
@@ -53,7 +60,7 @@
         </div>
     </header>
 
-    <main class="flex-grow flex items-center justify-center px-4 py-12">
+    <main class="flex-grow flex items-center justify-center px-4 py-12" id="main-register-content">
         <div class="w-full max-w-md bg-white p-8 md:p-12 rounded-[32px] shadow-[0_10px_40px_rgba(0,0,0,0.04)] border border-gray-100">
             <div class="text-center mb-8">
                 <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 inline-block"><i class="fa-solid fa-handshake mr-1"></i> Đối tác chính thức</span>
@@ -73,7 +80,7 @@
                 </div>
 
                 <div class="pt-2">
-                    <button type="submit" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-sm uppercase tracking-wide shadow-lg hover:bg-red-600 transition">
+                    <button type="submit" id="btn-submit" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-sm uppercase tracking-wide shadow-lg hover:bg-red-600 transition">
                         Hoàn tất đăng ký
                     </button>
                 </div>
@@ -86,17 +93,44 @@
             <div class="mt-8 pt-6 border-t border-gray-100 text-center">
                 <p class="text-sm text-gray-500 font-medium">
                     Bạn đã là thành viên? 
-                    <a href="login.html" class="text-red-600 font-black ml-1 hover:underline">Đăng nhập</a>
+                    <a href="login.html" class="text-red-600 font-black ml-1 hover:underline">Đăng nhập ngay</a>
                 </p>
             </div>
         </div>
     </main>
 
+    <div class="modal-overlay" id="modal-success">
+        <div class="modal-box">
+            <div class="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 class="text-xl font-black text-slate-900 uppercase mb-2">Đăng Ký Thành Công</h2>
+            <p class="text-sm text-gray-600 mb-6">Hệ thống đang tự động đăng nhập. Chào mừng bạn gia nhập mạng lưới SQDLand!</p>
+            
+            <button onclick="window.location.href='user-dashboard.html'" class="w-full bg-green-500 text-white py-3 rounded-xl font-bold text-sm hover:bg-green-600 transition shadow-lg shadow-green-500/30">
+                <i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Đang chuyển hướng...
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-error">
+        <div class="modal-box">
+            <div class="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h2 class="text-xl font-black text-slate-900 uppercase mb-2">Đăng Ký Thất Bại</h2>
+            <p class="text-sm text-gray-600 mb-6" id="error-msg">Số điện thoại này đã tồn tại trong hệ thống.</p>
+            
+            <button onclick="closeModal('modal-error')" class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold text-sm uppercase hover:bg-slate-800 transition">
+                Đóng và thử lại
+            </button>
+        </div>
+    </div>
+
     <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
         <div class="container mx-auto px-4 lg:px-6">
             <div class="flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4">
                 <p>&copy; 2026 SQDLand.vn. Đã đăng ký bản quyền.</p>
-                
                 <div class="flex items-center gap-3 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200">
                     <span class="text-slate-600">SQDLand.vn được cung cấp dịch vụ và vận hành bởi <strong>MTH Exchange</strong></span>
                     <img src="logomth.jpg" alt="MTH Exchange" class="h-6 rounded object-contain bg-white shadow-sm">
@@ -124,6 +158,9 @@
     </nav>
 
     <script>
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
         // Xử lý gửi Form Đăng ký tới API Backend
         document.getElementById('registerForm').onsubmit = async (e) => {
             e.preventDefault();
@@ -131,6 +168,10 @@
             const fullName = document.getElementById('reg-name').value;
             const phone = document.getElementById('reg-phone').value;
             const password = document.getElementById('reg-pass').value;
+            const btn = document.getElementById('btn-submit');
+
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang xử lý...';
+            btn.disabled = true;
 
             try {
                 // Gọi API tới server.js
@@ -143,16 +184,41 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    alert("🎉 Đăng ký thành công! Chào mừng bạn gia nhập mạng lưới đối tác của SQDLand.");
-                    window.location.href = 'login.html';
+                    // TỰ ĐỘNG ĐĂNG NHẬP SAU KHI ĐĂNG KÝ
+                    const userObj = {
+                        id: data.userId || Date.now(), // Lấy ID từ CSDL
+                        full_name: fullName,
+                        phone: phone,
+                        balance: 0,
+                        role: 'user'
+                    };
+                    localStorage.setItem('sqd_user', JSON.stringify(userObj));
+
+                    openModal('modal-success');
+                    
+                    // Tự động chuyển trang sau 1.5 giây để người dùng kịp đọc thông báo
+                    setTimeout(() => {
+                        window.location.href = 'user-dashboard.html';
+                    }, 1500);
+
                 } else {
-                    alert("❌ Đăng ký thất bại: " + data.message);
+                    document.getElementById('error-msg').innerText = data.message || "Đã xảy ra lỗi, vui lòng thử lại!";
+                    openModal('modal-error');
+                    
+                    btn.innerHTML = 'Hoàn tất đăng ký';
+                    btn.disabled = false;
                 }
             } catch (error) {
-                // Nếu Backend chưa chạy, vẫn cho phép trải nghiệm giao diện
+                // FALLBACK: Khi Backend chưa chạy, vẫn cho phép giả lập trải nghiệm
                 console.error("Lỗi kết nối Backend:", error);
-                alert("🎉 (Chế độ trải nghiệm) Đăng ký thành công! Chào mừng bạn gia nhập SQDLand.");
-                window.location.href = 'login.html';
+                
+                const dummyUser = { id: Date.now(), full_name: fullName, phone: phone, balance: 0, role: 'user' };
+                localStorage.setItem('sqd_user', JSON.stringify(dummyUser));
+
+                openModal('modal-success');
+                setTimeout(() => {
+                    window.location.href = 'user-dashboard.html';
+                }, 1500);
             }
         };
     </script>
