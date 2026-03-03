@@ -21,23 +21,22 @@
         .hero-section { background: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000') center/cover no-repeat; position: relative; }
         .hero-overlay { background: linear-gradient(to right, rgba(17,24,39,0.95), rgba(17,24,39,0.7)); position: absolute; inset: 0; }
         .search-box { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        
         select { -webkit-appearance: none; appearance: none; background: transparent; }
 
         /* PROPERTY CARD & VIP BADGE */
         .prop-card { background: white; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; transition: all 0.3s ease; display: flex; flex-direction: column; height: 100%; position: relative; }
         .prop-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--sqd-red); }
+        
         .prop-card.vip-card { border: 2px solid #FDA085; box-shadow: 0 10px 30px rgba(253, 160, 133, 0.15); }
         .prop-card.vip-card:hover { border-color: #F6D365; box-shadow: 0 20px 40px rgba(253, 160, 133, 0.3); }
         
         .prop-img { height: 220px; width: 100%; object-fit: cover; }
-        .badge { position: absolute; top: 12px; left: 12px; background: var(--sqd-red); color: white; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; z-index: 10; }
+        .badge { position: absolute; top: 12px; left: 12px; color: white; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; z-index: 10; }
         
-        /* HIỆU ỨNG VIP BADGE */
         .badge-vip { right: 12px; left: auto; background: var(--gold-vip); color: #fff; box-shadow: 0 4px 15px rgba(246, 211, 101, 0.5); animation: pulseVip 2s infinite; }
         @keyframes pulseVip { 0% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(246, 211, 101, 0); } 100% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0); } }
 
-        /* CHATBOT TƯ VẤN PHÁP LÝ */
+        /* CHATBOT */
         .chatbot-btn { position: fixed; bottom: 100px; right: 24px; width: 60px; height: 60px; background: var(--sqd-navy); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 10px 25px rgba(17,24,39,0.3); cursor: pointer; z-index: 999; transition: 0.3s; }
         .chatbot-btn:hover { transform: scale(1.1); background: var(--sqd-red); }
         .chatbot-window { position: fixed; bottom: 170px; right: 24px; width: 340px; background: white; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 1px solid #e2e8f0; z-index: 999; display: none; flex-direction: column; overflow: hidden; transform-origin: bottom right; animation: scaleUp 0.3s ease; }
@@ -49,23 +48,28 @@
         .msg-user { background: var(--sqd-red); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
         .chat-input { padding: 12px 16px; border-top: 1px solid #e2e8f0; display: flex; background: white; }
 
+        /* MODAL POPUP CHUNG */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.7); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); padding: 16px; }
+        .modal-box { background: white; border-radius: 24px; width: 100%; max-width: 400px; padding: 32px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); transform: scale(0.9); opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal-overlay.active { display: flex; }
+        .modal-overlay.active .modal-box { transform: scale(1); opacity: 1; }
+
+        /* COPY BOX */
+        .copy-box { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .copy-text { font-family: monospace; font-size: 16px; font-weight: 800; color: var(--sqd-red); letter-spacing: 1px; }
+        .copy-btn { background: white; border: 1px solid #e2e8f0; color: #475569; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .copy-btn:hover { background: #f1f5f9; color: var(--sqd-navy); }
+        .copy-btn.copied { background: #10b981; color: white; border-color: #10b981; }
+
         /* MOBILE BOTTOM NAV */
         .mobile-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; height: 70px; border-top: 1px solid #e2e8f0; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
         .nav-item-m { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; flex: 1; transition: 0.2s; }
         .nav-item-m.active { color: var(--sqd-red); }
-        .nav-item-m span { font-size: 10px; font-weight: 600; }
+        .nav-item-m span { font-size: 10px; font-weight: 600; text-transform: uppercase; }
 
-        /* RESPONSIVE LÊN MOBILE */
-        @media (min-width: 1024px) { 
-            .mobile-bottom-nav { display: none; } 
-            .chatbot-btn { bottom: 30px; } 
-            .chatbot-window { bottom: 100px; } 
-        }
-        @media (max-width: 1023px) { 
-            /* ẨN TOÀN BỘ HEADER TRÊN MOBILE */
-            header { display: none !important; } 
-            .hero-section { padding-top: 40px; } 
-        }
+        /* RESPONSIVE */
+        @media (min-width: 1024px) { .mobile-bottom-nav { display: none; } .chatbot-btn { bottom: 30px; } .chatbot-window { bottom: 100px; } }
+        @media (max-width: 1023px) { header { display: none !important; } .hero-section { padding-top: 40px; } }
     </style>
 </head>
 <body>
@@ -158,6 +162,33 @@
         </main>
     </div>
 
+    <div class="modal-overlay" id="modal-topup">
+        <div class="modal-box">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4"><i class="fa-solid fa-building-columns"></i></div>
+                <h2 class="text-xl font-black text-slate-900 uppercase">Nạp Tiền Tự Động</h2>
+                <p class="text-sm text-gray-500 mt-2">Hệ thống giao dịch sẽ tự động đối soát và cộng số dư vào ngân sách của bạn trong 30 giây.</p>
+            </div>
+            
+            <div class="mb-6">
+                <p class="text-[11px] font-bold text-gray-500 uppercase mb-2">Thông tin Ngân hàng</p>
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 mb-4">
+                    <p class="text-sm text-gray-600 mb-1">Ngân hàng: <strong id="bank-name">MB Bank</strong></p>
+                    <p class="text-sm text-gray-600 mb-1">Chủ tài khoản: <strong id="bank-account-name">PHAM VAN QUAN</strong></p>
+                    <p class="text-sm text-gray-600">Số tài khoản: <strong id="bank-account-number" class="text-slate-900">0981593935</strong></p>
+                </div>
+
+                <p class="text-[11px] font-bold text-gray-500 uppercase mb-2">Nội dung chuyển khoản (Bắt buộc ghi đúng)</p>
+                <div class="copy-box">
+                    <span class="copy-text" id="transfer-content">NAP SQDLand ...</span>
+                    <button class="copy-btn" onclick="copyText('transfer-content', this)" title="Copy nội dung"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+
+            <button onclick="closeModal('modal-topup')" class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold text-sm uppercase hover:bg-slate-800 transition">Đã hiểu & Đóng</button>
+        </div>
+    </div>
+
     <footer class="bg-white border-t border-gray-200 pt-12 pb-6 lg:pb-12 mt-auto">
         <div class="container mx-auto px-4 lg:px-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10 text-sm text-gray-600">
@@ -184,7 +215,7 @@
                     <ul class="space-y-3 font-medium">
                         <li><a href="listing.html" class="hover:text-red-600 transition">Tìm kiếm Bất động sản</a></li>
                         <li><a href="user-post-ad.html" class="hover:text-red-600 transition">Hướng dẫn niêm yết tài sản</a></li>
-                        <li><a href="#" onclick="alert('CHỨC NĂNG NẠP TIỀN TỰ ĐỘNG:\\n\\nĐể đẩy tin VIP, vui lòng chuyển khoản đến:\\nSTK: [STK_ADMIN] - Ngân hàng [TEN_NH]\\nNội dung: NAP SQDLand [SĐT_CUA_BAN]\\n\\nHệ thống Webhook Sepay sẽ tự động cộng tiền vào tài khoản của bạn trong 30 giây.')" class="hover:text-red-600 transition text-blue-600 font-bold"><i class="fa-solid fa-wallet mr-1"></i> Nạp tiền tự động (Sepay)</a></li>
+                        <li><a href="#" onclick="showTopupModal()" class="hover:text-red-600 transition text-blue-600 font-bold"><i class="fa-solid fa-wallet mr-1"></i> Nạp tiền tự động</a></li>
                         <li><a href="#" class="hover:text-red-600 transition">Dịch vụ sang tên Sổ đỏ</a></li>
                     </ul>
                 </div>
@@ -192,7 +223,6 @@
             
             <div class="border-t border-gray-100 pt-6 flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4">
                 <p>&copy; 2026 SQDLand.vn. Đã đăng ký bản quyền.</p>
-                
                 <div class="flex items-center gap-3 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200">
                     <span class="text-slate-600">SQDLand.vn được cung cấp dịch vụ và vận hành bởi <strong>MTH Exchange</strong></span>
                     <img src="logomth.jpg" alt="MTH Exchange" class="h-6 rounded object-contain bg-white shadow-sm">
@@ -243,10 +273,9 @@
     </nav>
 
     <script>
-        // --- LOGIC LẤY 100% DỮ LIỆU TỪ CƠ SỞ DỮ LIỆU ---
+        // --- LOGIC LẤY DỮ LIỆU TỪ CƠ SỞ DỮ LIỆU ---
         async function fetchFeaturedProperties() {
             const container = document.getElementById('featured-listings');
-            // Hiệu ứng Loading
             container.innerHTML = `
                 <div class="col-span-full text-center py-12">
                     <i class="fa-solid fa-spinner fa-spin text-3xl text-red-600 mb-3"></i>
@@ -255,10 +284,7 @@
             `;
 
             try {
-                // Fetch API thật tới Backend server.js
                 const response = await fetch('/api/properties');
-                
-                // Nếu chưa bật Server backend thì sẽ văng xuống Catch, xử lý lỗi an toàn
                 if (!response.ok) throw new Error('Network error');
                 
                 let properties = await response.json();
@@ -268,12 +294,16 @@
                     return;
                 }
 
-                // Sắp xếp ưu tiên bài VIP lên đầu
-                properties.sort((a, b) => (b.is_vip === true ? 1 : 0) - (a.is_vip === true ? 1 : 0));
+                // Ưu tiên đưa bài VIP lên đầu danh sách
+                properties.sort((a, b) => {
+                    const isVipA = a.is_vip || false;
+                    const isVipB = b.is_vip || false;
+                    return (isVipB ? 1 : 0) - (isVipA ? 1 : 0);
+                });
 
-                // Render HTML thật dựa trên Database
+                // Chỉ render 8 sản phẩm mới nhất ra trang chủ
                 container.innerHTML = properties.slice(0, 8).map(item => {
-                    // Logic màu sắc Label Loại hình (8 loại)
+                    
                     let catLabel = 'Bất động sản';
                     let catColor = 'bg-gray-600';
                     switch(item.category) {
@@ -282,15 +312,13 @@
                         case 'bietthu': catLabel = '3. Biệt thự'; catColor = 'bg-purple-600'; break;
                         case 'chungcu': catLabel = '4. Chung cư'; catColor = 'bg-blue-600'; break;
                         case 'shophouse': catLabel = '5. Shophouse'; catColor = 'bg-orange-500'; break;
-                        case 'vanphong': catLabel = '6. Văn phòng / Officetel'; catColor = 'bg-teal-600'; break;
+                        case 'vanphong': catLabel = '6. Văn phòng'; catColor = 'bg-teal-600'; break;
                         case 'khoxuong': catLabel = '7. Kho – xưởng'; catColor = 'bg-amber-700'; break;
                         case 'khac': catLabel = '8. Khác'; catColor = 'bg-gray-600'; break;
                     }
 
-                    // Giả lập Logic VIP (Nếu trong DB bạn có cột is_vip)
-                    // Ở đây tôi random 1 vài bài làm VIP để bạn thấy giao diện
-                    const isVip = item.is_vip || Math.random() > 0.7; // Tỷ lệ 30% bài được gắn mác VIP
-                    
+                    // Hiển thị mác VIP nếu is_vip = true
+                    const isVip = item.is_vip || false; 
                     const vipBadgeHtml = isVip ? `<span class="badge badge-vip"><i class="fa-solid fa-crown mr-1"></i> Tin VIP</span>` : '';
                     const vipCardClass = isVip ? 'vip-card' : '';
 
@@ -313,7 +341,6 @@
                 `}).join('');
 
             } catch (error) {
-                // Thông báo khi Backend chưa khởi động
                 container.innerHTML = `
                     <div class="col-span-full text-center py-12 bg-red-50 rounded-2xl border border-red-100">
                         <i class="fa-solid fa-server text-4xl text-red-300 mb-3"></i>
@@ -324,8 +351,36 @@
             }
         }
 
-        // Tự động load dữ liệu khi mở trang
         document.addEventListener('DOMContentLoaded', fetchFeaturedProperties);
+
+        // --- LOGIC HIỂN THỊ POPUP NẠP TIỀN (SEPAY) ---
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function showTopupModal() {
+            // Lấy SĐT để tạo mã chuyển khoản tự động
+            const userStr = localStorage.getItem('sqd_user');
+            const phone = userStr ? JSON.parse(userStr).phone : '09xxxx';
+            document.getElementById('transfer-content').innerText = `NAP SQDLand ${phone}`;
+            
+            // Lấy STK từ cấu hình Admin
+            const bankConfig = JSON.parse(localStorage.getItem('sqd_sepay_config')) || { bank: 'MB Bank', name: 'PHAM VAN QUAN', number: '0981593935' };
+            document.getElementById('bank-name').innerText = bankConfig.bank;
+            document.getElementById('bank-account-name').innerText = bankConfig.name;
+            document.getElementById('bank-account-number').innerText = bankConfig.number;
+            
+            openModal('modal-topup');
+        }
+
+        function copyText(elementId, btn) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalIcon = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.innerHTML = originalIcon; btn.classList.remove('copied'); }, 2000);
+            });
+        }
 
         // --- LOGIC CHATBOT ---
         function toggleChat() {
