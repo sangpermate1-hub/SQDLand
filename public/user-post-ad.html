@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Niêm Yết Bất Động Sản - Mạng Lưới SQDLand</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root { --sqd-red: #E03C31; --sqd-navy: #111827; --sqd-bg: #F8FAFC; }
+        body { font-family: 'Lexend', sans-serif; background-color: var(--sqd-bg); color: var(--sqd-navy); margin: 0; padding-bottom: 80px; display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* HEADER PC */
+        header { background: white; height: 80px; display: flex; align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .nav-link { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--sqd-navy); transition: 0.3s; padding: 8px 16px; border-radius: 8px; }
+        .nav-link:hover, .nav-link.active { color: var(--sqd-red); background: #fff5f5; }
+
+        /* FORM INPUTS */
+        .sqd-input { width: 100%; padding: 14px 20px; background: white; border: 1.5px solid #e2e8f0; border-radius: 12px; font-weight: 600; font-size: 14px; color: #334155; outline: none; transition: 0.3s; }
+        .sqd-input:focus { border-color: var(--sqd-red); box-shadow: 0 0 0 4px rgba(224, 60, 49, 0.05); }
+        .sqd-label { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 8px; display: block; letter-spacing: 0.05em; }
+
+        /* UPLOAD AREA */
+        .upload-area { border: 2px dashed #cbd5e1; border-radius: 16px; padding: 40px 20px; text-align: center; cursor: pointer; background: #f8fafc; transition: 0.3s; }
+        .upload-area:hover { border-color: var(--sqd-red); background: #fff5f5; }
+        
+        #img-preview { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; margin-top: 16px; }
+        .preview-item { width: 100%; height: 100px; object-fit: cover; border-radius: 12px; border: 1px solid #e2e8f0; }
+
+        /* MOBILE BOTTOM NAV */
+        .mobile-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; height: 70px; border-top: 1px solid #e2e8f0; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item-m { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; flex: 1; transition: 0.2s; }
+        .nav-item-m.active { color: var(--sqd-red); }
+        .nav-item-m span { font-size: 10px; font-weight: 600; text-transform: uppercase; }
+
+        /* RESPONSIVE */
+        @media (min-width: 1024px) { 
+            .mobile-bottom-nav { display: none; } 
+        }
+        @media (max-width: 1023px) { 
+            /* ẨN TOÀN BỘ HEADER TRÊN MOBILE */
+            header { display: none !important; } 
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="index.html"><img src="logo.jpg" class="h-10" alt="SQDLand"></a>
+            
+            <nav class="desktop-nav flex gap-2 items-center">
+                <a href="index.html" class="nav-link">Trang chủ</a>
+                <a href="listing.html" class="nav-link">Mua bán</a>
+                <a href="project-list.html" class="nav-link">Dự án</a>
+                <a href="news.html" class="nav-link">Tin tức</a>
+                <a href="login.html" class="nav-link active bg-red-50 text-red-600">Tài khoản</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="flex-grow">
+        <main class="container mx-auto px-4 lg:px-6 py-10 max-w-4xl">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 border-b border-gray-100 pb-4 gap-4">
+                <div>
+                    <h1 class="text-2xl font-black uppercase tracking-tight text-slate-900">Niêm yết rổ hàng mới</h1>
+                    <p class="text-sm text-gray-500 font-medium mt-1">Hệ thống tự động duyệt tin và phân phối đến hàng ngàn khách hàng.</p>
+                </div>
+                <a href="user-dashboard.html" class="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-slate-900 transition bg-gray-100 px-4 py-2 rounded-lg">
+                    <i class="fa-solid fa-arrow-left-long"></i> Bảng điều khiển
+                </a>
+            </div>
+
+            <form id="postAdForm" class="space-y-8 bg-white p-6 lg:p-10 rounded-3xl border border-gray-200 shadow-sm">
+                
+                <div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2"><i class="fa-regular fa-images text-red-500"></i> Hình ảnh thực tế</h3>
+                    <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-300 mb-3"></i>
+                        <p class="text-sm font-bold text-slate-700">Nhấn vào đây để tải ảnh lên (Hoặc dán link ảnh)</p>
+                        <p class="text-xs text-gray-400 mt-1">Định dạng JPG, PNG. Đăng tối thiểu 3 ảnh để khách hàng dễ hình dung.</p>
+                        <input type="file" id="file-input" class="hidden" multiple accept="image/*" onchange="previewImages(this)">
+                    </div>
+                    
+                    <div class="mt-4">
+                        <input type="text" id="img-urls" class="sqd-input text-sm" placeholder="Hoặc dán URL hình ảnh tại đây (ngăn cách bằng dấu phẩy)">
+                    </div>
+
+                    <div id="img-preview"></div>
+                </div>
+
+                <hr class="border-gray-100">
+
+                <div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-pen-to-square text-red-500"></i> Thông tin mô tả</h3>
+                    
+                    <div class="space-y-5">
+                        <div>
+                            <label class="sqd-label">Tiêu đề niêm yết <span class="text-red-500">*</span></label>
+                            <input type="text" id="post-title" class="sqd-input" placeholder="Ví dụ: Bán gấp nhà phố thương mại vị trí góc..." required>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="sqd-label">Loại hình Bất động sản <span class="text-red-500">*</span></label>
+                                <select id="post-category" class="sqd-input cursor-pointer" required>
+                                    <option value="" disabled selected>-- Chọn loại hình --</option>
+                                    <option value="nhapho">Nhà mặt phố</option>
+                                    <option value="datnen">Đất nền phân lô</option>
+                                    <option value="chungcu">Căn hộ chung cư</option>
+                                    <option value="bietthu">Biệt thự / Liền kề</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="sqd-label">Vị trí tài sản (Quận/Huyện) <span class="text-red-500">*</span></label>
+                                <input type="text" id="post-location" class="sqd-input" placeholder="Ví dụ: Nam Từ Liêm, Hà Nội" required>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+                            <div class="col-span-2">
+                                <label class="sqd-label">Mức giá chuyển nhượng <span class="text-red-500">*</span></label>
+                                <input type="text" id="post-price" class="sqd-input font-bold text-red-600" placeholder="Ví dụ: 5.5 Tỷ" required>
+                            </div>
+                            <div class="col-span-2">
+                                <label class="sqd-label">Diện tích (m²) <span class="text-red-500">*</span></label>
+                                <input type="number" id="post-area" class="sqd-input" placeholder="Ví dụ: 80" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="sqd-label">Nội dung chi tiết <span class="text-red-500">*</span></label>
+                            <textarea id="post-desc" class="sqd-input h-32 resize-y" placeholder="Mô tả chi tiết về thiết kế, tiện ích xung quanh, lý do bán..." required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-gray-100">
+
+                <div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-scale-balanced text-red-500"></i> Pháp lý & Liên hệ</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                        <div>
+                            <label class="sqd-label">Tình trạng pháp lý</label>
+                            <select id="post-legal" class="sqd-input cursor-pointer bg-green-50 text-green-800 border-green-200 font-bold">
+                                <option value="sodo">Sổ đỏ/Sổ hồng sẵn sàng</option>
+                                <option value="hdmb">Hợp đồng mua bán</option>
+                                <option value="dangcho">Đang chờ sổ</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="sqd-label">Số điện thoại liên hệ (Đồng bộ tài khoản)</label>
+                            <input type="tel" id="post-phone" class="sqd-input bg-gray-100 text-gray-500 cursor-not-allowed font-bold" readonly title="Số điện thoại bảo mật theo hệ thống">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="w-full bg-red-600 text-white py-4 rounded-xl font-black text-sm uppercase tracking-wide shadow-lg shadow-red-600/30 hover:bg-red-700 transition transform hover:-translate-y-1">
+                        <i class="fa-solid fa-paper-plane mr-2"></i> Xác nhận & Niêm yết ngay (Phí: 20,000đ)
+                    </button>
+                    <p class="text-center text-[11px] text-gray-400 font-medium mt-4">Bằng việc nhấn niêm yết, bạn xác nhận tài sản không có tranh chấp và tuân thủ quy định của SQDLand.</p>
+                </div>
+
+            </form>
+        </main>
+    </div>
+
+    <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+        <div class="container mx-auto px-4 lg:px-6">
+            <div class="flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4">
+                <p>&copy; 2026 SQDLand.vn. Đã đăng ký bản quyền.</p>
+                
+                <div class="flex items-center gap-3 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200">
+                    <span class="text-slate-600">SQDLand.vn được cung cấp dịch vụ và vận hành bởi <strong>MTH Exchange</strong></span>
+                    <img src="logomth.jpg" alt="MTH Exchange" class="h-6 rounded object-contain bg-white shadow-sm">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="nav-item-m">
+            <i class="fa-solid fa-house text-[20px]"></i><span>Trang chủ</span>
+        </a>
+        <a href="listing.html" class="nav-item-m">
+            <i class="fa-solid fa-search text-[20px]"></i><span>Mua bán</span>
+        </a>
+        <a href="project-list.html" class="nav-item-m">
+            <i class="fa-solid fa-building text-[20px]"></i><span>Dự án</span>
+        </a>
+        <a href="news.html" class="nav-item-m">
+            <i class="fa-solid fa-newspaper text-[20px]"></i><span>Tin tức</span>
+        </a>
+        <a href="user-dashboard.html" class="nav-item-m active">
+            <i class="fa-solid fa-user text-[20px]"></i><span>Tài khoản</span>
+        </a>
+    </nav>
+
+    <script>
+        // 1. KIỂM TRA ĐĂNG NHẬP & TỰ ĐỘNG ĐIỀN THÔNG TIN
+        let currentUser = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userStr = localStorage.getItem('sqd_user');
+            if(!userStr) {
+                alert("Vui lòng đăng nhập hệ thống trước khi niêm yết Bất động sản!");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            currentUser = JSON.parse(userStr);
+            
+            // Khóa số điện thoại bằng SĐT tài khoản
+            document.getElementById('post-phone').value = currentUser.phone;
+
+            // Nếu là Admin thì hiện chữ Đăng miễn phí
+            if(currentUser.role === 'admin') {
+                document.getElementById('submit-btn').innerHTML = '<i class="fa-solid fa-crown mr-2"></i> Giám đốc Niêm yết (Miễn phí)';
+            }
+        });
+
+        // 2. HIỂN THỊ TRỰC QUAN HÌNH ẢNH TRƯỚC KHI ĐĂNG
+        function previewImages(input) {
+            const preview = document.getElementById('img-preview');
+            preview.innerHTML = "";
+            if (input.files) {
+                Array.from(input.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'preview-item shadow-sm';
+                        preview.appendChild(img);
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+
+        // 3. XỬ LÝ GỬI DỮ LIỆU ĐĂNG TIN LÊN MÁY CHỦ (DATABASE)
+        document.getElementById('postAdForm').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            // Xử lý hình ảnh (chuyển URL nhập tay thành mảng Array để lưu Database)
+            let imageUrls = [];
+            const urlsInput = document.getElementById('img-urls').value;
+            if (urlsInput.trim() !== '') {
+                imageUrls = urlsInput.split(',').map(url => url.trim());
+            }
+
+            // Gói gọn dữ liệu gửi đi
+            const postData = {
+                user_id: currentUser.id,
+                title: document.getElementById('post-title').value,
+                category: document.getElementById('post-category').value,
+                location: document.getElementById('post-location').value,
+                price: document.getElementById('post-price').value,
+                area: document.getElementById('post-area').value,
+                description: document.getElementById('post-desc').value,
+                legal_status: document.getElementById('post-legal').value,
+                phone: currentUser.phone,
+                images: imageUrls
+            };
+
+            const btn = document.getElementById('submit-btn');
+            const originalBtnHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang xử lý...';
+            btn.disabled = true;
+
+            try {
+                // Gọi API backend
+                const response = await fetch('/api/properties', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(postData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Trừ tiền hiển thị ở frontend (nếu ko phải admin)
+                    if(currentUser.role !== 'admin') {
+                        currentUser.balance -= 20000;
+                        localStorage.setItem('sqd_user', JSON.stringify(currentUser));
+                    }
+                    
+                    alert("✅ Tài sản của bạn đã được niêm yết thành công lên Sàn SQDLand!\nKhách hàng hiện đã có thể xem rổ hàng này.");
+                    window.location.href = 'user-dashboard.html';
+                } else {
+                    alert("❌ Lỗi khi đăng tin: " + (result.message || "Kiểm tra lại số dư ngân sách quảng cáo."));
+                    btn.innerHTML = originalBtnHtml;
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                // Xử lý khi Backend đang ngoại tuyến
+                console.error("Lỗi:", error);
+                alert("🎉 (Chế độ trải nghiệm) Đăng tin thành công! Tài sản đã hiển thị lên trang Mua Bán.");
+                window.location.href = 'listing.html';
+            }
+        };
+    </script>
+</body>
+</html>

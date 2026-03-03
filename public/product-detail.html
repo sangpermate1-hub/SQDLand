@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Bất Động Sản - Phân Phối Chính Thức SQDLand</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root { --sqd-red: #E03C31; --sqd-navy: #111827; --sqd-bg: #F8FAFC; }
+        body { font-family: 'Lexend', sans-serif; background-color: var(--sqd-bg); color: var(--sqd-navy); margin: 0; padding-bottom: 80px; }
+
+        /* HEADER PC: 5 PHÍM CHUYÊN NGHIỆP */
+        header { background: white; height: 80px; display: flex; align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .nav-link { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--sqd-navy); transition: 0.3s; padding: 8px 16px; border-radius: 8px; }
+        .nav-link:hover, .nav-link.active { color: var(--sqd-red); background: #fff5f5; }
+
+        /* GALLERY HÌNH ẢNH */
+        .gallery-main { width: 100%; height: 450px; border-radius: 20px; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .gallery-thumb { width: 100%; height: 90px; border-radius: 12px; object-fit: cover; cursor: pointer; opacity: 0.6; transition: 0.3s; border: 2px solid transparent; }
+        .gallery-thumb:hover, .gallery-thumb.active { opacity: 1; border-color: var(--sqd-red); transform: translateY(-2px); }
+
+        /* KHUNG CHỐT SALE (STICKY CTA) */
+        .sticky-cta { position: sticky; top: 100px; background: white; border-radius: 24px; padding: 32px; border: 1px solid #e2e8f0; box-shadow: 0 20px 40px rgba(0,0,0,0.04); }
+        .badge-legal { background: #ecfdf5; color: #10b981; padding: 6px 14px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; display: inline-flex; items-center; gap: 6px; border: 1px solid #a7f3d0; }
+
+        /* THÔNG SỐ SẢN PHẨM */
+        .specs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
+        .spec-item { display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 12px 16px; border-radius: 12px; }
+
+        /* MOBILE BOTTOM NAV */
+        .mobile-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; height: 70px; border-top: 1px solid #e2e8f0; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item-m { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; flex: 1; transition: 0.2s; }
+        .nav-item-m.active { color: var(--sqd-red); }
+        .nav-item-m span { font-size: 10px; font-weight: 600; }
+
+        @media (min-width: 1024px) { .mobile-bottom-nav { display: none; } }
+        @media (max-width: 1023px) { .desktop-nav { display: none; } .gallery-main { height: 280px; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="index.html"><img src="logo.jpg" class="h-10" alt="SQDLand"></a>
+            
+            <nav class="desktop-nav flex gap-2 items-center">
+                <a href="index.html" class="nav-link">Trang chủ</a>
+                <a href="listing.html" class="nav-link active">Mua bán</a>
+                <a href="project-list.html" class="nav-link">Dự án</a>
+                <a href="news.html" class="nav-link">Tin tức</a>
+                <a href="login.html" class="nav-link bg-red-600 text-white hover:bg-red-700 hover:text-white ml-2 shadow-sm">Tài khoản</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 lg:px-6 py-8">
+        
+        <div class="text-xs font-medium text-gray-500 mb-6 flex items-center gap-2 uppercase tracking-wide">
+            <a href="index.html" class="hover:text-red-600 transition">Trang chủ</a>
+            <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <a href="listing.html" class="hover:text-red-600 transition">Mua bán</a>
+            <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <span class="text-slate-900 font-bold">Biệt thự Ngọc Trai, Vinhomes Ocean Park</span>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-10">
+            
+            <div class="lg:w-2/3">
+                <div class="mb-8">
+                    <img id="main-photo" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&auto=format&fit=crop" class="gallery-main mb-4" alt="Hình ảnh chính">
+                    <div class="grid grid-cols-4 md:grid-cols-5 gap-3">
+                        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&auto=format&fit=crop" class="gallery-thumb active" onclick="changeImage(this, this.src)" alt="Góc 1">
+                        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&auto=format&fit=crop" class="gallery-thumb" onclick="changeImage(this, this.src)" alt="Góc 2">
+                        <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&auto=format&fit=crop" class="gallery-thumb" onclick="changeImage(this, this.src)" alt="Góc 3">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&auto=format&fit=crop" class="gallery-thumb" onclick="changeImage(this, this.src)" alt="Góc 4">
+                        <div class="gallery-thumb bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-sm hover:bg-slate-200 transition">
+                            +5 Ảnh
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm mb-8">
+                    <div class="mb-4">
+                        <span class="badge-legal mb-4"><i class="fa-solid fa-file-contract"></i> Sổ đỏ cá nhân - Sẵn sàng giao dịch</span>
+                    </div>
+                    <h1 class="text-2xl lg:text-3xl font-black text-slate-900 leading-snug mb-4 uppercase">Bán Biệt thự góc 2 mặt tiền, phân khu Ngọc Trai, Vinhomes Ocean Park</h1>
+                    <p class="text-gray-500 text-sm font-medium mb-8"><i class="fa-solid fa-location-dot text-red-500 mr-2"></i> Phân khu Ngọc Trai, KĐT Vinhomes Ocean Park, Gia Lâm, Hà Nội</p>
+
+                    <h3 class="font-bold text-lg uppercase tracking-tight border-b border-gray-100 pb-3 mb-4">Thông số cơ bản</h3>
+                    <div class="specs-grid mb-8">
+                        <div class="spec-item">
+                            <i class="fa-solid fa-expand text-gray-400 text-lg w-6"></i>
+                            <div><p class="text-[10px] text-gray-500 uppercase font-bold">Diện tích đất</p><p class="font-black text-slate-900">150 m²</p></div>
+                        </div>
+                        <div class="spec-item">
+                            <i class="fa-solid fa-house text-gray-400 text-lg w-6"></i>
+                            <div><p class="text-[10px] text-gray-500 uppercase font-bold">Kết cấu</p><p class="font-black text-slate-900">3 Tầng, 1 Tum</p></div>
+                        </div>
+                        <div class="spec-item">
+                            <i class="fa-solid fa-bed text-gray-400 text-lg w-6"></i>
+                            <div><p class="text-[10px] text-gray-500 uppercase font-bold">Phòng ngủ</p><p class="font-black text-slate-900">5 Phòng</p></div>
+                        </div>
+                        <div class="spec-item">
+                            <i class="fa-solid fa-compass text-gray-400 text-lg w-6"></i>
+                            <div><p class="text-[10px] text-gray-500 uppercase font-bold">Hướng nhà</p><p class="font-black text-slate-900">Đông Nam</p></div>
+                        </div>
+                    </div>
+
+                    <h3 class="font-bold text-lg uppercase tracking-tight border-b border-gray-100 pb-3 mb-4">Mô tả tài sản</h3>
+                    <div class="text-gray-600 leading-relaxed text-sm space-y-4">
+                        <p>Chính chủ cần chuyển nhượng gấp căn biệt thự góc siêu đẹp tại phân khu đóng Ngọc Trai, trái tim của đại đô thị Vinhomes Ocean Park.</p>
+                        <p>- Vị trí đắc địa: Lô góc 2 mặt tiền đường lớn, tầm nhìn thoáng đãng, chỉ vài bước chân là ra đến hồ Ngọc Trai 24.5ha.</p>
+                        <p>- Thiết kế sang trọng: Đã hoàn thiện mặt ngoài theo tiêu chuẩn CĐT, bên trong nhận bàn giao thô để khách hàng tự do thiết kế theo gu thẩm mỹ cá nhân.</p>
+                        <p>- Tiện ích nội khu: An ninh 24/7, hưởng trọn cụm tiện ích đặc quyền chỉ dành riêng cho cư dân Ngọc Trai (bể bơi bốn mùa, sân tennis, công viên BBQ...).</p>
+                        <p>- Pháp lý: Sổ đỏ chính chủ, không thế chấp ngân hàng, giao dịch ngay trong ngày. Chủ nhà bao toàn bộ phí sang tên.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:w-1/3">
+                <div class="sticky-cta">
+                    <p class="text-[11px] font-black uppercase text-gray-400 tracking-widest mb-2">Mức giá đầu tư</p>
+                    <h2 class="text-4xl font-black text-red-600 tracking-tighter mb-2">25.5 Tỷ</h2>
+                    <p class="text-xs text-gray-500 font-medium mb-8">~ 170 triệu/m² (Có thương lượng nhẹ)</p>
+                    
+                    <div class="bg-slate-50 p-4 rounded-xl mb-6 border border-slate-100 flex items-center gap-4">
+                        <img src="logo.jpg" class="w-14 h-14 rounded-full border-2 border-white shadow-md object-cover bg-white p-1" alt="Avatar">
+                        <div>
+                            <p class="font-black text-slate-900 uppercase text-sm">Phạm Văn Quân</p>
+                            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wide mb-1">Chuyên viên tư vấn SQDLand</p>
+                            <span class="text-[9px] bg-green-100 text-green-700 px-2 py-0.5 rounded font-bold uppercase"><i class="fa-solid fa-shield-check mr-1"></i>Đã xác thực</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <a href="tel:0971828236" class="flex items-center justify-center gap-3 w-full bg-red-600 text-white py-4 rounded-xl font-bold text-sm uppercase tracking-wide hover:bg-red-700 transition shadow-lg shadow-red-600/30">
+                            <i class="fa-solid fa-phone-volume text-lg"></i> Gọi điện nhận tư vấn
+                        </a>
+                        <a href="https://zalo.me/0971828236" target="_blank" class="flex items-center justify-center gap-3 w-full bg-blue-500 text-white py-4 rounded-xl font-bold text-sm uppercase tracking-wide hover:bg-blue-600 transition shadow-lg shadow-blue-500/30">
+                            <i class="fa-regular fa-comment-dots text-lg"></i> Chat Zalo ngay
+                        </a>
+                        <button class="flex items-center justify-center gap-3 w-full bg-white border border-gray-200 text-slate-700 py-4 rounded-xl font-bold text-sm uppercase tracking-wide hover:bg-gray-50 transition">
+                            <i class="fa-regular fa-heart text-lg text-gray-400"></i> Lưu tài sản này
+                        </button>
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <p class="text-[10px] text-gray-400 font-medium italic"><i class="fa-solid fa-info-circle mr-1"></i> SQDLand cam kết đồng hành hỗ trợ toàn bộ thủ tục pháp lý, sang tên sổ đỏ miễn phí dịch vụ.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="nav-item-m">
+            <i class="fa-solid fa-house text-[20px]"></i><span>Trang chủ</span>
+        </a>
+        <a href="listing.html" class="nav-item-m active">
+            <i class="fa-solid fa-search text-[20px]"></i><span>Mua bán</span>
+        </a>
+        <a href="project-list.html" class="nav-item-m">
+            <i class="fa-solid fa-building text-[20px]"></i><span>Dự án</span>
+        </a>
+        <a href="news.html" class="nav-item-m">
+            <i class="fa-solid fa-newspaper text-[20px]"></i><span>Tin tức</span>
+        </a>
+        <a href="login.html" class="nav-item-m">
+            <i class="fa-solid fa-user text-[20px]"></i><span>Tài khoản</span>
+        </a>
+    </nav>
+
+    <script>
+        // Xử lý đổi ảnh Gallery khi click
+        function changeImage(element, src) {
+            document.getElementById('main-photo').src = src;
+            // Xóa active khỏi tất cả thumbnail
+            document.querySelectorAll('.gallery-thumb').forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+            // Thêm active vào ảnh được click
+            element.classList.add('active');
+        }
+        // Hệ thống sẽ đồng bộ nội dung sản phẩm từ máy chủ SQDLand khi hoạt động thực tế
+    </script>
+</body>
+</html>

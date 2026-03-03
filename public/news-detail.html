@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Phân Tích - SQDLand</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root { --sqd-red: #E03C31; --sqd-navy: #111827; --sqd-bg: #F8FAFC; }
+        body { font-family: 'Lexend', sans-serif; background-color: var(--sqd-bg); color: var(--sqd-navy); margin: 0; padding-bottom: 80px; display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* HEADER PC */
+        header { background: white; height: 80px; display: flex; align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .nav-link { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--sqd-navy); transition: 0.3s; padding: 8px 16px; border-radius: 8px; }
+        .nav-link:hover, .nav-link.active { color: var(--sqd-red); background: #fff5f5; }
+
+        /* NỘI DUNG BÀI VIẾT */
+        .article-banner { width: 100%; height: 350px; object-fit: cover; border-radius: 24px; margin-bottom: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .article-content { font-size: 16px; line-height: 1.8; color: #334155; }
+        .article-content p { margin-bottom: 20px; }
+        .article-content h3 { font-size: 20px; font-weight: 800; color: var(--sqd-navy); margin-top: 32px; margin-bottom: 16px; }
+        .quote-box { border-left: 4px solid var(--sqd-red); background: #fff5f5; padding: 20px 24px; border-radius: 0 16px 16px 0; font-style: italic; color: var(--sqd-navy); font-weight: 600; margin: 32px 0; }
+
+        /* AUTHOR BOX (CHỐT SALE) */
+        .author-box { background: var(--sqd-navy); color: white; padding: 32px; border-radius: 24px; margin-top: 48px; display: flex; flex-direction: column; gap: 24px; align-items: center; justify-content: space-between; box-shadow: 0 15px 40px rgba(17,24,39,0.2); }
+        @media (min-width: 768px) { .author-box { flex-direction: row; } }
+
+        /* MOBILE BOTTOM NAV */
+        .mobile-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; height: 70px; border-top: 1px solid #e2e8f0; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item-m { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; flex: 1; transition: 0.2s; }
+        .nav-item-m.active { color: var(--sqd-red); }
+        .nav-item-m span { font-size: 10px; font-weight: 600; text-transform: uppercase; }
+
+        /* RESPONSIVE LÊN MOBILE */
+        @media (min-width: 1024px) { 
+            .mobile-bottom-nav { display: none; } 
+        }
+        @media (max-width: 1023px) { 
+            /* ẨN TOÀN BỘ HEADER TRÊN MOBILE */
+            header { display: none !important; } 
+            .article-banner { height: 240px; } 
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="index.html"><img src="logo.jpg" class="h-10" alt="SQDLand"></a>
+            <nav class="desktop-nav flex gap-2 items-center">
+                <a href="index.html" class="nav-link">Trang chủ</a>
+                <a href="listing.html" class="nav-link">Mua bán</a>
+                <a href="project-list.html" class="nav-link">Dự án</a>
+                <a href="news.html" class="nav-link active">Tin tức</a>
+                <a href="login.html" class="nav-link bg-red-600 text-white hover:bg-red-700 hover:text-white ml-2 shadow-sm">Tài khoản</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="flex-grow">
+        <main class="container mx-auto px-4 lg:px-6 py-8 max-w-4xl">
+            
+            <div class="text-xs font-bold text-gray-500 mb-6 flex items-center gap-2 uppercase tracking-wide">
+                <a href="index.html" class="hover:text-red-600 transition">Trang chủ</a>
+                <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                <a href="news.html" class="hover:text-red-600 transition">Tin tức</a>
+                <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                <span class="text-slate-900" id="breadcrumb-title">Đang tải...</span>
+            </div>
+
+            <div id="news-detail-container">
+                </div>
+
+        </main>
+    </div>
+
+    <footer class="bg-white border-t border-gray-200 pt-12 pb-6 lg:pb-12 mt-auto">
+        <div class="container mx-auto px-4 lg:px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10 text-sm text-gray-600">
+                <div>
+                    <img src="logo.jpg" class="h-10 mb-4" alt="SQDLand">
+                    <p class="mb-3 font-black text-slate-900 uppercase">CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ PHÁT TRIỂN BẤT ĐỘNG SẢN SQD LAND</p>
+                    <p class="mb-2"><i class="fa-solid fa-location-dot w-5 text-red-600"></i> Trụ sở: Tầng 01, Căn S13, Tòa SA3, Vinhomes Smart City, đường Đại lộ Thăng Long, Phường Tây Mỗ, Thành phố Hà Nội, Việt Nam</p>
+                    <p class="mb-2"><i class="fa-solid fa-phone w-5 text-red-600"></i> Hotline: 0971 82 82 36</p>
+                    <p class="mb-2"><i class="fa-solid fa-envelope w-5 text-red-600"></i> Email: contact@sqdland.vn</p>
+                </div>
+                <div>
+                    <p class="font-bold text-slate-900 mb-4 uppercase">Về chúng tôi</p>
+                    <ul class="space-y-3 font-medium">
+                        <li><a href="#" class="hover:text-red-600 transition">Giới thiệu mạng lưới SQDLand</a></li>
+                        <li><a href="#" class="hover:text-red-600 transition">Quy chế hoạt động sàn</a></li>
+                        <li><a href="#" class="hover:text-red-600 transition">Chính sách bảo mật thông tin</a></li>
+                        <li><a href="#" class="hover:text-red-600 transition">Giải quyết tranh chấp/khiếu nại</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="font-bold text-slate-900 mb-4 uppercase">Hỗ trợ đối tác & Khách hàng</p>
+                    <ul class="space-y-3 font-medium">
+                        <li><a href="listing.html" class="hover:text-red-600 transition">Tìm kiếm Bất động sản</a></li>
+                        <li><a href="user-post-ad.html" class="hover:text-red-600 transition">Hướng dẫn niêm yết tài sản</a></li>
+                        <li><a href="#" class="hover:text-red-600 transition">Dịch vụ sang tên Sổ đỏ</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-100 pt-6 flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4">
+                <p>&copy; 2026 SQDLand.vn. Đã đăng ký bản quyền.</p>
+                
+                <div class="flex items-center gap-3 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200">
+                    <span class="text-slate-600">SQDLand.vn được cung cấp dịch vụ và vận hành bởi <strong>MTH Exchange</strong></span>
+                    <img src="logomth.jpg" alt="MTH Exchange" class="h-6 rounded object-contain bg-white shadow-sm">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="nav-item-m">
+            <i class="fa-solid fa-house text-[20px]"></i><span>Trang chủ</span>
+        </a>
+        <a href="listing.html" class="nav-item-m">
+            <i class="fa-solid fa-search text-[20px]"></i><span>Mua bán</span>
+        </a>
+        <a href="project-list.html" class="nav-item-m">
+            <i class="fa-solid fa-building text-[20px]"></i><span>Dự án</span>
+        </a>
+        <a href="news.html" class="nav-item-m active">
+            <i class="fa-solid fa-newspaper text-[20px]"></i><span>Tin tức</span>
+        </a>
+        <a href="login.html" class="nav-item-m">
+            <i class="fa-solid fa-user text-[20px]"></i><span>Tài khoản</span>
+        </a>
+    </nav>
+
+    <script>
+        // HÀM FETCH DỮ LIỆU BÀI VIẾT THEO ID TỪ DATABASE
+        async function fetchArticleDetail() {
+            const container = document.getElementById('news-detail-container');
+            
+            // Lấy ID bài viết từ URL (VD: news-detail.html?id=123)
+            const urlParams = new URLSearchParams(window.location.search);
+            let newsId = urlParams.get('id');
+
+            // Hiệu ứng Loading
+            container.innerHTML = `
+                <div class="text-center py-20">
+                    <i class="fa-solid fa-circle-notch fa-spin text-4xl text-red-600 mb-4"></i>
+                    <p class="text-gray-500 font-bold text-sm">Đang tải dữ liệu bài viết...</p>
+                </div>
+            `;
+
+            try {
+                // Nếu không có ID truyền vào, lấy danh sách bài viết và hiển thị bài đầu tiên
+                let endpoint = newsId ? `/api/news/${newsId}` : '/api/news';
+                const response = await fetch(endpoint);
+                
+                if (!response.ok) throw new Error('Network error');
+                
+                let article = await response.json();
+                
+                // Xử lý trường hợp mảng (nếu lấy toàn bộ)
+                if (Array.isArray(article) && article.length > 0) {
+                    article = article[0]; // Lấy bài mới nhất
+                } else if (Array.isArray(article) && article.length === 0) {
+                    throw new Error('Not found');
+                }
+
+                // Cập nhật Breadcrumb
+                document.getElementById('breadcrumb-title').innerText = article.category || 'Phân tích';
+                document.title = `${article.title} - SQDLand`;
+
+                // Định dạng ngày tháng
+                const publishDate = article.created_at ? new Date(article.created_at).toLocaleDateString('vi-VN') : 'Hôm nay';
+
+                // Render giao diện HTML với dữ liệu thật
+                container.innerHTML = `
+                    <article class="bg-white p-6 lg:p-12 rounded-[32px] border border-gray-100 shadow-sm animate-fade-in">
+                        <span class="bg-red-50 text-red-600 px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest mb-6 inline-block">${article.category || 'Tiêu điểm thị trường'}</span>
+                        <h1 class="text-3xl lg:text-4xl font-black text-slate-900 leading-tight mb-6">${article.title}</h1>
+                        
+                        <div class="flex flex-wrap items-center gap-4 text-xs font-bold text-gray-500 uppercase tracking-wide border-b border-gray-100 pb-6 mb-8">
+                            <span><i class="fa-solid fa-user-tie text-red-600 mr-1"></i> Tác giả: ${article.author || 'Phạm Văn Quân'}</span>
+                            <span><i class="fa-regular fa-calendar mr-1"></i> ${publishDate}</span>
+                        </div>
+
+                        <img src="${article.thumbnail || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&auto=format&fit=crop'}" class="article-banner" alt="Thumbnail">
+
+                        <div class="article-content">
+                            ${article.content}
+                        </div>
+
+                        <div class="author-box">
+                            <div class="flex flex-col md:flex-row items-center md:items-start gap-6 text-center md:text-left">
+                                <img src="logo.jpg" class="w-20 h-20 rounded-full border-2 border-white object-cover bg-white" alt="Phạm Văn Quân">
+                                <div>
+                                    <h4 class="text-xl font-black uppercase mb-1">Giám đốc Phạm Văn Quân</h4>
+                                    <p class="text-gray-300 text-sm mb-3">Chuyên gia tư vấn chiến lược & Quy hoạch BĐS tại SQDLand</p>
+                                    <p class="text-xs text-gray-400 font-medium">Bạn cần thẩm định giá hoặc kiểm tra pháp lý Bất động sản? Hãy liên hệ trực tiếp để nhận tư vấn miễn phí, minh bạch, chính xác 100%.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 w-full md:w-auto flex-shrink-0 mt-6 md:mt-0">
+                                <a href="tel:0971828236" class="flex-1 md:flex-none text-center bg-red-600 text-white px-6 py-3 rounded-xl font-bold text-sm uppercase hover:bg-red-700 transition">
+                                    <i class="fa-solid fa-phone mr-2"></i> Gọi ngay
+                                </a>
+                                <a href="https://zalo.me/0971828236" target="_blank" class="flex-1 md:flex-none text-center bg-white text-slate-900 px-6 py-3 rounded-xl font-bold text-sm uppercase hover:bg-gray-100 transition">
+                                    <i class="fa-regular fa-comment-dots mr-2"></i> Zalo
+                                </a>
+                            </div>
+                        </div>
+
+                    </article>
+                `;
+
+            } catch (error) {
+                // Xử lý khi Lỗi Server hoặc Không tìm thấy bài viết
+                container.innerHTML = `
+                    <div class="text-center py-16 bg-red-50 rounded-[32px] border border-red-100">
+                        <i class="fa-solid fa-triangle-exclamation text-5xl text-red-400 mb-4"></i>
+                        <h2 class="text-xl font-black text-slate-900 mb-2 uppercase">Không tìm thấy bài viết</h2>
+                        <p class="text-gray-600 text-sm mb-6">Bài viết này không tồn tại hoặc máy chủ đang ngoại tuyến.</p>
+                        <button onclick="location.href='news.html'" class="bg-slate-900 text-white px-6 py-3 rounded-xl text-sm font-bold uppercase hover:bg-red-600 transition">
+                            Quay lại danh sách
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Tự động tải nội dung khi vào trang
+        document.addEventListener('DOMContentLoaded', fetchArticleDetail);
+    </script>
+</body>
+</html>

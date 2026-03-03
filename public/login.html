@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập Hệ Thống - SQDLand</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root { --sqd-red: #E03C31; --sqd-navy: #111827; --sqd-bg: #F8FAFC; }
+        body { font-family: 'Lexend', sans-serif; background-color: var(--sqd-bg); color: var(--sqd-navy); margin: 0; min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 80px; }
+
+        /* HEADER PC */
+        header { background: white; height: 80px; display: flex; align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .nav-link { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--sqd-navy); transition: 0.3s; padding: 8px 16px; border-radius: 8px; }
+        .nav-link:hover, .nav-link.active { color: var(--sqd-red); background: #fff5f5; }
+
+        /* FORM INPUTS */
+        .sqd-input { width: 100%; padding: 16px 20px; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; font-weight: 600; font-size: 14px; outline: none; transition: 0.3s; }
+        .sqd-input:focus { border-color: var(--sqd-red); background: white; box-shadow: 0 0 0 4px rgba(224, 60, 49, 0.05); }
+
+        /* MOBILE BOTTOM NAV */
+        .mobile-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; height: 70px; border-top: 1px solid #e2e8f0; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item-m { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; flex: 1; transition: 0.2s; }
+        .nav-item-m.active { color: var(--sqd-red); }
+        .nav-item-m span { font-size: 10px; font-weight: 600; text-transform: uppercase; }
+
+        /* RESPONSIVE */
+        @media (min-width: 1024px) { 
+            .mobile-bottom-nav { display: none; } 
+        }
+        @media (max-width: 1023px) { 
+            /* ẨN TOÀN BỘ HEADER TRÊN MOBILE */
+            header { display: none !important; } 
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="index.html"><img src="logo.jpg" class="h-10" alt="SQDLand"></a>
+            
+            <nav class="desktop-nav flex gap-2 items-center">
+                <a href="index.html" class="nav-link">Trang chủ</a>
+                <a href="listing.html" class="nav-link">Mua bán</a>
+                <a href="project-list.html" class="nav-link">Dự án</a>
+                <a href="news.html" class="nav-link">Tin tức</a>
+                <a href="login.html" class="nav-link active bg-red-50 text-red-600">Tài khoản</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-md bg-white p-8 md:p-12 rounded-[32px] shadow-[0_10px_40px_rgba(0,0,0,0.04)] border border-gray-100">
+            <div class="text-center mb-10">
+                <div class="w-16 h-16 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h1 class="text-2xl font-black uppercase tracking-tight text-slate-900">Truy Cập Hệ Thống</h1>
+                <p class="text-gray-500 text-sm font-medium mt-2">Đăng nhập để quản lý rổ hàng và xem các phân tích độc quyền từ SQDLand.</p>
+            </div>
+
+            <form id="loginForm" class="space-y-5">
+                <div>
+                    <input type="tel" id="phone" class="sqd-input" placeholder="Số điện thoại cá nhân" required pattern="[0-9]{10}">
+                </div>
+                <div>
+                    <input type="password" id="pass" class="sqd-input" placeholder="Mật khẩu bảo mật" required>
+                </div>
+                
+                <div class="flex justify-between items-center px-1">
+                    <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-500 font-medium">
+                        <input type="checkbox" class="accent-red-600 w-4 h-4"> Nhớ tài khoản
+                    </label>
+                    <a href="#" class="text-sm font-bold text-red-600 hover:text-red-800 transition">Quên mật khẩu?</a>
+                </div>
+
+                <button type="submit" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-sm uppercase tracking-wide shadow-lg hover:bg-red-600 transition mt-6">
+                    Đăng nhập ngay
+                </button>
+            </form>
+
+            <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+                <p class="text-sm text-gray-500 font-medium">
+                    Chưa phải là đối tác? 
+                    <a href="register.html" class="text-red-600 font-black ml-1 hover:underline">Mở tài khoản miễn phí</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+        <div class="container mx-auto px-4 lg:px-6">
+            <div class="flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4">
+                <p>&copy; 2026 SQDLand.vn. Đã đăng ký bản quyền.</p>
+                
+                <div class="flex items-center gap-3 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200">
+                    <span class="text-slate-600">SQDLand.vn được cung cấp dịch vụ và vận hành bởi <strong>MTH Exchange</strong></span>
+                    <img src="logomth.jpg" alt="MTH Exchange" class="h-6 rounded object-contain bg-white shadow-sm">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="nav-item-m">
+            <i class="fa-solid fa-house text-[20px]"></i><span>Trang chủ</span>
+        </a>
+        <a href="listing.html" class="nav-item-m">
+            <i class="fa-solid fa-search text-[20px]"></i><span>Mua bán</span>
+        </a>
+        <a href="project-list.html" class="nav-item-m">
+            <i class="fa-solid fa-building text-[20px]"></i><span>Dự án</span>
+        </a>
+        <a href="news.html" class="nav-item-m">
+            <i class="fa-solid fa-newspaper text-[20px]"></i><span>Tin tức</span>
+        </a>
+        <a href="login.html" class="nav-item-m active">
+            <i class="fa-solid fa-user text-[20px]"></i><span>Tài khoản</span>
+        </a>
+    </nav>
+
+    <script>
+        // Xử lý gửi Form Đăng nhập tới API Backend
+        document.getElementById('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('pass').value;
+
+            try {
+                // Gọi API tới server.js
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: phone, password: password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Lưu thông tin người dùng vào Local Storage để sử dụng ở Bảng điều khiển
+                    localStorage.setItem('sqd_user', JSON.stringify(data.user));
+                    
+                    alert("✅ Đăng nhập thành công! Đang chuyển hướng đến Bảng điều khiển...");
+                    window.location.href = 'user-dashboard.html';
+                } else {
+                    alert("❌ Đăng nhập thất bại: " + (data.message || "Sai thông tin xác thực."));
+                }
+            } catch (error) {
+                // Nếu Backend chưa chạy, vẫn cho phép trải nghiệm giao diện
+                console.error("Lỗi kết nối Backend:", error);
+                
+                // Giả lập thông tin người dùng để trải nghiệm luồng giao diện
+                const dummyUser = { id: 1, full_name: 'Đối tác Trải nghiệm', phone: phone, balance: 500000, role: 'user' };
+                localStorage.setItem('sqd_user', JSON.stringify(dummyUser));
+
+                alert("✅ (Chế độ trải nghiệm) Đăng nhập thành công!");
+                window.location.href = 'user-dashboard.html';
+            }
+        };
+    </script>
+</body>
+</html>

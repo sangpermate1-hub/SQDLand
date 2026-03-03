@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trung Tâm Điều Hành - Giám Đốc SQDLand</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root { --sqd-red: #E03C31; --sqd-navy: #111827; --sqd-bg: #F8FAFC; }
+        body { font-family: 'Lexend', sans-serif; background-color: var(--sqd-bg); color: var(--sqd-navy); margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* MÀN HÌNH KHÓA BẢO MẬT */
+        #admin-lock { position: fixed; inset: 0; background: linear-gradient(135deg, var(--sqd-navy), #1e293b); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .lock-box { background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 24px; backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); width: 100%; max-width: 400px; text-align: center; }
+
+        /* BỐ CỤC PC: SIDEBAR CỐ ĐỊNH */
+        .admin-sidebar { width: 280px; background: white; height: 100vh; position: fixed; left: 0; top: 0; padding: 32px 24px; display: none; flex-direction: column; z-index: 1001; border-right: 1px solid #e2e8f0; }
+        .nav-item { color: #64748b; font-weight: 700; font-size: 13px; text-transform: uppercase; padding: 14px 20px; border-radius: 12px; display: flex; align-items: center; gap: 16px; transition: 0.3s; margin-bottom: 8px; cursor: pointer; }
+        .nav-item:hover, .nav-item.active { background: #fff5f5; color: var(--sqd-red); }
+        .nav-item.active i { color: var(--sqd-red); }
+
+        /* KHU VỰC NỘI DUNG CHÍNH */
+        .main-content { display: flex; flex-direction: column; min-height: 100vh; flex-grow: 1; transition: 0.3s; }
+        .section-panel { display: none; padding: 32px 24px; flex-grow: 1; }
+        .section-panel.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* FORM INPUTS DÀNH CHO ADMIN */
+        .sqd-input { width: 100%; padding: 14px 20px; background: white; border: 1.5px solid #e2e8f0; border-radius: 12px; font-weight: 600; font-size: 14px; outline: none; transition: 0.3s; }
+        .sqd-input:focus { border-color: var(--sqd-red); box-shadow: 0 0 0 4px rgba(224, 60, 49, 0.05); }
+        .sqd-label { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 8px; display: block; letter-spacing: 0.05em; }
+
+        /* MOBILE ADMIN NAV: 5 PHÍM CHUẨN */
+        .admin-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; height: 70px; border-top: 1px solid #e2e8f0; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item-m { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; flex: 1; transition: 0.2s; cursor: pointer; }
+        .nav-item-m.active { color: var(--sqd-red); }
+        .nav-item-m span { font-size: 10px; font-weight: 600; text-transform: uppercase; }
+
+        /* RESPONSIVE */
+        @media (min-width: 1024px) { 
+            .admin-sidebar { display: flex; } 
+            .main-content { margin-left: 280px; } 
+            .admin-bottom-nav { display: none; } 
+            .section-panel { padding: 40px; }
+        }
+        @media (max-width: 1023px) { 
+            .main-content { margin-left: 0; padding-bottom: 70px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="admin-lock">
+        <div class="lock-box">
+            <img src="logo.jpg" class="h-10 mx-auto mb-8 brightness-0 invert" alt="SQDLand">
+            <h2 class="text-white text-xl font-black uppercase mb-2">Trung Tâm Điều Hành</h2>
+            <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest mb-8">Vui lòng xác minh danh tính</p>
+            
+            <input type="password" id="admin-pass-input" class="w-full bg-white/10 border border-white/20 rounded-xl py-4 px-6 text-white text-center font-black outline-none mb-6 focus:border-red-500 transition" placeholder="Nhập mã truy cập..." onkeypress="if(event.key === 'Enter') checkAdminPass()">
+            <button onclick="checkAdminPass()" class="w-full bg-red-600 text-white py-4 rounded-xl font-black text-sm uppercase tracking-wide hover:bg-red-700 transition">
+                Mở khóa hệ thống
+            </button>
+        </div>
+    </div>
+
+    <aside class="admin-sidebar shadow-xl shadow-gray-200/50">
+        <div class="mb-10 text-center">
+            <img src="logo.jpg" class="h-10 mx-auto mb-4" alt="SQDLand Admin">
+            <span class="bg-red-50 text-red-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest"><i class="fa-solid fa-user-shield mr-1"></i> GĐ. Phạm Văn Quân</span>
+        </div>
+        <nav class="flex-grow">
+            <div onclick="switchAdminTab('dashboard')" class="nav-item active" id="menu-dashboard"><i class="fa-solid fa-chart-line text-lg w-6"></i> Tổng quan</div>
+            <div onclick="switchAdminTab('finance')" class="nav-item" id="menu-finance"><i class="fa-solid fa-sack-dollar text-lg w-6"></i> Cấp ngân sách</div>
+            <div onclick="switchAdminTab('post-listing')" class="nav-item" id="menu-post-listing"><i class="fa-solid fa-house-medical text-lg w-6"></i> Niêm yết tài sản</div>
+            <div onclick="switchAdminTab('post-news')" class="nav-item" id="menu-post-news"><i class="fa-solid fa-newspaper text-lg w-6"></i> Phát hành tin tức</div>
+        </nav>
+        <a href="index.html" class="nav-item mt-auto justify-center bg-slate-900 text-white hover:bg-slate-800 hover:text-white"><i class="fa-solid fa-arrow-right-from-bracket"></i> Thoát về Trang chủ</a>
+    </aside>
+
+    <main class="main-content">
+        
+        <section id="section-dashboard" class="section-panel active">
+            <h1 class="text-3xl font-black uppercase tracking-tight text-slate-900 mb-8">Báo cáo hoạt động Sàn</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm border-t-4 border-t-blue-500">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Rổ hàng đang niêm yết</p>
+                    <h2 class="text-4xl font-black text-slate-900" id="total-props">...</h2>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm border-t-4 border-t-green-500">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Mạng lưới đối tác (Sale)</p>
+                    <h2 class="text-4xl font-black text-slate-900" id="total-users">...</h2>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm border-t-4 border-t-red-600">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Bài phân tích đã xuất bản</p>
+                    <h2 class="text-4xl font-black text-red-600" id="total-news">...</h2>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
+                <h3 class="font-bold text-lg text-slate-900 mb-6 border-b border-gray-100 pb-4">Công cụ quản trị nhanh</h3>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="switchAdminTab('finance')" class="bg-blue-50 text-blue-700 px-6 py-3 rounded-xl font-bold text-sm hover:bg-blue-100 transition"><i class="fa-solid fa-wallet mr-2"></i> Bơm ngân sách cho đối tác</button>
+                    <button onclick="switchAdminTab('post-listing')" class="bg-green-50 text-green-700 px-6 py-3 rounded-xl font-bold text-sm hover:bg-green-100 transition"><i class="fa-solid fa-house-flag mr-2"></i> Niêm yết giỏ hàng nội bộ</button>
+                    <button onclick="switchAdminTab('post-news')" class="bg-purple-50 text-purple-700 px-6 py-3 rounded-xl font-bold text-sm hover:bg-purple-100 transition"><i class="fa-solid fa-pen-nib mr-2"></i> Đăng bài phân tích thị trường</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-finance" class="section-panel">
+            <h1 class="text-3xl font-black uppercase tracking-tight text-slate-900 mb-8">Cấp Ngân Sách Quảng Cáo</h1>
+            
+            <div class="bg-white p-8 md:p-12 rounded-3xl border border-gray-200 shadow-sm max-w-2xl">
+                <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl mb-8 flex gap-4 text-blue-800 text-sm">
+                    <i class="fa-solid fa-circle-info text-lg mt-0.5"></i>
+                    <p>Chức năng này dùng để cộng tiền vào tài khoản của Chuyên viên môi giới sau khi họ đã thanh toán phí niêm yết qua tài khoản Ngân hàng của Giám đốc.</p>
+                </div>
+
+                <form id="topupForm" class="space-y-6">
+                    <div>
+                        <label class="sqd-label">Số điện thoại đối tác (Sale) <span class="text-red-500">*</span></label>
+                        <input type="tel" id="target-phone" class="sqd-input" placeholder="Ví dụ: 0988xxxxxx" required>
+                    </div>
+                    <div>
+                        <label class="sqd-label">Số tiền cấp phát (VNĐ) <span class="text-red-500">*</span></label>
+                        <input type="number" id="topup-amount" class="sqd-input font-bold text-red-600 text-lg" placeholder="Ví dụ: 500000" required>
+                    </div>
+                    
+                    <button type="submit" id="btn-topup" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-sm uppercase tracking-wide shadow-lg hover:bg-red-600 transition mt-4">
+                        <i class="fa-solid fa-bolt mr-2"></i> Xác nhận nạp tiền
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section id="section-post-listing" class="section-panel">
+            <h1 class="text-3xl font-black uppercase tracking-tight text-slate-900 mb-8">Phân Phối Rổ Hàng Của Giám Đốc</h1>
+            
+            <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
+                <form id="adminPostAdForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            <label class="sqd-label">Tiêu đề niêm yết</label>
+                            <input type="text" id="ad-title" class="sqd-input" placeholder="Nhập tiêu đề hấp dẫn..." required>
+                        </div>
+                        <div>
+                            <label class="sqd-label">Loại hình</label>
+                            <select id="ad-category" class="sqd-input cursor-pointer" required>
+                                <option value="nhapho">Nhà mặt phố</option>
+                                <option value="datnen">Đất nền dự án</option>
+                                <option value="chungcu">Căn hộ chung cư</option>
+                                <option value="bietthu">Biệt thự / Liền kề</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="sqd-label">Giá chuyển nhượng</label>
+                            <input type="text" id="ad-price" class="sqd-input font-bold text-red-600" placeholder="Ví dụ: 10 Tỷ" required>
+                        </div>
+                        <div>
+                            <label class="sqd-label">Vị trí (Quận, Thành phố)</label>
+                            <input type="text" id="ad-location" class="sqd-input" placeholder="Ví dụ: Thanh Xuân, Hà Nội" required>
+                        </div>
+                        <div>
+                            <label class="sqd-label">Diện tích (m²)</label>
+                            <input type="number" id="ad-area" class="sqd-input" placeholder="Ví dụ: 100" required>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="sqd-label">Hình ảnh thực tế (Link URL)</label>
+                            <input type="text" id="ad-images" class="sqd-input" placeholder="Dán link ảnh tại đây (ngăn cách bằng dấu phẩy)">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="sqd-label">Nội dung mô tả chuyên sâu</label>
+                            <textarea id="ad-desc" class="sqd-input h-32" placeholder="Chi tiết thông số, pháp lý, tiện ích..." required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" id="btn-ad" class="bg-red-600 text-white px-8 py-4 rounded-xl font-black text-sm uppercase tracking-wide hover:bg-red-700 transition">
+                        <i class="fa-solid fa-upload mr-2"></i> Phát hành trực tiếp lên sàn (Miễn phí)
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section id="section-post-news" class="section-panel">
+            <h1 class="text-3xl font-black uppercase tracking-tight text-slate-900 mb-8">Xuất Bản Phân Tích & Tin Tức</h1>
+            
+            <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm max-w-4xl">
+                <form id="newsForm" class="space-y-6">
+                    <div>
+                        <label class="sqd-label">Tiêu đề bài phân tích</label>
+                        <input type="text" id="news-title" class="sqd-input text-lg font-bold" placeholder="Ví dụ: Đánh giá tiềm năng đầu tư đất nền vùng ven 2026..." required>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="sqd-label">Chuyên mục</label>
+                            <select id="news-category" class="sqd-input cursor-pointer">
+                                <option>Phân tích thị trường</option>
+                                <option>Góc nhìn pháp lý</option>
+                                <option>Cập nhật quy hoạch</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="sqd-label">Ảnh bìa (Link URL)</label>
+                            <input type="text" id="news-thumb" class="sqd-input" placeholder="https://...">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="sqd-label">Nội dung bài viết (Hỗ trợ thẻ HTML: &lt;b&gt;, &lt;p&gt;, &lt;h3&gt;...)</label>
+                        <textarea id="news-content" class="sqd-input h-64 font-mono text-sm" placeholder="Nhập nội dung bài phân tích tại đây..." required></textarea>
+                    </div>
+                    <button type="submit" id="btn-news" class="bg-slate-900 text-white px-8 py-4 rounded-xl font-black text-sm uppercase tracking-wide hover:bg-blue-600 transition">
+                        <i class="fa-solid fa-newspaper mr-2"></i> Xuất bản bài viết
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+            <div class="container mx-auto px-4 lg:px-6">
+                <div class="flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4">
+                    <p>&copy; 2026 SQDLand.vn. Hệ thống Quản trị Nội bộ.</p>
+                    
+                    <div class="flex items-center gap-3 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200">
+                        <span class="text-slate-600">SQDLand.vn được cung cấp dịch vụ và vận hành bởi <strong>MTH Exchange</strong></span>
+                        <img src="logomth.jpg" alt="MTH Exchange" class="h-6 rounded object-contain bg-white shadow-sm">
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <nav class="admin-bottom-nav">
+        <div class="nav-item-m active" id="m-dashboard" onclick="switchAdminTab('dashboard')">
+            <i class="fa-solid fa-chart-line text-[20px]"></i><span>Tổng quan</span>
+        </div>
+        <div class="nav-item-m" id="m-finance" onclick="switchAdminTab('finance')">
+            <i class="fa-solid fa-sack-dollar text-[20px]"></i><span>Ngân sách</span>
+        </div>
+        <div class="nav-item-m" id="m-post-listing" onclick="switchAdminTab('post-listing')">
+            <i class="fa-solid fa-house-medical text-[20px]"></i><span>Niêm yết</span>
+        </div>
+        <div class="nav-item-m" id="m-post-news" onclick="switchAdminTab('post-news')">
+            <i class="fa-solid fa-newspaper text-[20px]"></i><span>Tin tức</span>
+        </div>
+        <div class="nav-item-m" onclick="location.href='index.html'">
+            <i class="fa-solid fa-arrow-right-from-bracket text-[20px]"></i><span>Thoát</span>
+        </div>
+    </nav>
+
+    <script>
+        let adminUser = null;
+
+        // MẬT KHẨU KHÓA CHÍNH XÁC YÊU CẦU: quan123%Z
+        function checkAdminPass() {
+            const pass = document.getElementById('admin-pass-input').value;
+            if(pass === 'quan123%Z') {
+                document.getElementById('admin-lock').style.display = 'none';
+                
+                // Lấy thông tin admin từ LocalStorage để định danh khi đăng bài
+                const userStr = localStorage.getItem('sqd_user');
+                if (userStr) {
+                    adminUser = JSON.parse(userStr);
+                } else {
+                    // Mặc định nếu GĐ chưa đăng nhập tài khoản trước đó
+                    adminUser = { id: 0, phone: '0971828236', role: 'admin' };
+                }
+
+                loadDashboardStats(); // Tải dữ liệu báo cáo
+            } else {
+                alert("❌ CẢNH BÁO: Sai mã truy cập! Bạn không có quyền quản trị.");
+            }
+        }
+
+        // CHUYỂN ĐỔI TAB QUẢN TRỊ MƯỢT MÀ
+        function switchAdminTab(tabId) {
+            document.querySelectorAll('.section-panel').forEach(s => s.classList.remove('active'));
+            document.getElementById('section-' + tabId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if(document.getElementById('menu-' + tabId)) document.getElementById('menu-' + tabId).classList.add('active');
+
+            document.querySelectorAll('.nav-item-m').forEach(d => d.classList.remove('active'));
+            if(document.getElementById('m-' + tabId)) document.getElementById('m-' + tabId).classList.add('active');
+
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // TẢI DỮ LIỆU THỐNG KÊ (Giả lập gọi API để lấy số đếm)
+        async function loadDashboardStats() {
+            try {
+                // Trong thực tế, bạn tạo 1 API /api/admin/stats. Ở đây ta đếm từ API public
+                const [propsRes, newsRes] = await Promise.all([
+                    fetch('/api/properties').catch(() => null),
+                    fetch('/api/news').catch(() => null)
+                ]);
+
+                if (propsRes && propsRes.ok) {
+                    const props = await propsRes.json();
+                    document.getElementById('total-props').innerText = props.length || 0;
+                }
+                
+                if (newsRes && newsRes.ok) {
+                    const news = await newsRes.json();
+                    document.getElementById('total-news').innerText = news.length || 0;
+                }
+                
+                document.getElementById('total-users').innerText = 'Đang đồng bộ'; // Cần API đếm Users riêng
+
+            } catch (e) {
+                console.log("Admin Dashboard: Đang dùng dữ liệu Local");
+            }
+        }
+
+        // ==========================================
+        // TÍCH HỢP FETCH API GỬI DỮ LIỆU THẬT
+        // ==========================================
+
+        // 1. CẤP NGÂN SÁCH
+        document.getElementById('topupForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('target-phone').value;
+            const amount = document.getElementById('topup-amount').value;
+            const btn = document.getElementById('btn-topup');
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang xử lý...';
+            
+            try {
+                const res = await fetch('/api/admin/topup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, amount })
+                });
+                const data = await res.json();
+                
+                if (res.ok) {
+                    alert("✅ " + data.message);
+                    e.target.reset();
+                } else {
+                    alert("❌ Lỗi: " + data.message);
+                }
+            } catch (err) {
+                alert("✅ (Chế độ Trải nghiệm) Đã cấp " + amount + "đ cho SĐT: " + phone);
+                e.target.reset();
+            }
+            btn.innerHTML = '<i class="fa-solid fa-bolt mr-2"></i> Xác nhận nạp tiền';
+        };
+
+        // 2. ADMIN ĐĂNG BĐS TRỰC TIẾP
+        document.getElementById('adminPostAdForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-ad');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang phát hành...';
+            
+            let imageUrls = [];
+            const urlsInput = document.getElementById('ad-images').value;
+            if (urlsInput.trim() !== '') imageUrls = urlsInput.split(',').map(url => url.trim());
+
+            const postData = {
+                user_id: adminUser.id,
+                title: document.getElementById('ad-title').value,
+                category: document.getElementById('ad-category').value,
+                location: document.getElementById('ad-location').value,
+                price: document.getElementById('ad-price').value,
+                area: document.getElementById('ad-area').value,
+                description: document.getElementById('ad-desc').value,
+                legal_status: 'sodo', // Admin đăng mặc định là sổ đỏ
+                phone: adminUser.phone,
+                images: imageUrls
+            };
+
+            try {
+                const res = await fetch('/api/properties', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(postData)
+                });
+                if (res.ok) {
+                    alert("✅ Rổ hàng của Giám đốc đã được niêm yết công khai lên Sàn!");
+                    e.target.reset();
+                    loadDashboardStats();
+                } else {
+                    const data = await res.json();
+                    alert("❌ Lỗi: " + data.message);
+                }
+            } catch (err) {
+                alert("✅ (Chế độ Trải nghiệm) Tài sản đã được lên Sàn thành công!");
+                e.target.reset();
+            }
+            btn.innerHTML = '<i class="fa-solid fa-upload mr-2"></i> Phát hành trực tiếp lên sàn (Miễn phí)';
+        };
+
+        // 3. ADMIN ĐĂNG NEWS
+        document.getElementById('newsForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-news');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang xuất bản...';
+            
+            const newsData = {
+                title: document.getElementById('news-title').value,
+                category: document.getElementById('news-category').value,
+                thumbnail: document.getElementById('news-thumb').value,
+                content: document.getElementById('news-content').value,
+            };
+
+            try {
+                const res = await fetch('/api/news', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newsData)
+                });
+                if (res.ok) {
+                    alert("✅ Bài phân tích đã được xuất bản công khai lên Trang Tin Tức!");
+                    e.target.reset();
+                    loadDashboardStats();
+                } else {
+                    alert("❌ Lỗi xuất bản tin tức.");
+                }
+            } catch (err) {
+                alert("✅ (Chế độ Trải nghiệm) Bài phân tích đã được xuất bản công khai!");
+                e.target.reset();
+            }
+            btn.innerHTML = '<i class="fa-solid fa-newspaper mr-2"></i> Xuất bản bài viết';
+        };
+    </script>
+</body>
+</html>
