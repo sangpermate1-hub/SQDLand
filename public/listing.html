@@ -41,9 +41,10 @@
         .badge-vip { position: absolute; top: 12px; right: 12px; background: var(--gold-vip); color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; box-shadow: 0 4px 15px rgba(246, 211, 101, 0.5); z-index: 10; animation: pulseVip 2s infinite; }
         @keyframes pulseVip { 0% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(246, 211, 101, 0); } 100% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0); } }
 
-        /* BẢN ĐỒ MAP */
-        #map-container { display: none; width: 100%; height: calc(100vh - 160px); border-radius: 16px; background: #e2e8f0; overflow: hidden; position: relative; }
-        .map-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #64748b; }
+        /* MODAL POPUP */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.7); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); padding: 16px; }
+        .modal-box { background: white; border-radius: 24px; width: 100%; max-width: 400px; padding: 32px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+        .modal-overlay.active { display: flex; }
 
         /* MOBILE BOTTOM NAV */
         .mobile-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; height: 70px; border-top: 1px solid #e2e8f0; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
@@ -72,7 +73,7 @@
                 <a href="listing.html" class="nav-link active">Mua bán</a>
                 <a href="project-list.html" class="nav-link">Dự án</a>
                 <a href="news.html" class="nav-link">Tin tức</a>
-                <a href="login.html" class="nav-link bg-red-600 text-white hover:bg-red-700 hover:text-white ml-2 shadow-sm">Tài khoản</a>
+                <a href="login.html" id="nav-auth-link" class="nav-link bg-red-600 text-white hover:bg-red-700 hover:text-white ml-2 shadow-sm">Tài khoản</a>
             </nav>
         </div>
     </header>
@@ -106,7 +107,7 @@
                 </div>
 
                 <div class="relative w-[48%] lg:w-40">
-                    <select class="filter-select w-full">
+                    <select class="filter-select w-full" id="filter-price-range">
                         <option value="">Khoảng giá</option>
                         <option value="u2">Dưới 2 Tỷ</option>
                         <option value="2-5">Từ 2 - 5 Tỷ</option>
@@ -142,12 +143,27 @@
                 <div class="map-placeholder">
                     <i class="fa-solid fa-map-location-dot text-6xl text-gray-300 mb-4"></i>
                     <h3 class="text-xl font-bold text-slate-700">Bản đồ Bất động sản SQDLand</h3>
-                    <p class="text-sm text-gray-500 mt-2">Hệ thống đang tích hợp tọa độ các dự án và nhà đất.</p>
+                    <p class="text-sm text-gray-500 mt-2">Hệ thống đang tích hợp tọa độ Neon Database.</p>
                     <button onclick="switchView('grid')" class="mt-6 bg-slate-900 text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-red-600 transition">Quay lại danh sách</button>
                 </div>
             </div>
 
         </main>
+    </div>
+
+    <div class="modal-overlay" id="modal-topup">
+        <div class="modal-box">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4"><i class="fa-solid fa-building-columns"></i></div>
+                <h2 class="text-xl font-black text-slate-900 uppercase">Nạp Tiền Hệ Thống</h2>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 mb-6 text-sm text-gray-600 space-y-1">
+                <p>Ngân hàng: <strong id="bank-name">...</strong></p>
+                <p>Chủ TK: <strong id="bank-acc-name">...</strong></p>
+                <p>Số TK: <strong id="bank-acc-num" class="text-slate-900">...</strong></p>
+            </div>
+            <button onclick="document.getElementById('modal-topup').classList.remove('active')" class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold text-sm uppercase">Đóng</button>
+        </div>
     </div>
 
     <footer class="bg-white border-t border-gray-200 pt-12 pb-6 lg:pb-12 mt-auto">
@@ -157,18 +173,15 @@
                     <img src="logo.jpg" class="h-10 mb-4" alt="SQDLand">
                     <p class="mb-3 font-black text-slate-900 uppercase">CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ PHÁT TRIỂN BẤT ĐỘNG SẢN SQD LAND</p>
                     <p class="mb-2"><i class="fa-solid fa-building w-5 text-red-600"></i> Mã Số Thuế: <strong>0111029283</strong></p>
-                    <p class="mb-2"><i class="fa-solid fa-location-dot w-5 text-red-600"></i> Trụ sở: Tầng 01, Căn S13, Tòa SA3, Vinhomes Smart City, Đại lộ Thăng Long, P. Tây Mỗ, TP. Hà Nội</p>
-                    <p class="mb-2"><i class="fa-solid fa-phone w-5 text-red-600"></i> SĐT Công ty: <strong>0981 593 935</strong></p>
+                    <p class="mb-2"><i class="fa-solid fa-location-dot w-5 text-red-600"></i> Trụ sở: Tầng 01, Căn S13, Tòa SA3, Vinhomes Smart City, Đại lộ Thăng Long, TP. Hà Nội</p>
+                    <p class="mb-2"><i class="fa-solid fa-phone w-5 text-red-600"></i> Hotline: <strong>0981 593 935</strong></p>
                     <p class="mb-2"><i class="fa-solid fa-headset w-5 text-red-600"></i> CSKH: <strong>+84 971 82 82 36</strong></p>
-                    <p class="mb-2"><i class="fa-solid fa-envelope w-5 text-red-600"></i> Email: contact@sqdland.vn</p>
                 </div>
                 <div>
                     <p class="font-bold text-slate-900 mb-4 uppercase">Về chúng tôi</p>
                     <ul class="space-y-3 font-medium">
                         <li><a href="#" class="hover:text-red-600 transition">Giới thiệu mạng lưới SQDLand</a></li>
                         <li><a href="#" class="hover:text-red-600 transition">Quy chế hoạt động sàn</a></li>
-                        <li><a href="#" class="hover:text-red-600 transition">Chính sách bảo mật thông tin</a></li>
-                        <li><a href="#" class="hover:text-red-600 transition">Giải quyết tranh chấp/khiếu nại</a></li>
                     </ul>
                 </div>
                 <div>
@@ -176,123 +189,75 @@
                     <ul class="space-y-3 font-medium">
                         <li><a href="listing.html" class="hover:text-red-600 transition">Tìm kiếm Bất động sản</a></li>
                         <li><a href="user-post-ad.html" class="hover:text-red-600 transition">Hướng dẫn niêm yết tài sản</a></li>
-                        <li><a href="#" onclick="alert('CHỨC NĂNG NẠP TIỀN TỰ ĐỘNG:\\n\\nĐể đẩy tin VIP, vui lòng chuyển khoản đến:\\nSTK: [STK_ADMIN] - Ngân hàng [TEN_NH]\\nNội dung: NAP SQDLand [SĐT_CUA_BAN]\\n\\nHệ thống Webhook Sepay sẽ tự động cộng tiền vào tài khoản của bạn trong 30 giây.')" class="hover:text-red-600 transition text-blue-600 font-bold"><i class="fa-solid fa-wallet mr-1"></i> Nạp tiền tự động (Sepay)</a></li>
-                        <li><a href="#" class="hover:text-red-600 transition">Dịch vụ sang tên Sổ đỏ</a></li>
+                        <li><button onclick="showTopupModal()" class="text-blue-600 font-bold hover:underline">Nạp tiền tự động</button></li>
                     </ul>
                 </div>
             </div>
             
             <div class="border-t border-gray-100 pt-6 flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4">
                 <p>&copy; 2026 SQDLand.vn. Đã đăng ký bản quyền.</p>
-                
                 <div class="flex items-center gap-3 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200">
-                    <span class="text-slate-600">SQDLand.vn được cung cấp dịch vụ và vận hành bởi <strong>MTH Exchange</strong></span>
-                    <img src="logomth.jpg" alt="MTH Exchange" class="h-6 rounded object-contain bg-white shadow-sm">
+                    <span class="text-slate-600">Vận hành bởi <strong>MTH Exchange</strong></span>
+                    <img src="logomth.jpg" alt="MTH" class="h-6 rounded object-contain">
                 </div>
             </div>
         </div>
     </footer>
 
     <nav class="mobile-bottom-nav">
-        <a href="index.html" class="nav-item-m">
-            <i class="fa-solid fa-house text-[20px]"></i><span>Trang chủ</span>
-        </a>
-        <a href="listing.html" class="nav-item-m active">
-            <i class="fa-solid fa-search text-[20px]"></i><span>Mua bán</span>
-        </a>
-        <a href="project-list.html" class="nav-item-m">
-            <i class="fa-solid fa-building text-[20px]"></i><span>Dự án</span>
-        </a>
-        <a href="news.html" class="nav-item-m">
-            <i class="fa-solid fa-newspaper text-[20px]"></i><span>Tin tức</span>
-        </a>
-        <a href="login.html" class="nav-item-m">
-            <i class="fa-solid fa-user text-[20px]"></i><span>Tài khoản</span>
-        </a>
+        <a href="index.html" class="nav-item-m"><i class="fa-solid fa-house text-[20px]"></i><span>Trang chủ</span></a>
+        <a href="listing.html" class="nav-item-m active"><i class="fa-solid fa-search text-[20px]"></i><span>Mua bán</span></a>
+        <a href="project-list.html" class="nav-item-m"><i class="fa-solid fa-building text-[20px]"></i><span>Dự án</span></a>
+        <a href="news.html" class="nav-item-m"><i class="fa-solid fa-newspaper text-[20px]"></i><span>Tin tức</span></a>
+        <a href="login.html" id="nav-auth-link-m" class="nav-item-m"><i class="fa-solid fa-user text-[20px]"></i><span>Tài khoản</span></a>
     </nav>
 
     <script>
-        // LOGIC CHUYỂN ĐỔI CHẾ ĐỘ XEM
+        // 1. ĐỒNG BỘ TRẠNG THÁI ĐĂNG NHẬP
+        const user = JSON.parse(localStorage.getItem('sqd_user'));
+        if (user) {
+            document.getElementById('nav-auth-link').innerText = "Quản lý";
+            document.getElementById('nav-auth-link').href = "user-dashboard.html";
+            document.getElementById('nav-auth-link-m').parentElement.href = "user-dashboard.html";
+        }
+
+        // 2. CHUYỂN ĐỔI CHẾ ĐỘ XEM
         function switchView(viewType) {
             const grid = document.getElementById('grid-container');
             const map = document.getElementById('map-container');
             const btnGrid = document.getElementById('btn-grid');
             const btnMap = document.getElementById('btn-map');
-
             if (viewType === 'map') {
-                grid.style.display = 'none';
-                map.style.display = 'flex';
-                btnGrid.classList.remove('active');
-                btnMap.classList.add('active');
+                grid.style.display = 'none'; map.style.display = 'flex';
+                btnGrid.classList.remove('active'); btnMap.classList.add('active');
             } else {
-                grid.style.display = 'grid';
-                map.style.display = 'none';
-                btnMap.classList.remove('active');
-                btnGrid.classList.add('active');
+                grid.style.display = 'grid'; map.style.display = 'none';
+                btnMap.classList.remove('active'); btnGrid.classList.add('active');
             }
         }
 
-        // FETCH API: TẢI 100% DỮ LIỆU TỪ BACKEND
+        // 3. FETCH DỮ LIỆU TỪ NEON DATABASE (THAY THẾ ẢNH GIẢ LẬP)
         async function fetchListings() {
             const container = document.getElementById('grid-container');
-            container.innerHTML = `
-                <div class="col-span-full text-center py-20">
-                    <i class="fa-solid fa-circle-notch fa-spin text-4xl text-red-600 mb-4"></i>
-                    <p class="text-gray-500 font-bold text-sm">Đang quét kho dữ liệu SQDLand...</p>
-                </div>
-            `;
+            container.innerHTML = `<div class="col-span-full text-center py-20 text-gray-400"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Đang tải dữ liệu Neon...</div>`;
 
-            // Lấy giá trị bộ lọc
             const cat = document.getElementById('filter-category').value;
             const loc = document.getElementById('filter-location').value;
-            
-            let query = '/api/properties?';
-            if (cat) query += `category=${cat}&`;
-            if (loc) query += `location=${loc}&`;
+            let url = `/api/properties?category=${cat}&location=${loc}`;
 
             try {
-                const response = await fetch(query);
-                if (!response.ok) throw new Error('Database connection failed');
-                
-                let properties = await response.json();
-                
-                // Cập nhật số lượng
+                const res = await fetch(url);
+                const properties = await res.json();
                 document.getElementById('result-count').innerText = properties.length;
 
                 if (properties.length === 0) {
-                    container.innerHTML = `
-                        <div class="col-span-full text-center py-16 bg-gray-50 rounded-2xl border border-gray-100">
-                            <i class="fa-solid fa-folder-open text-4xl text-gray-300 mb-3"></i>
-                            <p class="text-gray-500 font-bold text-sm">Chưa tìm thấy Bất động sản phù hợp với tiêu chí.</p>
-                        </div>
-                    `;
+                    container.innerHTML = `<p class="col-span-full text-center text-gray-500 py-10">Không tìm thấy tài sản phù hợp.</p>`;
                     return;
                 }
 
-                // Sắp xếp: Ưu tiên bài VIP hiển thị trước, sau đó sắp xếp theo thời gian mới nhất
-                properties.sort((a, b) => {
-                    const isVipA = a.is_vip || false;
-                    const isVipB = b.is_vip || false;
-                    if (isVipA === isVipB) {
-                        // Cùng cấp độ VIP thì ưu tiên thời gian tạo mới hơn
-                        return new Date(b.created_at) - new Date(a.created_at);
-                    }
-                    return isVipB ? 1 : -1;
-                });
-
-                // Render dữ liệu thật
+                // Render dữ liệu từ Database
                 container.innerHTML = properties.map(p => {
-                    
-                    // Logic tem nhãn pháp lý
-                    let legalBadge = '';
-                    if (p.legal_status === 'sodo') {
-                        legalBadge = '<span class="badge-verified"><i class="fa-solid fa-file-signature mr-1"></i> Sổ đỏ trao tay</span>';
-                    } else {
-                        legalBadge = '<span class="badge-verified bg-blue-600"><i class="fa-solid fa-check-circle mr-1"></i> Đã kiểm duyệt</span>';
-                    }
-
-                    // Logic 8 loại hình Bất động sản
-                    let catLabel = 'BĐS Khác';
+                    let catLabel = 'Bất động sản';
                     let catColor = 'bg-gray-600';
                     switch(p.category) {
                         case 'datnen': catLabel = 'Đất nền'; catColor = 'bg-green-600'; break;
@@ -302,53 +267,38 @@
                         case 'shophouse': catLabel = 'Shophouse'; catColor = 'bg-orange-500'; break;
                         case 'vanphong': catLabel = 'Văn phòng'; catColor = 'bg-teal-600'; break;
                         case 'khoxuong': catLabel = 'Kho – Xưởng'; catColor = 'bg-amber-700'; break;
-                        case 'khac': catLabel = 'Khác'; catColor = 'bg-gray-600'; break;
+                        default: catLabel = 'Khác';
                     }
 
-                    // Logic VIP (Màu viền và Huy hiệu)
-                    const isVip = p.is_vip || Math.random() > 0.8; // Giả lập tỷ lệ VIP cho bạn dễ hình dung
-                    const vipBadgeHtml = isVip ? `<span class="badge-vip"><i class="fa-solid fa-crown mr-1"></i> VIP</span>` : '';
-                    const vipCardClass = isVip ? 'vip-card' : '';
-
                     return `
-                    <div class="prop-card ${vipCardClass} cursor-pointer" onclick="location.href='product-detail.html?id=${p.id}'">
+                    <div class="prop-card ${p.is_vip ? 'vip-card' : ''} cursor-pointer" onclick="location.href='product-detail.html?id=${p.id}'">
                         <div class="relative">
-                            <img src="${p.images?.[0] || 'logo.jpg'}" class="prop-img bg-gray-100" alt="${p.title}" onerror="this.src='logo.jpg'">
-                            
-                            ${legalBadge}
-                            ${vipBadgeHtml}
+                            <img src="${p.images?.[0] || 'logo.jpg'}" class="prop-img bg-gray-100" alt="img" onerror="this.src='logo.jpg'">
+                            ${p.legal_status === 'sodo' ? '<span class="badge-verified"><i class="fa-solid fa-file-signature mr-1"></i> Sổ đỏ</span>' : ''}
+                            ${p.is_vip ? '<span class="badge-vip"><i class="fa-solid fa-crown mr-1"></i> VIP</span>' : ''}
                             <span class="badge-type ${catColor}">${catLabel}</span>
                         </div>
                         <div class="p-5 flex flex-col flex-grow">
-                            <h3 class="font-bold text-slate-900 text-base leading-snug mb-2 line-clamp-2 hover:text-red-600 transition">${p.title}</h3>
+                            <h3 class="font-bold text-slate-900 text-sm leading-snug mb-2 line-clamp-2">${p.title}</h3>
                             <div class="text-red-600 font-black text-xl mb-3">${p.price}</div>
-                            <div class="flex items-center gap-4 text-xs text-gray-600 font-medium border-t border-gray-100 pt-3 mb-4">
+                            <div class="flex items-center gap-4 text-xs text-gray-600 border-t border-gray-100 pt-3 mt-auto">
                                 <span><i class="fa-solid fa-expand text-gray-400 mr-1"></i> ${p.area}m²</span>
                                 <span class="truncate"><i class="fa-solid fa-location-dot text-gray-400 mr-1"></i> ${p.location}</span>
                             </div>
-                            <div class="mt-auto flex items-center gap-2 text-xs text-gray-500 bg-gray-50 p-2 rounded-lg">
-                                <div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-600 text-[10px] uppercase">
-                                    ${p.full_name ? p.full_name.charAt(0) : 'S'}
-                                </div>
-                                <span class="truncate">${p.role === 'admin' ? 'Chuyên viên: ' : 'Chính chủ: '}${p.full_name || 'Người dùng SQD'}</span>
-                            </div>
                         </div>
                     </div>
-                `}).join('');
-
+                `;}).join('');
             } catch (err) {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-12 bg-red-50 rounded-2xl border border-red-100">
-                        <i class="fa-solid fa-server text-4xl text-red-300 mb-3"></i>
-                        <p class="text-red-600 font-bold text-sm mb-1">Máy chủ dữ liệu đang ngoại tuyến.</p>
-                        <p class="text-gray-500 text-xs">Hãy đảm bảo Backend server.js đang chạy.</p>
-                    </div>
-                `;
+                container.innerHTML = `<p class="col-span-full text-center text-red-500">Lỗi kết nối Server Neon.</p>`;
             }
         }
 
-        // Tự tải danh sách khi vừa vào trang
-        document.addEventListener('DOMContentLoaded', fetchListings);
-    </script>
-</body>
-</html>
+        // 4. HIỂN THỊ POPUP NẠP TIỀN (LẤY TỪ DB)
+        async function showTopupModal() {
+            try {
+                const res = await fetch('/api/config-bank');
+                const cfg = await res.json();
+                if(cfg.bank) {
+                    document.getElementById('bank-name').innerText = cfg.bank;
+                    document.getElementById('bank-acc-num').innerText = cfg.account_number;
+                    document.getElementById('bank-acc-name').
