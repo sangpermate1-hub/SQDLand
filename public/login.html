@@ -6,6 +6,7 @@
     <title>Đăng Nhập Hệ Thống - SQDLand</title>
 
     <script>
+        // Kiểm tra phiên đăng nhập hiện tại
         if (localStorage.getItem('sqd_user')) {
             window.location.replace('user-dashboard.html');
         }
@@ -105,7 +106,7 @@
                 <i class="fa-solid fa-check"></i>
             </div>
             <h2 class="text-xl font-black text-slate-900 uppercase mb-2">Đăng Nhập Thành Công</h2>
-            <p class="text-sm text-gray-600 mb-6">Đang tải dữ liệu rổ hàng và ngân sách của bạn...</p>
+            <p class="text-sm text-gray-600 mb-6">Đang tải dữ liệu từ Neon Database...</p>
             
             <button disabled class="w-full bg-green-500 text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-green-500/30 cursor-not-allowed">
                 <i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Đang chuyển hướng...
@@ -129,10 +130,10 @@
 
     <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
         <div class="container mx-auto px-4 lg:px-6">
-            <div class="flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4">
+            <div class="flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4 text-center">
                 <p>&copy; 2026 SQDLand.vn. Đã đăng ký bản quyền.</p>
                 <div class="flex items-center gap-3 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200">
-                    <span class="text-slate-600">SQDLand.vn được cung cấp dịch vụ và vận hành bởi <strong>MTH Exchange</strong></span>
+                    <span class="text-slate-600">Dữ liệu bảo mật bởi <strong>Neon.tech</strong></span>
                     <img src="logomth.jpg" alt="MTH Exchange" class="h-6 rounded object-contain bg-white shadow-sm">
                 </div>
             </div>
@@ -161,7 +162,7 @@
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        // Xử lý gửi Form Đăng nhập tới API Backend
+        // XỬ LÝ ĐĂNG NHẬP VỚI NEON DATABASE
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
             
@@ -172,48 +173,4 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang xác thực...';
             btn.disabled = true;
 
-            try {
-                // Gọi API tới server.js
-                const response = await fetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: phone, password: password })
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    // Lưu thông tin người dùng vào Local Storage
-                    localStorage.setItem('sqd_user', JSON.stringify(data.user));
-                    
-                    // Hiển thị Popup thành công
-                    openModal('modal-success');
-                    
-                    // Tự động chuyển hướng sau 1.5 giây
-                    setTimeout(() => {
-                        window.location.href = 'user-dashboard.html';
-                    }, 1500);
-
-                } else {
-                    document.getElementById('error-msg').innerText = data.message || "Sai thông tin xác thực.";
-                    openModal('modal-error');
-                    
-                    btn.innerHTML = 'Đăng nhập ngay';
-                    btn.disabled = false;
-                }
-            } catch (error) {
-                // Nếu Backend chưa chạy, vẫn cho phép trải nghiệm giao diện
-                console.error("Lỗi kết nối Backend:", error);
-                
-                const dummyUser = { id: 1, full_name: 'Đối tác Trải nghiệm', phone: phone, balance: 500000, role: 'user' };
-                localStorage.setItem('sqd_user', JSON.stringify(dummyUser));
-
-                openModal('modal-success');
-                setTimeout(() => {
-                    window.location.href = 'user-dashboard.html';
-                }, 1500);
-            }
-        };
-    </script>
-</body>
-</html>
+            try
