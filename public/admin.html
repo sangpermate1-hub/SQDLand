@@ -33,6 +33,12 @@
         .sqd-input:focus { border-color: var(--sqd-red); box-shadow: 0 0 0 4px rgba(224, 60, 49, 0.05); }
         .sqd-label { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 8px; display: block; letter-spacing: 0.05em; }
 
+        /* UPLOAD AREA */
+        .upload-area { border: 2px dashed #cbd5e1; border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; background: #f8fafc; transition: 0.3s; }
+        .upload-area:hover { border-color: var(--sqd-red); background: #fff5f5; }
+        #img-preview { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; margin-top: 16px; }
+        .preview-item { width: 100%; height: 80px; object-fit: cover; border-radius: 12px; border: 1px solid #e2e8f0; }
+
         /* MOBILE ADMIN NAV: 5 PHÍM CHUẨN */
         .admin-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; height: 70px; border-top: 1px solid #e2e8f0; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
         .nav-item-m { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; flex: 1; transition: 0.2s; cursor: pointer; }
@@ -116,7 +122,10 @@
             <div class="bg-white p-8 md:p-12 rounded-3xl border border-gray-200 shadow-sm max-w-2xl">
                 <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl mb-8 flex gap-4 text-blue-800 text-sm">
                     <i class="fa-solid fa-circle-info text-lg mt-0.5"></i>
-                    <p>Chức năng này dùng để cộng tiền vào tài khoản của Chuyên viên môi giới sau khi họ đã thanh toán phí niêm yết qua tài khoản Ngân hàng của Giám đốc.</p>
+                    <div>
+                        <p class="font-bold mb-1">Cấp tiền thủ công</p>
+                        <p>Chức năng này dùng để cộng tiền vào tài khoản của Sale khi hệ thống Sepay lỗi hoặc khách hàng chuyển khoản sai cú pháp.</p>
+                    </div>
                 </div>
 
                 <form id="topupForm" class="space-y-6">
@@ -142,6 +151,18 @@
             <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
                 <form id="adminPostAdForm" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <div class="md:col-span-2">
+                            <label class="sqd-label">Hình ảnh thực tế</label>
+                            <div class="upload-area" onclick="document.getElementById('admin-file-input').click()">
+                                <i class="fa-solid fa-cloud-arrow-up text-3xl text-gray-300 mb-2"></i>
+                                <p class="text-sm font-bold text-slate-700">Tải ảnh lên từ máy</p>
+                                <input type="file" id="admin-file-input" class="hidden" multiple accept="image/*" onchange="previewAdminImages(this)">
+                            </div>
+                            <div id="admin-img-preview"></div>
+                            <input type="text" id="ad-images" class="sqd-input mt-3 text-sm" placeholder="Hoặc dán URL hình ảnh từ web khác tại đây...">
+                        </div>
+
                         <div class="md:col-span-2">
                             <label class="sqd-label">Tiêu đề niêm yết</label>
                             <input type="text" id="ad-title" class="sqd-input" placeholder="Nhập tiêu đề hấp dẫn..." required>
@@ -149,10 +170,14 @@
                         <div>
                             <label class="sqd-label">Loại hình</label>
                             <select id="ad-category" class="sqd-input cursor-pointer" required>
-                                <option value="nhapho">Nhà mặt phố</option>
-                                <option value="datnen">Đất nền dự án</option>
-                                <option value="chungcu">Căn hộ chung cư</option>
-                                <option value="bietthu">Biệt thự / Liền kề</option>
+                                <option value="datnen">1. Đất nền</option>
+                                <option value="nhapho">2. Nhà phố</option>
+                                <option value="bietthu">3. Biệt thự</option>
+                                <option value="chungcu">4. Chung cư</option>
+                                <option value="shophouse">5. Shophouse</option>
+                                <option value="vanphong">6. Văn phòng / Officetel</option>
+                                <option value="khoxuong">7. Kho – xưởng</option>
+                                <option value="khac">8. Khác</option>
                             </select>
                         </div>
                         <div>
@@ -167,17 +192,21 @@
                             <label class="sqd-label">Diện tích (m²)</label>
                             <input type="number" id="ad-area" class="sqd-input" placeholder="Ví dụ: 100" required>
                         </div>
+                        
                         <div class="md:col-span-2">
-                            <label class="sqd-label">Hình ảnh thực tế (Link URL)</label>
-                            <input type="text" id="ad-images" class="sqd-input" placeholder="Dán link ảnh tại đây (ngăn cách bằng dấu phẩy)">
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" id="ad-is-vip" class="w-5 h-5 accent-orange-500">
+                                <span class="font-bold text-orange-500 uppercase text-sm"><i class="fa-solid fa-crown mr-1"></i> Đánh dấu tin VIP (Hiển thị đầu trang)</span>
+                            </label>
                         </div>
+
                         <div class="md:col-span-2">
                             <label class="sqd-label">Nội dung mô tả chuyên sâu</label>
                             <textarea id="ad-desc" class="sqd-input h-32" placeholder="Chi tiết thông số, pháp lý, tiện ích..." required></textarea>
                         </div>
                     </div>
                     <button type="submit" id="btn-ad" class="bg-red-600 text-white px-8 py-4 rounded-xl font-black text-sm uppercase tracking-wide hover:bg-red-700 transition">
-                        <i class="fa-solid fa-upload mr-2"></i> Phát hành trực tiếp lên sàn (Miễn phí)
+                        <i class="fa-solid fa-upload mr-2"></i> Phát hành trực tiếp lên sàn
                     </button>
                 </form>
             </div>
@@ -217,13 +246,29 @@
             </div>
         </section>
 
-        <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+        <footer class="bg-white border-t border-gray-200 pt-12 pb-6 lg:pb-12 mt-auto">
             <div class="container mx-auto px-4 lg:px-6">
-                <div class="flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10 text-sm text-gray-600">
+                    <div>
+                        <img src="logo.jpg" class="h-10 mb-4" alt="SQDLand">
+                        <p class="mb-3 font-black text-slate-900 uppercase">CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ PHÁT TRIỂN BĐS SQD LAND</p>
+                        <p class="mb-2"><i class="fa-solid fa-building w-5 text-red-600"></i> MST: <strong>0111029283</strong></p>
+                        <p class="mb-2"><i class="fa-solid fa-location-dot w-5 text-red-600"></i> Trụ sở: Tầng 01, Căn S13, Tòa SA3, Vinhomes Smart City, Đại lộ Thăng Long, Tây Mỗ, HN</p>
+                        <p class="mb-2"><i class="fa-solid fa-phone w-5 text-red-600"></i> SĐT: <strong>0981 593 935</strong></p>
+                        <p class="mb-2"><i class="fa-solid fa-headset w-5 text-red-600"></i> CSKH: <strong>+84 971 82 82 36</strong></p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-900 mb-4 uppercase">Cấu hình hệ thống</p>
+                        <ul class="space-y-3 font-medium">
+                            <li><a href="#" class="hover:text-red-600 transition text-blue-600 font-bold"><i class="fa-solid fa-code mr-1"></i> Quản lý Webhook Sepay</a></li>
+                            <li><a href="#" class="hover:text-red-600 transition">Sao lưu Database Cloud</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="border-t border-gray-100 pt-6 flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4">
                     <p>&copy; 2026 SQDLand.vn. Hệ thống Quản trị Nội bộ.</p>
-                    
                     <div class="flex items-center gap-3 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200">
-                        <span class="text-slate-600">SQDLand.vn được cung cấp dịch vụ và vận hành bởi <strong>MTH Exchange</strong></span>
+                        <span class="text-slate-600">Phát triển bởi <strong>MTH Exchange</strong></span>
                         <img src="logomth.jpg" alt="MTH Exchange" class="h-6 rounded object-contain bg-white shadow-sm">
                     </div>
                 </div>
@@ -251,29 +296,23 @@
 
     <script>
         let adminUser = null;
+        let adminUploadedImages = []; // Chứa ảnh Base64
 
-        // MẬT KHẨU KHÓA CHÍNH XÁC YÊU CẦU: quan123%Z
         function checkAdminPass() {
             const pass = document.getElementById('admin-pass-input').value;
             if(pass === 'quan123%Z') {
                 document.getElementById('admin-lock').style.display = 'none';
                 
-                // Lấy thông tin admin từ LocalStorage để định danh khi đăng bài
                 const userStr = localStorage.getItem('sqd_user');
-                if (userStr) {
-                    adminUser = JSON.parse(userStr);
-                } else {
-                    // Mặc định nếu GĐ chưa đăng nhập tài khoản trước đó
-                    adminUser = { id: 0, phone: '0971828236', role: 'admin' };
-                }
+                if (userStr) { adminUser = JSON.parse(userStr); } 
+                else { adminUser = { id: 0, phone: '0971828236', role: 'admin' }; }
 
-                loadDashboardStats(); // Tải dữ liệu báo cáo
+                loadDashboardStats();
             } else {
-                alert("❌ CẢNH BÁO: Sai mã truy cập! Bạn không có quyền quản trị.");
+                alert("❌ CẢNH BÁO: Sai mã truy cập!");
             }
         }
 
-        // CHUYỂN ĐỔI TAB QUẢN TRỊ MƯỢT MÀ
         function switchAdminTab(tabId) {
             document.querySelectorAll('.section-panel').forEach(s => s.classList.remove('active'));
             document.getElementById('section-' + tabId).classList.add('active');
@@ -283,14 +322,11 @@
 
             document.querySelectorAll('.nav-item-m').forEach(d => d.classList.remove('active'));
             if(document.getElementById('m-' + tabId)) document.getElementById('m-' + tabId).classList.add('active');
-
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // TẢI DỮ LIỆU THỐNG KÊ (Giả lập gọi API để lấy số đếm)
         async function loadDashboardStats() {
             try {
-                // Trong thực tế, bạn tạo 1 API /api/admin/stats. Ở đây ta đếm từ API public
                 const [propsRes, newsRes] = await Promise.all([
                     fetch('/api/properties').catch(() => null),
                     fetch('/api/news').catch(() => null)
@@ -305,19 +341,16 @@
                     const news = await newsRes.json();
                     document.getElementById('total-news').innerText = news.length || 0;
                 }
-                
-                document.getElementById('total-users').innerText = 'Đang đồng bộ'; // Cần API đếm Users riêng
-
+                document.getElementById('total-users').innerText = 'Đang đồng bộ';
             } catch (e) {
-                console.log("Admin Dashboard: Đang dùng dữ liệu Local");
+                console.log("Dùng Local Data");
             }
         }
 
         // ==========================================
-        // TÍCH HỢP FETCH API GỬI DỮ LIỆU THẬT
+        // TÍCH HỢP FETCH API
         // ==========================================
 
-        // 1. CẤP NGÂN SÁCH
         document.getElementById('topupForm').onsubmit = async (e) => {
             e.preventDefault();
             const phone = document.getElementById('target-phone').value;
@@ -333,29 +366,43 @@
                     body: JSON.stringify({ phone, amount })
                 });
                 const data = await res.json();
-                
-                if (res.ok) {
-                    alert("✅ " + data.message);
-                    e.target.reset();
-                } else {
-                    alert("❌ Lỗi: " + data.message);
-                }
+                if (res.ok) { alert("✅ " + data.message); e.target.reset(); } 
+                else { alert("❌ Lỗi: " + data.message); }
             } catch (err) {
-                alert("✅ (Chế độ Trải nghiệm) Đã cấp " + amount + "đ cho SĐT: " + phone);
+                alert(`✅ Đã cấp ${amount}đ cho SĐT: ${phone} (Local)`);
                 e.target.reset();
             }
             btn.innerHTML = '<i class="fa-solid fa-bolt mr-2"></i> Xác nhận nạp tiền';
         };
 
-        // 2. ADMIN ĐĂNG BĐS TRỰC TIẾP
+        // HIỂN THỊ ẢNH TRƯỚC KHI ĐĂNG
+        function previewAdminImages(input) {
+            const preview = document.getElementById('admin-img-preview');
+            if (input.files) {
+                Array.from(input.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'preview-item shadow-sm';
+                        preview.appendChild(img);
+                        adminUploadedImages.push(e.target.result); // Lưu dạng Base64
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+
         document.getElementById('adminPostAdForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-ad');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang phát hành...';
             
-            let imageUrls = [];
+            let finalImageUrls = [...adminUploadedImages];
             const urlsInput = document.getElementById('ad-images').value;
-            if (urlsInput.trim() !== '') imageUrls = urlsInput.split(',').map(url => url.trim());
+            if (urlsInput.trim() !== '') {
+                finalImageUrls = finalImageUrls.concat(urlsInput.split(',').map(url => url.trim()));
+            }
 
             const postData = {
                 user_id: adminUser.id,
@@ -365,9 +412,10 @@
                 price: document.getElementById('ad-price').value,
                 area: document.getElementById('ad-area').value,
                 description: document.getElementById('ad-desc').value,
-                legal_status: 'sodo', // Admin đăng mặc định là sổ đỏ
+                legal_status: 'sodo',
                 phone: adminUser.phone,
-                images: imageUrls
+                images: finalImageUrls,
+                is_vip: document.getElementById('ad-is-vip').checked
             };
 
             try {
@@ -379,19 +427,20 @@
                 if (res.ok) {
                     alert("✅ Rổ hàng của Giám đốc đã được niêm yết công khai lên Sàn!");
                     e.target.reset();
+                    adminUploadedImages = [];
+                    document.getElementById('admin-img-preview').innerHTML = '';
                     loadDashboardStats();
                 } else {
                     const data = await res.json();
                     alert("❌ Lỗi: " + data.message);
                 }
             } catch (err) {
-                alert("✅ (Chế độ Trải nghiệm) Tài sản đã được lên Sàn thành công!");
+                alert("✅ Tài sản đã được lên Sàn thành công! (Local)");
                 e.target.reset();
             }
-            btn.innerHTML = '<i class="fa-solid fa-upload mr-2"></i> Phát hành trực tiếp lên sàn (Miễn phí)';
+            btn.innerHTML = '<i class="fa-solid fa-upload mr-2"></i> Phát hành trực tiếp lên sàn';
         };
 
-        // 3. ADMIN ĐĂNG NEWS
         document.getElementById('newsForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-news');
@@ -418,7 +467,7 @@
                     alert("❌ Lỗi xuất bản tin tức.");
                 }
             } catch (err) {
-                alert("✅ (Chế độ Trải nghiệm) Bài phân tích đã được xuất bản công khai!");
+                alert("✅ Bài phân tích đã được xuất bản công khai! (Local)");
                 e.target.reset();
             }
             btn.innerHTML = '<i class="fa-solid fa-newspaper mr-2"></i> Xuất bản bài viết';
