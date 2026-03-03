@@ -105,7 +105,7 @@
                 <i class="fa-solid fa-check"></i>
             </div>
             <h2 class="text-xl font-black text-slate-900 uppercase mb-2">Đăng Ký Thành Công</h2>
-            <p class="text-sm text-gray-600 mb-6">Hệ thống đang tự động đăng nhập. Chào mừng bạn gia nhập mạng lưới SQDLand!</p>
+            <p class="text-sm text-gray-600 mb-6">Hệ thống đang lưu trữ thông tin vào Neon Database. Chào mừng bạn gia nhập SQDLand!</p>
             
             <button onclick="window.location.href='user-dashboard.html'" class="w-full bg-green-500 text-white py-3 rounded-xl font-bold text-sm hover:bg-green-600 transition shadow-lg shadow-green-500/30">
                 <i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Đang chuyển hướng...
@@ -132,7 +132,7 @@
             <div class="flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4">
                 <p>&copy; 2026 SQDLand.vn. Đã đăng ký bản quyền.</p>
                 <div class="flex items-center gap-3 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200">
-                    <span class="text-slate-600">SQDLand.vn được cung cấp dịch vụ và vận hành bởi <strong>MTH Exchange</strong></span>
+                    <span class="text-slate-600">Dữ liệu được bảo mật bởi <strong>Neon.tech</strong></span>
                     <img src="logomth.jpg" alt="MTH Exchange" class="h-6 rounded object-contain bg-white shadow-sm">
                 </div>
             </div>
@@ -161,7 +161,7 @@
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        // Xử lý gửi Form Đăng ký tới API Backend
+        // --- XỬ LÝ ĐĂNG KÝ (NEON DATABASE) ---
         document.getElementById('registerForm').onsubmit = async (e) => {
             e.preventDefault();
             
@@ -170,11 +170,11 @@
             const password = document.getElementById('reg-pass').value;
             const btn = document.getElementById('btn-submit');
 
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang xử lý...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang khởi tạo...';
             btn.disabled = true;
 
             try {
-                // Gọi API tới server.js
+                // Gọi API tới server.js (Kết nối PostgreSQL Neon)
                 const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -184,41 +184,27 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // TỰ ĐỘNG ĐĂNG NHẬP SAU KHI ĐĂNG KÝ
-                    const userObj = {
-                        id: data.userId || Date.now(), // Lấy ID từ CSDL
-                        full_name: fullName,
-                        phone: phone,
-                        balance: 0,
-                        role: 'user'
-                    };
-                    localStorage.setItem('sqd_user', JSON.stringify(userObj));
+                    // TỰ ĐỘNG ĐĂNG NHẬP SAU KHI LƯU VÀO NEON DB
+                    localStorage.setItem('sqd_user', JSON.stringify(data.user));
 
                     openModal('modal-success');
                     
-                    // Tự động chuyển trang sau 1.5 giây để người dùng kịp đọc thông báo
+                    // Chuyển hướng sau 1.5 giây
                     setTimeout(() => {
                         window.location.href = 'user-dashboard.html';
                     }, 1500);
 
                 } else {
-                    document.getElementById('error-msg').innerText = data.message || "Đã xảy ra lỗi, vui lòng thử lại!";
+                    document.getElementById('error-msg').innerText = data.message || "Lỗi hệ thống database!";
                     openModal('modal-error');
-                    
                     btn.innerHTML = 'Hoàn tất đăng ký';
                     btn.disabled = false;
                 }
             } catch (error) {
-                // FALLBACK: Khi Backend chưa chạy, vẫn cho phép giả lập trải nghiệm
-                console.error("Lỗi kết nối Backend:", error);
-                
-                const dummyUser = { id: Date.now(), full_name: fullName, phone: phone, balance: 0, role: 'user' };
-                localStorage.setItem('sqd_user', JSON.stringify(dummyUser));
-
-                openModal('modal-success');
-                setTimeout(() => {
-                    window.location.href = 'user-dashboard.html';
-                }, 1500);
+                console.error("Lỗi kết nối Neon:", error);
+                alert("Không thể kết nối tới Neon Database Server.");
+                btn.innerHTML = 'Hoàn tất đăng ký';
+                btn.disabled = false;
             }
         };
     </script>
