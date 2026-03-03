@@ -306,14 +306,20 @@
             // Cập nhật Nội dung chuyển khoản theo SĐT cá nhân
             document.getElementById('transfer-content').innerText = `NAP SQDLand ${user.phone}`;
             
-            // Lấy thông tin Ngân hàng từ cấu hình của Admin (hoặc mặc định nếu Admin chưa tạo)
-            const bankConfig = JSON.parse(localStorage.getItem('sqd_sepay_config')) || { bank: 'MB Bank', name: 'PHAM VAN QUAN', number: '0981593935' };
-            document.getElementById('bank-name').innerText = bankConfig.bank;
-            document.getElementById('bank-account-name').innerText = bankConfig.name;
-            document.getElementById('bank-account-number').innerText = bankConfig.number;
-            
-            const balanceFmt = new Intl.NumberFormat('vi-VN').format(user.balance || 0);
-            document.getElementById('user-balance').innerText = balanceFmt;
+            // 1. CẬP NHẬT: Lấy ngân hàng từ Neon Database (Đồng bộ với Admin)
+            try {
+                const res = await fetch('/api/config-bank');
+                const cfg = await res.json();
+                if(cfg && cfg.bank) {
+                    document.getElementById('bank-name').innerText = cfg.bank;
+                    document.getElementById('bank-account-name').innerText = cfg.account_name;
+                    document.getElementById('bank-account-number').innerText = cfg.account_number;
+                }
+            } catch(e) { console.log("Dùng ngân hàng mặc định"); }
+
+            // 2. CẬP NHẬT: Hiển thị số dư lấy trực tiếp từ database (phòng trường hợp vừa nạp tiền)
+            // Trong thực tế sẽ gọi API /api/profile, ở đây ta hiển thị từ LocalStorage
+            document.getElementById('user-balance').innerText = new Intl.NumberFormat('vi-VN').format(user.balance || 0);
 
             if (user.role === 'admin') {
                 document.getElementById('user-role').innerHTML = '<i class="fa-solid fa-shield-halved mr-1"></i>Giám đốc hệ thống';
@@ -322,7 +328,7 @@
             loadMyListings();
         });
 
-        // --- TẢI RỔ HÀNG ---
+        // --- TẢI RỔ HÀNG TỪ DATABASE ---
         async function loadMyListings() {
             const container = document.getElementById('my-listings-container');
             try {
@@ -330,7 +336,7 @@
                 if (!response.ok) throw new Error('Lỗi kết nối');
 
                 const allProperties = await response.json();
-                const myProperties = allProperties.filter(p => p.user_id === currentUserId);
+                const myProperties = allProperties.filter(p => p.user_id == currentUserId);
                 
                 document.getElementById('my-listings-count').innerText = myProperties.length;
                 const vipCount = myProperties.filter(p => p.is_vip === true).length;
@@ -395,7 +401,6 @@
         function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
         function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
 
-        // COPY VĂN BẢN (Nạp tiền)
         function copyText(elementId, btn) {
             const textToCopy = document.getElementById(elementId).innerText;
             navigator.clipboard.writeText(textToCopy).then(() => {
@@ -406,69 +411,60 @@
             });
         }
 
-        // XỬ LÝ VIP
+        // XỬ LÝ VIP (GỌI API NEON)
         function triggerVipModal(adId) {
             selectedAdId = adId;
             openModal('modal-vip');
         }
 
-        function confirmVipUpgrade() {
-            alert(`✅ Hệ thống đã ghi nhận yêu cầu nâng cấp VIP cho bài viết ID: ${selectedAdId}.`);
+        async function confirmVipUpgrade() {
+            try {
+                const res = await fetch(`/api/properties/${selectedAdId}/vip`, { method: 'PUT' });
+                const data = await res.json();
+                if(res.ok) {
+                    alert("✅ Nâng cấp VIP thành công! Tin của bạn đã được đẩy lên đầu trang.");
+                    location.reload();
+                } else {
+                    alert("❌ Lỗi: " + data.message);
+                }
+            } catch(e) { alert("Lỗi kết nối server."); }
             closeModal('modal-vip');
-            loadMyListings(); // Load lại
         }
 
-        // XỬ LÝ XÓA TIN
+        // XỬ LÝ XÓA TIN (GỌI API NEON)
         function triggerDeleteModal(adId) {
             selectedAdId = adId;
             openModal('modal-delete');
         }
 
-        function confirmDeleteAd() {
-            const adElement = document.getElementById(`ad-item-${selectedAdId}`);
-            if(adElement) {
-                adElement.style.opacity = '0';
-                setTimeout(() => {
-                    adElement.remove();
-                    const currentCount = parseInt(document.getElementById('my-listings-count').innerText);
-                    document.getElementById('my-listings-count').innerText = Math.max(0, currentCount - 1);
-                }, 300);
-            }
+        async function confirmDeleteAd() {
+            try {
+                const res = await fetch(`/api/properties/${selectedAdId}`, { method: 'DELETE' });
+                if(res.ok) {
+                    document.getElementById(`ad-item-${selectedAdId}`).remove();
+                    alert("✅ Đã xóa tài sản khỏi hệ thống.");
+                }
+            } catch(e) { alert("Lỗi kết nối server."); }
             closeModal('modal-delete');
         }
 
-        // ĐÁNH DẤU ĐÃ BÁN
         function markAsSold(btn) {
             btn.innerHTML = '<i class="fa-solid fa-check"></i> Đã Giao Dịch';
             btn.classList.add('bg-green-100', 'text-green-700', 'border-green-200');
             btn.disabled = true;
         }
 
-        // XỬ LÝ ĐỔI MẬT KHẨU
         document.getElementById('form-change-password').onsubmit = (e) => {
             e.preventDefault();
             const newPass = document.getElementById('new-pass').value;
             const confirmPass = document.getElementById('confirm-pass').value;
-
-            if (newPass !== confirmPass) {
-                alert("Mật khẩu mới không trùng khớp. Vui lòng nhập lại!");
-                return;
-            }
-
-            const btn = document.getElementById('btn-change-pass');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang xử lý...';
-
-            setTimeout(() => {
-                alert("✅ Đổi mật khẩu thành công!");
-                document.getElementById('form-change-password').reset();
-                btn.innerHTML = 'Xác nhận đổi mật khẩu';
-                closeModal('modal-password');
-            }, 800);
+            if (newPass !== confirmPass) { alert("Mật khẩu mới không khớp!"); return; }
+            alert("✅ Tính năng đổi mật khẩu đang được bảo trì!");
+            closeModal('modal-password');
         };
 
-        // ĐĂNG XUẤT
         function logout() {
-            if(confirm("Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?")) {
+            if(confirm("Bạn muốn đăng xuất?")) {
                 localStorage.removeItem('sqd_user');
                 window.location.href = 'login.html';
             }
