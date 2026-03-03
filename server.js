@@ -5,25 +5,25 @@ const { Pool } = require('pg');
 
 const app = express();
 
-// 1. CẤU HÌNH HỆ THỐNG & FILE TĨNH
+// 1. CẤU HÌNH HỆ THỐNG
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
-// Phục vụ file tĩnh từ thư mục gốc
-app.use(express.static(path.join(__dirname)));
+// CHỈ ĐỊNH THƯ MỤC PUBLIC: Phục vụ toàn bộ HTML, CSS, JS, Ảnh từ đây
+app.use(express.static(path.join(__dirname, 'public')));
 
-// 2. KẾT NỐI NEON.TECH (PostgreSQL)
+// 2. KẾT NỐI DATABASE NEON.TECH
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
 });
 
-// Khởi tạo Database
+// Khởi tạo bảng dữ liệu (Neon PostgreSQL)
 const initDB = async () => {
     try {
         const client = await pool.connect();
-        // Bảng Người dùng
+        // Bảng Users
         await client.query(`
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
@@ -34,7 +34,7 @@ const initDB = async () => {
                 role TEXT DEFAULT 'user'
             )
         `);
-        // Bảng Bất động sản
+        // Bảng Properties
         await client.query(`
             CREATE TABLE IF NOT EXISTS properties (
                 id SERIAL PRIMARY KEY,
@@ -51,7 +51,7 @@ const initDB = async () => {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
-        // Bảng Tin tức
+        // Bảng News
         await client.query(`
             CREATE TABLE IF NOT EXISTS news (
                 id SERIAL PRIMARY KEY,
@@ -63,7 +63,7 @@ const initDB = async () => {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
-        // Bảng Cấu hình Admin
+        // Bảng Configs
         await client.query(`
             CREATE TABLE IF NOT EXISTS configs (
                 id INTEGER PRIMARY KEY DEFAULT 1,
@@ -73,7 +73,7 @@ const initDB = async () => {
             )
         `);
 
-        // Tạo Admin mặc định cho GĐ. Phạm Văn Quân
+        // Tài khoản GĐ mặc định
         await client.query(`
             INSERT INTO users (full_name, phone, password, balance, role)
             VALUES ('Phạm Văn Quân', '0971828236', 'quan123', 999999999, 'admin')
@@ -81,17 +81,18 @@ const initDB = async () => {
         `);
 
         client.release();
-        console.log("🐘 Neon Database Ready!");
+        console.log("🐘 [Neon DB] Hệ thống đã sẵn sàng!");
     } catch (err) {
-        console.error("❌ DB Error:", err);
+        console.error("❌ [DB Error]:", err);
     }
 };
 initDB();
 
 // ==========================================
-// 3. API XÁC THỰC
+// 3. HỆ THỐNG API (GIỮ NGUYÊN LOGIC CHUẨN)
 // ==========================================
 
+// --- AUTH API ---
 app.post('/api/auth/register', async (req, res) => {
     const { full_name, phone, password } = req.body;
     try {
@@ -100,9 +101,7 @@ app.post('/api/auth/register', async (req, res) => {
             [full_name, phone, password]
         );
         res.json({ success: true, user: result.rows[0] });
-    } catch (err) {
-        res.status(400).json({ message: "Số điện thoại đã tồn tại!" });
-    }
+    } catch (err) { res.status(400).json({ message: "SĐT đã tồn tại!" }); }
 });
 
 app.post('/api/auth/login', async (req, res) => {
@@ -114,10 +113,7 @@ app.post('/api/auth/login', async (req, res) => {
     } catch (err) { res.status(500).json({ message: "Lỗi hệ thống" }); }
 });
 
-// ==========================================
-// 4. API BẤT ĐỘNG SẢN
-// ==========================================
-
+// --- PROPERTIES API ---
 app.get('/api/properties', async (req, res) => {
     try {
         const { category, location } = req.query;
@@ -143,7 +139,7 @@ app.post('/api/properties', async (req, res) => {
     try {
         const user = (await pool.query("SELECT balance, role FROM users WHERE id = $1", [user_id])).rows[0];
         if (user.role !== 'admin') {
-            if (Number(user.balance) < 20000) return res.status(400).json({ message: "Số dư không đủ 20.000đ" });
+            if (Number(user.balance) < 20000) return res.status(400).json({ message: "Không đủ 20.000đ" });
             await pool.query("UPDATE users SET balance = balance - 20000 WHERE id = $1", [user_id]);
         }
         const result = await pool.query(
@@ -159,7 +155,7 @@ app.put('/api/properties/:id/vip', async (req, res) => {
         const prop = (await pool.query("SELECT user_id FROM properties WHERE id = $1", [req.params.id])).rows[0];
         const user = (await pool.query("SELECT balance, role FROM users WHERE id = $1", [prop.user_id])).rows[0];
         if (user.role !== 'admin') {
-            if (Number(user.balance) < 50000) return res.status(400).json({ message: "Số dư không đủ 50.000đ" });
+            if (Number(user.balance) < 50000) return res.status(400).json({ message: "Không đủ 50.000đ" });
             await pool.query("UPDATE users SET balance = balance - 50000 WHERE id = $1", [prop.user_id]);
         }
         await pool.query("UPDATE properties SET is_vip = TRUE WHERE id = $1", [req.params.id]);
@@ -172,10 +168,7 @@ app.delete('/api/properties/:id', async (req, res) => {
     res.json({ success: true });
 });
 
-// ==========================================
-// 5. API TIN TỨC & ADMIN
-// ==========================================
-
+// --- NEWS & ADMIN API ---
 app.get('/api/news', async (req, res) => {
     const result = await pool.query("SELECT * FROM news ORDER BY created_at DESC");
     res.json(result.rows);
@@ -210,6 +203,7 @@ app.post('/api/admin/topup', async (req, res) => {
     else res.status(404).json({ message: "SĐT không tồn tại" });
 });
 
+// --- WEBHOOK GIAO DỊCH TỰ ĐỘNG ---
 app.post('/api/webhook/transaction', async (req, res) => {
     const { transferAmount, amountIn, content, transactionContent } = req.body;
     const amount = transferAmount || amountIn || 0;
@@ -223,26 +217,26 @@ app.post('/api/webhook/transaction', async (req, res) => {
 });
 
 // ==========================================
-// 6. ĐIỀU HƯỚNG QUAN TRỌNG (FIX LỖI NOT FOUND)
+// 4. ĐIỀU HƯỚNG TRANG (FIX LỖI NOT FOUND)
 // ==========================================
 
-// Khi người dùng vào trang chủ
+// Trang chủ
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Khi vào các file HTML khác (như login.html, listing.html...)
+// Các trang HTML con
 app.get('/:page.html', (req, res) => {
-    res.sendFile(path.join(__dirname, req.params.page + '.html'));
+    res.sendFile(path.join(__dirname, 'public', req.params.page + '.html'));
 });
 
-// Xử lý tất cả các request khác (Hỗ trợ tốt cho SPA và Refresh trang)
+// Xử lý tất cả các route khác (Refresh trang không lỗi)
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// KHỞI CHẠY
+// 5. KHỞI CHẠY SERVER
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 SQDLand System v2.1 running on port ${PORT}`);
+    console.log(`🚀 [SQDLand Online] Port: ${PORT}`);
 });
