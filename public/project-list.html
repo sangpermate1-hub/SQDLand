@@ -20,7 +20,7 @@
         /* PROJECT BANNER CARD */
         .pj-card { position: relative; border-radius: 24px; overflow: hidden; height: 480px; cursor: pointer; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         .pj-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
-        .pj-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease; }
+        .pj-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease; background-color: #e2e8f0; }
         .pj-card:hover .pj-img { transform: scale(1.05); }
         
         .pj-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(17,24,39,0.95) 0%, rgba(17,24,39,0.4) 50%, rgba(17,24,39,0) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 32px; transition: 0.3s; }
@@ -34,15 +34,8 @@
         .nav-item-m.active { color: var(--sqd-red); }
         .nav-item-m span { font-size: 10px; font-weight: 600; }
 
-        /* RESPONSIVE MOBILE */
-        @media (min-width: 1024px) { 
-            .mobile-bottom-nav { display: none; } 
-        }
-        @media (max-width: 1023px) { 
-            header { display: none !important; } 
-            .pj-card { height: 400px; } 
-            .pj-overlay { padding: 24px; } 
-        }
+        @media (min-width: 1024px) { .mobile-bottom-nav { display: none; } }
+        @media (max-width: 1023px) { header { display: none !important; } .pj-card { height: 400px; } .pj-overlay { padding: 24px; } }
     </style>
 </head>
 <body>
@@ -50,13 +43,12 @@
     <header>
         <div class="container mx-auto px-6 flex justify-between items-center">
             <a href="index.html"><img src="logo.jpg" class="h-10" alt="SQDLand"></a>
-            
             <nav class="desktop-nav flex gap-2 items-center">
                 <a href="index.html" class="nav-link">Trang chủ</a>
                 <a href="listing.html" class="nav-link">Mua bán</a>
                 <a href="project-list.html" class="nav-link active">Dự án</a>
                 <a href="news.html" class="nav-link">Tin tức</a>
-                <a href="login.html" class="nav-link bg-red-600 text-white hover:bg-red-700 hover:text-white ml-2 shadow-sm">Tài khoản</a>
+                <a href="login.html" id="nav-auth-link" class="nav-link bg-red-600 text-white hover:bg-red-700 hover:text-white ml-2 shadow-sm">Tài khoản</a>
             </nav>
         </div>
     </header>
@@ -64,7 +56,7 @@
     <main class="container mx-auto px-4 lg:px-6 py-12">
         <div class="mb-12 text-center lg:text-left border-l-0 lg:border-l-4 lg:border-red-600 lg:pl-5">
             <h1 class="text-3xl lg:text-4xl font-black uppercase tracking-tight text-slate-900">Danh Mục Dự Án Cao Cấp</h1>
-            <p class="text-gray-500 text-sm mt-2 font-medium">Bảng hàng trực tiếp từ Chủ đầu tư - Phân phối độc quyền bởi SQDLand</p>
+            <p class="text-gray-500 text-sm mt-2 font-medium">Bảng hàng trực tiếp từ Chủ đầu tư - Phân phối bởi Neon Database</p>
         </div>
 
         <div id="projects-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -72,85 +64,77 @@
     </main>
 
     <nav class="mobile-bottom-nav">
-        <a href="index.html" class="nav-item-m">
-            <i class="fa-solid fa-house text-[20px]"></i><span>Trang chủ</span>
-        </a>
-        <a href="listing.html" class="nav-item-m">
-            <i class="fa-solid fa-search text-[20px]"></i><span>Mua bán</span>
-        </a>
-        <a href="project-list.html" class="nav-item-m active">
-            <i class="fa-solid fa-building text-[20px]"></i><span>Dự án</span>
-        </a>
-        <a href="news.html" class="nav-item-m">
-            <i class="fa-solid fa-newspaper text-[20px]"></i><span>Tin tức</span>
-        </a>
-        <a href="login.html" class="nav-item-m">
-            <i class="fa-solid fa-user text-[20px]"></i><span>Tài khoản</span>
-        </a>
+        <a href="index.html" class="nav-item-m"><i class="fa-solid fa-house text-[20px]"></i><span>Trang chủ</span></a>
+        <a href="listing.html" class="nav-item-m"><i class="fa-solid fa-search text-[20px]"></i><span>Mua bán</span></a>
+        <a href="project-list.html" class="nav-item-m active"><i class="fa-solid fa-building text-[20px]"></i><span>Dự án</span></a>
+        <a href="news.html" class="nav-item-m"><i class="fa-solid fa-newspaper text-[20px]"></i><span>Tin tức</span></a>
+        <a href="login.html" id="nav-auth-link-m" class="nav-item-m"><i class="fa-solid fa-user text-[20px]"></i><span>Tài khoản</span></a>
     </nav>
 
     <script>
-        // FETCH API: TẢI 100% DỮ LIỆU TỪ CƠ SỞ DỮ LIỆU
+        // KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP
+        const user = JSON.parse(localStorage.getItem('sqd_user'));
+        if (user) {
+            document.getElementById('nav-auth-link').innerText = "Quản lý";
+            document.getElementById('nav-auth-link').href = "user-dashboard.html";
+            document.getElementById('nav-auth-link-m').href = "user-dashboard.html";
+        }
+
+        // TẢI DỮ LIỆU DỰ ÁN TỪ NEON DB
         async function fetchProjects() {
             const container = document.getElementById('projects-grid');
-            
-            // Hiệu ứng tải dữ liệu
             container.innerHTML = `
                 <div class="col-span-full text-center py-20">
                     <i class="fa-solid fa-circle-notch fa-spin text-4xl text-red-600 mb-4"></i>
-                    <p class="text-gray-500 font-bold text-sm">Đang đồng bộ Bảng hàng Dự án từ hệ thống SQDLand...</p>
+                    <p class="text-gray-500 font-bold text-sm">Đang đồng bộ dữ liệu dự án từ Neon...</p>
                 </div>
             `;
 
             try {
-                // Gọi API backend. (Giả định Endpoint là /api/projects)
-                const response = await fetch('/api/projects');
-                
+                // Lấy tất cả thuộc tính, sau đó lọc những gì là "Dự án" hoặc "Chung cư" cấp cao
+                const response = await fetch('/api/properties');
                 if (!response.ok) throw new Error('Network error');
-                
-                const projects = await response.json();
+                const data = await response.json();
+
+                // Lọc logic: Hiển thị các tin đăng có Category là 'chungcu', 'shophouse' hoặc tin VIP của Admin làm Dự án
+                const projects = data.filter(item => 
+                    item.category === 'chungcu' || 
+                    item.category === 'shophouse' || 
+                    (item.is_vip === true && item.role === 'admin')
+                );
 
                 if (projects.length === 0) {
-                    container.innerHTML = `
-                        <div class="col-span-full text-center py-16 bg-gray-50 rounded-2xl border border-gray-100">
-                            <i class="fa-solid fa-city text-4xl text-gray-300 mb-3"></i>
-                            <p class="text-gray-500 font-bold text-sm">Giám đốc đang cập nhật danh mục dự án mới nhất. Quý khách vui lòng quay lại sau.</p>
-                        </div>
-                    `;
+                    container.innerHTML = `<div class="col-span-full text-center py-16 text-gray-500">Chưa có dự án trọng điểm nào được niêm yết.</div>`;
                     return;
                 }
 
-                // Render dữ liệu thật
                 container.innerHTML = projects.map(pj => {
-                    
-                    // Logic màu sắc nhãn dự án
-                    let badgeClass = 'pj-badge'; 
-                    if(pj.status === 'Sắp mở bán' || pj.status === 'upcoming') {
-                        badgeClass = 'pj-badge upcoming';
-                    }
+                    // Logic nhãn trạng thái
+                    let statusLabel = pj.is_vip ? 'Đang mở bán' : 'Sắp ra mắt';
+                    let badgeClass = pj.is_vip ? 'pj-badge' : 'pj-badge upcoming';
 
                     return `
                     <div class="pj-card" onclick="location.href='product-detail.html?id=${pj.id}'">
-                        <img src="${pj.thumbnail || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&auto=format&fit=crop'}" class="pj-img" alt="${pj.title}">
+                        <img src="${pj.images?.[0] || 'logo.jpg'}" class="pj-img" alt="${pj.title}" onerror="this.src='logo.jpg'">
                         <div class="pj-overlay">
                             <div>
-                                <span class="${badgeClass}">${pj.status_label || 'Đang mở bán'}</span>
+                                <span class="${badgeClass}">${statusLabel}</span>
                             </div>
-                            <h2 class="text-white text-3xl lg:text-4xl font-black uppercase tracking-tight mb-2">${pj.title}</h2>
-                            <p class="text-gray-300 text-sm font-medium mb-6"><i class="fa-solid fa-location-dot ${pj.status === 'Sắp mở bán' ? 'text-blue-500' : 'text-red-500'} mr-2"></i> ${pj.location}</p>
+                            <h2 class="text-white text-2xl lg:text-3xl font-black uppercase tracking-tight mb-2 line-clamp-2">${pj.title}</h2>
+                            <p class="text-gray-300 text-sm font-medium mb-6"><i class="fa-solid fa-location-dot text-red-500 mr-2"></i> ${pj.location}</p>
                             
                             <div class="grid grid-cols-3 gap-4 border-t border-white/20 pt-5 text-white">
                                 <div>
-                                    <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Quy mô</p>
-                                    <p class="font-bold text-base">${pj.scale || '--'}</p>
+                                    <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Diện tích</p>
+                                    <p class="font-bold text-sm lg:text-base">${pj.area} m²</p>
                                 </div>
                                 <div>
                                     <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Loại hình</p>
-                                    <p class="font-bold text-base line-clamp-1">${pj.category_type || '--'}</p>
+                                    <p class="font-bold text-sm lg:text-base uppercase">${pj.category}</p>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Mức giá từ</p>
-                                    <p class="font-black ${pj.status === 'Sắp mở bán' ? 'text-blue-400' : 'text-red-400'} text-base">${pj.price_from || 'Liên hệ'}</p>
+                                    <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Giá từ</p>
+                                    <p class="font-black text-red-400 text-sm lg:text-base">${pj.price}</p>
                                 </div>
                             </div>
                         </div>
@@ -158,18 +142,10 @@
                 `}).join('');
 
             } catch (error) {
-                // Xử lý khi Backend tắt
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-12 bg-red-50 rounded-2xl border border-red-100">
-                        <i class="fa-solid fa-server text-4xl text-red-300 mb-3"></i>
-                        <p class="text-red-600 font-bold text-sm mb-1">Máy chủ dữ liệu đang ngoại tuyến.</p>
-                        <p class="text-gray-500 text-xs">Vui lòng đảm bảo bạn đã khởi chạy tệp server.js</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-red-600 font-bold">Lỗi kết nối máy chủ dữ liệu.</div>`;
             }
         }
 
-        // Tự động load dữ liệu khi mở trang
         document.addEventListener('DOMContentLoaded', fetchProjects);
     </script>
 </body>
