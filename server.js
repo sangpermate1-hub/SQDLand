@@ -5,22 +5,21 @@ const { Pool } = require('pg');
 
 const app = express();
 
-// 1. CẤU HÌNH HỆ THỐNG
-// Tăng giới hạn tải trọng 50MB để lưu ảnh Base64 trực tiếp vào Database
+// 1. CẤU HÌNH HỆ THỐNG & FILE TĨNH
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
-// Phục vụ các file giao diện tĩnh (HTML, CSS, JS, Image)
-app.use(express.static(__dirname));
+// Phục vụ file tĩnh từ thư mục gốc
+app.use(express.static(path.join(__dirname)));
 
 // 2. KẾT NỐI NEON.TECH (PostgreSQL)
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false } // Bắt buộc khi dùng Neon
+    ssl: { rejectUnauthorized: false }
 });
 
-// Khởi tạo cấu trúc Database nếu chưa có
+// Khởi tạo Database
 const initDB = async () => {
     try {
         const client = await pool.connect();
@@ -47,7 +46,7 @@ const initDB = async () => {
                 area TEXT,
                 description TEXT,
                 legal_status TEXT,
-                images TEXT[], -- Mảng chứa các chuỗi Base64 hoặc URL
+                images TEXT[], 
                 is_vip BOOLEAN DEFAULT FALSE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
@@ -64,7 +63,7 @@ const initDB = async () => {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
-        // Bảng Cấu hình ngân hàng
+        // Bảng Cấu hình Admin
         await client.query(`
             CREATE TABLE IF NOT EXISTS configs (
                 id INTEGER PRIMARY KEY DEFAULT 1,
@@ -74,7 +73,7 @@ const initDB = async () => {
             )
         `);
 
-        // Tạo tài khoản Admin mặc định cho anh Quân
+        // Tạo Admin mặc định cho GĐ. Phạm Văn Quân
         await client.query(`
             INSERT INTO users (full_name, phone, password, balance, role)
             VALUES ('Phạm Văn Quân', '0971828236', 'quan123', 999999999, 'admin')
@@ -82,15 +81,15 @@ const initDB = async () => {
         `);
 
         client.release();
-        console.log("🐘 Neon Database synced successfully!");
+        console.log("🐘 Neon Database Ready!");
     } catch (err) {
-        console.error("❌ DB Init Error:", err);
+        console.error("❌ DB Error:", err);
     }
 };
 initDB();
 
 // ==========================================
-// 3. API XÁC THỰC (AUTH)
+// 3. API XÁC THỰC
 // ==========================================
 
 app.post('/api/auth/register', async (req, res) => {
@@ -109,23 +108,14 @@ app.post('/api/auth/register', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
     const { phone, password } = req.body;
     try {
-        const result = await pool.query(
-            "SELECT * FROM users WHERE phone = $1 AND password = $2",
-            [phone, password]
-        );
-        if (result.rows.length > 0) {
-            const { password: _, ...userWithoutPass } = result.rows[0];
-            res.json({ success: true, user: userWithoutPass });
-        } else {
-            res.status(401).json({ message: "Sai tài khoản hoặc mật khẩu!" });
-        }
-    } catch (err) {
-        res.status(500).json({ message: "Lỗi Server" });
-    }
+        const result = await pool.query("SELECT id, full_name, phone, balance, role FROM users WHERE phone = $1 AND password = $2", [phone, password]);
+        if (result.rows.length > 0) res.json({ success: true, user: result.rows[0] });
+        else res.status(401).json({ message: "Sai tài khoản hoặc mật khẩu!" });
+    } catch (err) { res.status(500).json({ message: "Lỗi hệ thống" }); }
 });
 
 // ==========================================
-// 4. API BẤT ĐỘNG SẢN (PROPERTIES)
+// 4. API BẤT ĐỘNG SẢN
 // ==========================================
 
 app.get('/api/properties', async (req, res) => {
@@ -133,86 +123,57 @@ app.get('/api/properties', async (req, res) => {
         const { category, location } = req.query;
         let sql = "SELECT p.*, u.full_name, u.role FROM properties p JOIN users u ON p.user_id = u.id WHERE 1=1";
         const params = [];
-
-        if (category) {
-            params.push(category);
-            sql += ` AND p.category = $${params.length}`;
-        }
-        if (location) {
-            params.push(`%${location}%`);
-            sql += ` AND p.location ILIKE $${params.length}`;
-        }
-
+        if (category) { params.push(category); sql += ` AND p.category = $${params.length}`; }
+        if (location) { params.push(`%${location}%`); sql += ` AND p.location ILIKE $${params.length}`; }
         sql += " ORDER BY p.is_vip DESC, p.created_at DESC";
         const result = await pool.query(sql, params);
         res.json(result.rows);
-    } catch (err) {
-        res.status(500).json([]);
-    }
+    } catch (err) { res.json([]); }
 });
 
 app.get('/api/properties/:id', async (req, res) => {
     try {
-        const result = await pool.query(
-            "SELECT p.*, u.full_name, u.role, u.phone FROM properties p JOIN users u ON p.user_id = u.id WHERE p.id = $1", 
-            [req.params.id]
-        );
-        res.json(result.rows); // Trả về mảng cho khớp Frontend
-    } catch (err) {
-        res.status(404).json([]);
-    }
+        const result = await pool.query("SELECT p.*, u.full_name, u.role, u.phone FROM properties p JOIN users u ON p.user_id = u.id WHERE p.id = $1", [req.params.id]);
+        res.json(result.rows);
+    } catch (err) { res.status(404).json([]); }
 });
 
 app.post('/api/properties', async (req, res) => {
     const { user_id, title, category, location, price, area, description, legal_status, images } = req.body;
     try {
-        const userRes = await pool.query("SELECT balance, role FROM users WHERE id = $1", [user_id]);
-        const user = userRes.rows[0];
-
+        const user = (await pool.query("SELECT balance, role FROM users WHERE id = $1", [user_id])).rows[0];
         if (user.role !== 'admin') {
             if (Number(user.balance) < 20000) return res.status(400).json({ message: "Số dư không đủ 20.000đ" });
             await pool.query("UPDATE users SET balance = balance - 20000 WHERE id = $1", [user_id]);
         }
-
         const result = await pool.query(
             "INSERT INTO properties (user_id, title, category, location, price, area, description, legal_status, images) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
             [user_id, title, category, location, price, area, description, legal_status, images]
         );
         res.json({ success: true, property: result.rows[0] });
-    } catch (err) {
-        res.status(500).json({ message: "Lỗi đăng tin" });
-    }
+    } catch (err) { res.status(500).json({ message: "Lỗi đăng tin" }); }
 });
 
 app.put('/api/properties/:id/vip', async (req, res) => {
     try {
-        const prop = await pool.query("SELECT user_id FROM properties WHERE id = $1", [req.params.id]);
-        const userId = prop.rows[0].user_id;
-        const user = (await pool.query("SELECT balance, role FROM users WHERE id = $1", [userId])).rows[0];
-
+        const prop = (await pool.query("SELECT user_id FROM properties WHERE id = $1", [req.params.id])).rows[0];
+        const user = (await pool.query("SELECT balance, role FROM users WHERE id = $1", [prop.user_id])).rows[0];
         if (user.role !== 'admin') {
             if (Number(user.balance) < 50000) return res.status(400).json({ message: "Số dư không đủ 50.000đ" });
-            await pool.query("UPDATE users SET balance = balance - 50000 WHERE id = $1", [userId]);
+            await pool.query("UPDATE users SET balance = balance - 50000 WHERE id = $1", [prop.user_id]);
         }
-
         await pool.query("UPDATE properties SET is_vip = TRUE WHERE id = $1", [req.params.id]);
         res.json({ success: true });
-    } catch (err) {
-        res.status(500).json({ message: "Lỗi nâng cấp VIP" });
-    }
+    } catch (err) { res.status(500).json({ message: "Lỗi nâng cấp" }); }
 });
 
 app.delete('/api/properties/:id', async (req, res) => {
-    try {
-        await pool.query("DELETE FROM properties WHERE id = $1", [req.params.id]);
-        res.json({ success: true });
-    } catch (err) {
-        res.status(500).json({ success: false });
-    }
+    await pool.query("DELETE FROM properties WHERE id = $1", [req.params.id]);
+    res.json({ success: true });
 });
 
 // ==========================================
-// 5. API TIN TỨC (NEWS)
+// 5. API TIN TỨC & ADMIN
 // ==========================================
 
 app.get('/api/news', async (req, res) => {
@@ -227,41 +188,13 @@ app.get('/api/news/:id', async (req, res) => {
 
 app.post('/api/news', async (req, res) => {
     const { title, category, thumbnail, content } = req.body;
-    await pool.query(
-        "INSERT INTO news (title, category, thumbnail, content) VALUES ($1, $2, $3, $4)",
-        [title, category, thumbnail, content]
-    );
+    await pool.query("INSERT INTO news (title, category, thumbnail, content) VALUES ($1, $2, $3, $4)", [title, category, thumbnail, content]);
     res.json({ success: true });
 });
 
-// ==========================================
-// 6. API TÀI CHÍNH & CẤU HÌNH (ADMIN)
-// ==========================================
-
-// Webhook nhận tiền tự động từ SePay
-app.post('/api/webhook/transaction', async (req, res) => {
-    const payload = req.body;
-    const amount = payload.transferAmount || payload.amountIn || 0;
-    const content = payload.content || payload.transactionContent || "";
-
-    console.log(`🔔 Webhook: ${amount}đ - Nội dung: ${content}`);
-
-    const match = content.match(/NAP\s+SQDLand\s+(\d{10})/i);
-    if (match && amount > 0) {
-        const phone = match[1];
-        const update = await pool.query("UPDATE users SET balance = balance + $1 WHERE phone = $2 RETURNING id", [amount, phone]);
-        if (update.rowCount > 0) return res.status(200).json({ success: true });
-    }
-    res.status(200).json({ success: false });
-});
-
-// Cài đặt ngân hàng Admin
 app.post('/api/admin/config-bank', async (req, res) => {
     const { bank, account_name, account_number } = req.body;
-    await pool.query(
-        "INSERT INTO configs (id, bank, account_name, account_number) VALUES (1, $1, $2, $3) ON CONFLICT (id) DO UPDATE SET bank=$1, account_name=$2, account_number=$3",
-        [bank, account_name, account_number]
-    );
+    await pool.query("INSERT INTO configs (id, bank, account_name, account_number) VALUES (1, $1, $2, $3) ON CONFLICT (id) DO UPDATE SET bank=$1, account_name=$2, account_number=$3", [bank, account_name, account_number]);
     res.json({ success: true });
 });
 
@@ -270,15 +203,40 @@ app.get('/api/config-bank', async (req, res) => {
     res.json(result.rows[0] || {});
 });
 
-// Nạp tiền thủ công
 app.post('/api/admin/topup', async (req, res) => {
     const { phone, amount } = req.body;
-    const result = await pool.query("UPDATE users SET balance = balance + $1 WHERE phone = $2", [amount, phone]);
-    if (result.rowCount > 0) res.json({ success: true, message: "Cấp ngân sách thành công" });
-    else res.status(404).json({ message: "Không tìm thấy SĐT" });
+    const update = await pool.query("UPDATE users SET balance = balance + $1 WHERE phone = $2", [amount, phone]);
+    if (update.rowCount > 0) res.json({ success: true });
+    else res.status(404).json({ message: "SĐT không tồn tại" });
 });
 
-// Chuyển hướng SPA
+app.post('/api/webhook/transaction', async (req, res) => {
+    const { transferAmount, amountIn, content, transactionContent } = req.body;
+    const amount = transferAmount || amountIn || 0;
+    const msg = content || transactionContent || "";
+    const match = msg.match(/NAP\s+SQDLand\s+(\d{10})/i);
+    if (match && amount > 0) {
+        await pool.query("UPDATE users SET balance = balance + $1 WHERE phone = $2", [amount, match[1]]);
+        return res.status(200).json({ success: true });
+    }
+    res.status(200).json({ success: false });
+});
+
+// ==========================================
+// 6. ĐIỀU HƯỚNG QUAN TRỌNG (FIX LỖI NOT FOUND)
+// ==========================================
+
+// Khi người dùng vào trang chủ
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Khi vào các file HTML khác (như login.html, listing.html...)
+app.get('/:page.html', (req, res) => {
+    res.sendFile(path.join(__dirname, req.params.page + '.html'));
+});
+
+// Xử lý tất cả các request khác (Hỗ trợ tốt cho SPA và Refresh trang)
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -286,5 +244,5 @@ app.get('*', (req, res) => {
 // KHỞI CHẠY
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 SQDLand v2.0 Ready on Port ${PORT}`);
+    console.log(`🚀 SQDLand System v2.1 running on port ${PORT}`);
 });
