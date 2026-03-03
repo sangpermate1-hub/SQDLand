@@ -28,7 +28,7 @@
         .section-panel.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* FORM INPUTS DÀNH CHO ADMIN */
+        /* FORM INPUTS */
         .sqd-input { width: 100%; padding: 14px 20px; background: white; border: 1.5px solid #e2e8f0; border-radius: 12px; font-weight: 600; font-size: 14px; outline: none; transition: 0.3s; }
         .sqd-input:focus { border-color: var(--sqd-red); box-shadow: 0 0 0 4px rgba(224, 60, 49, 0.05); }
         .sqd-label { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 8px; display: block; letter-spacing: 0.05em; }
@@ -79,7 +79,7 @@
         </div>
         <nav class="flex-grow">
             <div onclick="switchAdminTab('dashboard')" class="nav-item active" id="menu-dashboard"><i class="fa-solid fa-chart-line text-lg w-6"></i> Tổng quan</div>
-            <div onclick="switchAdminTab('finance')" class="nav-item" id="menu-finance"><i class="fa-solid fa-sack-dollar text-lg w-6"></i> Cấp ngân sách</div>
+            <div onclick="switchAdminTab('finance')" class="nav-item" id="menu-finance"><i class="fa-solid fa-sack-dollar text-lg w-6"></i> Quản lý Nạp tiền</div>
             <div onclick="switchAdminTab('post-listing')" class="nav-item" id="menu-post-listing"><i class="fa-solid fa-house-medical text-lg w-6"></i> Niêm yết tài sản</div>
             <div onclick="switchAdminTab('post-news')" class="nav-item" id="menu-post-news"><i class="fa-solid fa-newspaper text-lg w-6"></i> Phát hành tin tức</div>
         </nav>
@@ -105,43 +105,67 @@
                     <h2 class="text-4xl font-black text-red-600" id="total-news">...</h2>
                 </div>
             </div>
-
-            <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
-                <h3 class="font-bold text-lg text-slate-900 mb-6 border-b border-gray-100 pb-4">Công cụ quản trị nhanh</h3>
-                <div class="flex flex-wrap gap-4">
-                    <button onclick="switchAdminTab('finance')" class="bg-blue-50 text-blue-700 px-6 py-3 rounded-xl font-bold text-sm hover:bg-blue-100 transition"><i class="fa-solid fa-wallet mr-2"></i> Bơm ngân sách cho đối tác</button>
-                    <button onclick="switchAdminTab('post-listing')" class="bg-green-50 text-green-700 px-6 py-3 rounded-xl font-bold text-sm hover:bg-green-100 transition"><i class="fa-solid fa-house-flag mr-2"></i> Niêm yết giỏ hàng nội bộ</button>
-                    <button onclick="switchAdminTab('post-news')" class="bg-purple-50 text-purple-700 px-6 py-3 rounded-xl font-bold text-sm hover:bg-purple-100 transition"><i class="fa-solid fa-pen-nib mr-2"></i> Đăng bài phân tích thị trường</button>
-                </div>
-            </div>
         </section>
 
         <section id="section-finance" class="section-panel">
-            <h1 class="text-3xl font-black uppercase tracking-tight text-slate-900 mb-8">Cấp Ngân Sách Quảng Cáo</h1>
+            <h1 class="text-3xl font-black uppercase tracking-tight text-slate-900 mb-8">Quản Lý Giao Dịch & Nạp Tiền</h1>
             
-            <div class="bg-white p-8 md:p-12 rounded-3xl border border-gray-200 shadow-sm max-w-2xl">
-                <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl mb-8 flex gap-4 text-blue-800 text-sm">
-                    <i class="fa-solid fa-circle-info text-lg mt-0.5"></i>
-                    <div>
-                        <p class="font-bold mb-1">Cấp tiền thủ công</p>
-                        <p>Chức năng này dùng để cộng tiền vào tài khoản của Sale khi hệ thống Sepay lỗi hoặc khách hàng chuyển khoản sai cú pháp.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                
+                <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
+                    <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl mb-8 flex gap-4 text-blue-800 text-sm">
+                        <i class="fa-solid fa-circle-info text-lg mt-0.5"></i>
+                        <div>
+                            <p class="font-bold mb-1">Cấp tiền thủ công</p>
+                            <p>Dùng để cộng tiền vào tài khoản của Sale khi hệ thống Sepay lỗi hoặc khách chuyển khoản sai cú pháp.</p>
+                        </div>
                     </div>
+
+                    <form id="topupForm" class="space-y-6">
+                        <div>
+                            <label class="sqd-label">Số điện thoại đối tác (Sale) <span class="text-red-500">*</span></label>
+                            <input type="tel" id="target-phone" class="sqd-input" placeholder="Ví dụ: 0988xxxxxx" required>
+                        </div>
+                        <div>
+                            <label class="sqd-label">Số tiền cấp phát (VNĐ) <span class="text-red-500">*</span></label>
+                            <input type="number" id="topup-amount" class="sqd-input font-bold text-red-600 text-lg" placeholder="Ví dụ: 500000" required>
+                        </div>
+                        
+                        <button type="submit" id="btn-topup" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black text-sm uppercase tracking-wide shadow-lg hover:bg-blue-700 transition mt-4">
+                            <i class="fa-solid fa-bolt mr-2"></i> Cấp ngân sách ngay
+                        </button>
+                    </form>
                 </div>
 
-                <form id="topupForm" class="space-y-6">
-                    <div>
-                        <label class="sqd-label">Số điện thoại đối tác (Sale) <span class="text-red-500">*</span></label>
-                        <input type="tel" id="target-phone" class="sqd-input" placeholder="Ví dụ: 0988xxxxxx" required>
+                <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
+                    <div class="bg-purple-50 border border-purple-100 p-4 rounded-xl mb-8 flex gap-4 text-purple-800 text-sm">
+                        <i class="fa-solid fa-building-columns text-lg mt-0.5"></i>
+                        <div>
+                            <p class="font-bold mb-1">Cấu hình Số tài khoản nhận tiền</p>
+                            <p>Thông tin này sẽ được đồng bộ và hiển thị trực tiếp trên Popup Nạp tiền của tất cả các Sale.</p>
+                        </div>
                     </div>
-                    <div>
-                        <label class="sqd-label">Số tiền cấp phát (VNĐ) <span class="text-red-500">*</span></label>
-                        <input type="number" id="topup-amount" class="sqd-input font-bold text-red-600 text-lg" placeholder="Ví dụ: 500000" required>
-                    </div>
-                    
-                    <button type="submit" id="btn-topup" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-sm uppercase tracking-wide shadow-lg hover:bg-red-600 transition mt-4">
-                        <i class="fa-solid fa-bolt mr-2"></i> Xác nhận nạp tiền
-                    </button>
-                </form>
+
+                    <form id="sepayConfigForm" class="space-y-6">
+                        <div>
+                            <label class="sqd-label">Tên Ngân hàng <span class="text-red-500">*</span></label>
+                            <input type="text" id="config-bank" class="sqd-input" placeholder="Ví dụ: MB Bank" required>
+                        </div>
+                        <div>
+                            <label class="sqd-label">Tên Chủ tài khoản <span class="text-red-500">*</span></label>
+                            <input type="text" id="config-name" class="sqd-input uppercase" placeholder="Ví dụ: PHAM VAN QUAN" required>
+                        </div>
+                        <div>
+                            <label class="sqd-label">Số tài khoản <span class="text-red-500">*</span></label>
+                            <input type="text" id="config-number" class="sqd-input font-bold text-slate-900 text-lg tracking-wider" placeholder="Ví dụ: 0981593935" required>
+                        </div>
+                        
+                        <button type="submit" id="btn-config" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-sm uppercase tracking-wide shadow-lg hover:bg-slate-800 transition mt-4">
+                            <i class="fa-solid fa-floppy-disk mr-2"></i> Lưu cấu hình tài khoản
+                        </button>
+                    </form>
+                </div>
+
             </div>
         </section>
 
@@ -281,7 +305,7 @@
             <i class="fa-solid fa-chart-line text-[20px]"></i><span>Tổng quan</span>
         </div>
         <div class="nav-item-m" id="m-finance" onclick="switchAdminTab('finance')">
-            <i class="fa-solid fa-sack-dollar text-[20px]"></i><span>Ngân sách</span>
+            <i class="fa-solid fa-sack-dollar text-[20px]"></i><span>Tài chính</span>
         </div>
         <div class="nav-item-m" id="m-post-listing" onclick="switchAdminTab('post-listing')">
             <i class="fa-solid fa-house-medical text-[20px]"></i><span>Niêm yết</span>
@@ -296,7 +320,7 @@
 
     <script>
         let adminUser = null;
-        let adminUploadedImages = []; // Chứa ảnh Base64
+        let adminUploadedImages = []; 
 
         function checkAdminPass() {
             const pass = document.getElementById('admin-pass-input').value;
@@ -308,6 +332,7 @@
                 else { adminUser = { id: 0, phone: '0971828236', role: 'admin' }; }
 
                 loadDashboardStats();
+                loadSepayConfig(); // Tải config ngân hàng khi mở khóa
             } else {
                 alert("❌ CẢNH BÁO: Sai mã truy cập!");
             }
@@ -331,12 +356,10 @@
                     fetch('/api/properties').catch(() => null),
                     fetch('/api/news').catch(() => null)
                 ]);
-
                 if (propsRes && propsRes.ok) {
                     const props = await propsRes.json();
                     document.getElementById('total-props').innerText = props.length || 0;
                 }
-                
                 if (newsRes && newsRes.ok) {
                     const news = await newsRes.json();
                     document.getElementById('total-news').innerText = news.length || 0;
@@ -348,7 +371,35 @@
         }
 
         // ==========================================
-        // TÍCH HỢP FETCH API
+        // CẤU HÌNH NGÂN HÀNG (SEPAY CONFIG)
+        // ==========================================
+        
+        function loadSepayConfig() {
+            const savedConfig = JSON.parse(localStorage.getItem('sqd_sepay_config')) || { bank: 'MB Bank', name: 'PHAM VAN QUAN', number: '0981593935' };
+            document.getElementById('config-bank').value = savedConfig.bank;
+            document.getElementById('config-name').value = savedConfig.name;
+            document.getElementById('config-number').value = savedConfig.number;
+        }
+
+        document.getElementById('sepayConfigForm').onsubmit = (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-config');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang lưu...';
+
+            setTimeout(() => {
+                const config = {
+                    bank: document.getElementById('config-bank').value,
+                    name: document.getElementById('config-name').value.toUpperCase(),
+                    number: document.getElementById('config-number').value
+                };
+                localStorage.setItem('sqd_sepay_config', JSON.stringify(config)); // Lưu vào LocalStorage để user-dashboard.html đọc
+                alert('✅ Cập nhật thành công! Tất cả tài khoản Sale sẽ thấy số tài khoản mới này ở phần Nạp tiền.');
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk mr-2"></i> Lưu cấu hình tài khoản';
+            }, 500);
+        };
+
+        // ==========================================
+        // TÍCH HỢP FETCH API KHÁC
         // ==========================================
 
         document.getElementById('topupForm').onsubmit = async (e) => {
@@ -372,10 +423,9 @@
                 alert(`✅ Đã cấp ${amount}đ cho SĐT: ${phone} (Local)`);
                 e.target.reset();
             }
-            btn.innerHTML = '<i class="fa-solid fa-bolt mr-2"></i> Xác nhận nạp tiền';
+            btn.innerHTML = '<i class="fa-solid fa-bolt mr-2"></i> Cấp ngân sách ngay';
         };
 
-        // HIỂN THỊ ẢNH TRƯỚC KHI ĐĂNG
         function previewAdminImages(input) {
             const preview = document.getElementById('admin-img-preview');
             if (input.files) {
@@ -386,7 +436,7 @@
                         img.src = e.target.result;
                         img.className = 'preview-item shadow-sm';
                         preview.appendChild(img);
-                        adminUploadedImages.push(e.target.result); // Lưu dạng Base64
+                        adminUploadedImages.push(e.target.result); 
                     }
                     reader.readAsDataURL(file);
                 });
