@@ -12,64 +12,41 @@
         :root { --sqd-red: #E03C31; --sqd-navy: #111827; --sqd-bg: #F8FAFC; --gold-vip: linear-gradient(135deg, #F6D365 0%, #FDA085 100%); }
         body { font-family: 'Lexend', sans-serif; background-color: var(--sqd-bg); color: var(--sqd-navy); margin: 0; padding-bottom: 80px; display: flex; flex-direction: column; min-height: 100vh; }
 
-        /* HEADER PC */
+        /* HEADER */
         header { background: white; height: 80px; display: flex; align-items: center; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         .nav-link { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--sqd-navy); transition: 0.3s; padding: 8px 16px; border-radius: 8px; }
         .nav-link:hover, .nav-link.active { color: var(--sqd-red); background: #fff5f5; }
 
-        /* HERO & SEARCH */
+        /* HERO */
         .hero-section { background: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000') center/cover no-repeat; position: relative; }
         .hero-overlay { background: linear-gradient(to right, rgba(17,24,39,0.95), rgba(17,24,39,0.7)); position: absolute; inset: 0; }
         .search-box { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        select { -webkit-appearance: none; appearance: none; background: transparent; }
-
-        /* PROPERTY CARD & VIP BADGE */
+        
+        /* CARD & VIP */
         .prop-card { background: white; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; transition: all 0.3s ease; display: flex; flex-direction: column; height: 100%; position: relative; }
         .prop-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--sqd-red); }
-        
         .prop-card.vip-card { border: 2px solid #FDA085; box-shadow: 0 10px 30px rgba(253, 160, 133, 0.15); }
-        .prop-card.vip-card:hover { border-color: #F6D365; box-shadow: 0 20px 40px rgba(253, 160, 133, 0.3); }
         
-        .prop-img { height: 220px; width: 100%; object-fit: cover; }
-        .badge { position: absolute; top: 12px; left: 12px; color: white; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; z-index: 10; }
-        
-        .badge-vip { right: 12px; left: auto; background: var(--gold-vip); color: #fff; box-shadow: 0 4px 15px rgba(246, 211, 101, 0.5); animation: pulseVip 2s infinite; }
+        .badge-vip { position: absolute; top: 12px; right: 12px; background: var(--gold-vip); color: #fff; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; z-index: 10; animation: pulseVip 2s infinite; }
         @keyframes pulseVip { 0% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(246, 211, 101, 0); } 100% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0); } }
 
-        /* CHATBOT */
-        .chatbot-btn { position: fixed; bottom: 100px; right: 24px; width: 60px; height: 60px; background: var(--sqd-navy); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 10px 25px rgba(17,24,39,0.3); cursor: pointer; z-index: 999; transition: 0.3s; }
-        .chatbot-btn:hover { transform: scale(1.1); background: var(--sqd-red); }
-        .chatbot-window { position: fixed; bottom: 170px; right: 24px; width: 340px; background: white; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 1px solid #e2e8f0; z-index: 999; display: none; flex-direction: column; overflow: hidden; transform-origin: bottom right; animation: scaleUp 0.3s ease; }
-        @keyframes scaleUp { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-        .chat-header { background: var(--sqd-navy); color: white; padding: 16px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-        .chat-body { height: 300px; padding: 16px; overflow-y: auto; background: #f8fafc; display: flex; flex-direction: column; gap: 12px; }
-        .chat-msg { padding: 10px 14px; border-radius: 12px; max-width: 85%; font-size: 13px; line-height: 1.5; }
-        .msg-bot { background: white; border: 1px solid #e2e8f0; align-self: flex-start; border-bottom-left-radius: 2px; }
-        .msg-user { background: var(--sqd-red); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .chat-input { padding: 12px 16px; border-top: 1px solid #e2e8f0; display: flex; background: white; }
-
-        /* MODAL POPUP CHUNG */
+        /* MODAL */
         .modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.7); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); padding: 16px; }
-        .modal-box { background: white; border-radius: 24px; width: 100%; max-width: 400px; padding: 32px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); transform: scale(0.9); opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal-box { background: white; border-radius: 24px; width: 100%; max-width: 400px; padding: 32px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
         .modal-overlay.active { display: flex; }
-        .modal-overlay.active .modal-box { transform: scale(1); opacity: 1; }
-
-        /* COPY BOX */
+        
         .copy-box { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .copy-text { font-family: monospace; font-size: 16px; font-weight: 800; color: var(--sqd-red); letter-spacing: 1px; }
-        .copy-btn { background: white; border: 1px solid #e2e8f0; color: #475569; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
-        .copy-btn:hover { background: #f1f5f9; color: var(--sqd-navy); }
-        .copy-btn.copied { background: #10b981; color: white; border-color: #10b981; }
+        .copy-text { font-family: monospace; font-size: 16px; font-weight: 800; color: var(--sqd-red); }
+        .copy-btn { background: white; border: 1px solid #e2e8f0; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        /* MOBILE BOTTOM NAV */
-        .mobile-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; height: 70px; border-top: 1px solid #e2e8f0; z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        /* BOTTOM NAV */
+        .mobile-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; height: 70px; border-top: 1px solid #e2e8f0; z-index: 1000; display: flex; justify-content: space-around; align-items: center; }
         .nav-item-m { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; flex: 1; transition: 0.2s; }
         .nav-item-m.active { color: var(--sqd-red); }
         .nav-item-m span { font-size: 10px; font-weight: 600; text-transform: uppercase; }
 
-        /* RESPONSIVE */
-        @media (min-width: 1024px) { .mobile-bottom-nav { display: none; } .chatbot-btn { bottom: 30px; } .chatbot-window { bottom: 100px; } }
-        @media (max-width: 1023px) { header { display: none !important; } .hero-section { padding-top: 40px; } }
+        @media (min-width: 1024px) { .mobile-bottom-nav { display: none; } }
+        @media (max-width: 1023px) { header { display: none !important; } }
     </style>
 </head>
 <body>
@@ -77,13 +54,12 @@
     <header>
         <div class="container mx-auto px-6 flex justify-between items-center">
             <a href="index.html"><img src="logo.jpg" class="h-10" alt="SQDLand"></a>
-            
             <nav class="desktop-nav flex gap-2 items-center">
                 <a href="index.html" class="nav-link active">Trang chủ</a>
                 <a href="listing.html" class="nav-link">Mua bán</a>
                 <a href="project-list.html" class="nav-link">Dự án</a>
                 <a href="news.html" class="nav-link">Tin tức</a>
-                <a href="login.html" class="nav-link bg-red-600 text-white hover:bg-red-700 hover:text-white ml-2 shadow-sm">Tài khoản</a>
+                <a href="login.html" id="nav-auth-link" class="nav-link bg-red-600 text-white hover:bg-red-700 hover:text-white ml-2 shadow-sm">Tài khoản</a>
             </nav>
         </div>
     </header>
@@ -91,56 +67,36 @@
     <div class="flex-grow">
         <section class="hero-section py-20 lg:py-32 px-4 text-white">
             <div class="hero-overlay"></div>
-            <div class="container mx-auto relative z-10">
-                <div class="max-w-4xl mx-auto text-center mb-10">
-                    <h1 class="text-3xl lg:text-5xl font-black uppercase tracking-tight leading-tight mb-4">
-                        Khởi Đầu Giao Dịch <span class="text-red-500">Thành Công</span>
-                    </h1>
-                    <p class="text-gray-300 text-sm lg:text-base font-medium">Mạng lưới phân phối và niêm yết bất động sản chính chủ, pháp lý minh bạch hàng đầu.</p>
-                </div>
+            <div class="container mx-auto relative z-10 text-center">
+                <h1 class="text-3xl lg:text-5xl font-black uppercase tracking-tight mb-4">Khởi Đầu Giao Dịch <span class="text-red-500">Thành Công</span></h1>
+                <p class="text-gray-300 text-sm lg:text-base font-medium mb-10">Mạng lưới niêm yết bất động sản chính chủ, minh bạch pháp lý hàng đầu.</p>
                 
                 <div class="search-box p-4 rounded-2xl shadow-2xl max-w-5xl mx-auto">
                     <div class="flex flex-col lg:flex-row gap-3">
-                        <div class="flex-grow relative border border-gray-200 rounded-xl bg-white flex items-center px-4 py-3">
+                        <div class="flex-grow border border-gray-200 rounded-xl bg-white flex items-center px-4 py-3">
                             <i class="fa-solid fa-magnifying-glass text-gray-400 mr-3"></i>
-                            <input type="text" placeholder="Nhập địa điểm, tên dự án, đường, quận..." class="w-full outline-none text-slate-900 font-medium text-sm">
+                            <input type="text" placeholder="Địa điểm, dự án, đường, quận..." class="w-full outline-none text-slate-900 font-medium text-sm">
                         </div>
-                        
                         <div class="grid grid-cols-2 lg:flex gap-3">
-                            <div class="relative border border-gray-200 rounded-xl bg-white flex items-center px-4 py-3 lg:w-48">
-                                <i class="fa-solid fa-building text-gray-400 mr-2"></i>
-                                <select class="w-full outline-none text-slate-700 text-sm font-medium cursor-pointer">
-                                    <option value="">Loại hình</option>
-                                    <option value="datnen">1. Đất nền</option>
-                                    <option value="nhapho">2. Nhà phố</option>
-                                    <option value="bietthu">3. Biệt thự</option>
-                                    <option value="chungcu">4. Chung cư</option>
-                                    <option value="shophouse">5. Shophouse</option>
-                                    <option value="vanphong">6. Văn phòng / Officetel</option>
-                                    <option value="khoxuong">7. Kho – xưởng</option>
-                                    <option value="khac">8. Khác</option>
-                                </select>
-                                <i class="fa-solid fa-chevron-down text-gray-400 text-xs absolute right-4"></i>
-                            </div>
-                            
-                            <div class="relative border border-gray-200 rounded-xl bg-white flex items-center px-4 py-3 lg:w-40">
-                                <i class="fa-solid fa-tags text-gray-400 mr-2"></i>
-                                <select class="w-full outline-none text-slate-700 text-sm font-medium cursor-pointer">
-                                    <option value="">Mức giá</option>
-                                    <option value="u2">Dưới 2 Tỷ</option>
-                                    <option value="2t5">2 - 5 Tỷ</option>
-                                    <option value="o5">Trên 5 Tỷ</option>
-                                </select>
-                                <i class="fa-solid fa-chevron-down text-gray-400 text-xs absolute right-4"></i>
-                            </div>
+                            <select id="search-category" class="border border-gray-200 rounded-xl bg-white px-4 py-3 text-slate-700 text-sm font-medium lg:w-48 outline-none">
+                                <option value="">Tất cả loại hình</option>
+                                <option value="datnen">1. Đất nền</option>
+                                <option value="nhapho">2. Nhà phố</option>
+                                <option value="bietthu">3. Biệt thự</option>
+                                <option value="chungcu">4. Chung cư</option>
+                                <option value="shophouse">5. Shophouse</option>
+                                <option value="vanphong">6. Văn phòng / Officetel</option>
+                                <option value="khoxuong">7. Kho – xưởng</option>
+                                <option value="khac">8. Khác</option>
+                            </select>
+                            <select class="border border-gray-200 rounded-xl bg-white px-4 py-3 text-slate-700 text-sm font-medium lg:w-40 outline-none">
+                                <option value="">Mức giá</option>
+                                <option value="u2">Dưới 2 Tỷ</option>
+                                <option value="2t5">2 - 5 Tỷ</option>
+                                <option value="o5">Trên 5 Tỷ</option>
+                            </select>
                         </div>
-
-                        <button onclick="window.location.href='listing.html'" class="bg-red-600 hover:bg-red-700 transition text-white px-8 py-3 rounded-xl font-bold text-sm whitespace-nowrap shadow-md">
-                            Tìm kiếm
-                        </button>
-                        <button onclick="window.location.href='listing.html?view=map'" class="bg-slate-900 hover:bg-slate-800 transition text-white px-6 py-3 rounded-xl font-bold text-sm whitespace-nowrap shadow-md flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-map-location-dot"></i> Bản đồ
-                        </button>
+                        <button onclick="window.location.href='listing.html'" class="bg-red-600 text-white px-8 py-3 rounded-xl font-bold shadow-md">Tìm kiếm</button>
                     </div>
                 </div>
             </div>
@@ -150,11 +106,9 @@
             <div class="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
                 <div>
                     <h2 class="text-2xl font-bold text-slate-900 uppercase">Tin Đăng & Ưu Tiên VIP</h2>
-                    <p class="text-sm text-gray-500 mt-1">Các sản phẩm vừa được kiểm duyệt và tài trợ vị trí hiển thị.</p>
+                    <p class="text-sm text-gray-500 mt-1">Sản phẩm đã kiểm duyệt, ưu tiên hiển thị tin được tài trợ.</p>
                 </div>
-                <a href="listing.html" class="text-sm font-bold text-red-600 hover:text-red-800 transition flex items-center gap-1">
-                    Xem tất cả <i class="fa-solid fa-angle-right"></i>
-                </a>
+                <a href="listing.html" class="text-sm font-bold text-red-600 hover:underline">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
             </div>
 
             <div id="featured-listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -167,250 +121,155 @@
             <div class="text-center mb-6">
                 <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4"><i class="fa-solid fa-building-columns"></i></div>
                 <h2 class="text-xl font-black text-slate-900 uppercase">Nạp Tiền Tự Động</h2>
-                <p class="text-sm text-gray-500 mt-2">Hệ thống giao dịch sẽ tự động đối soát và cộng số dư vào ngân sách của bạn trong 30 giây.</p>
+                <p class="text-sm text-gray-500 mt-2">Dữ liệu được xử lý trực tiếp qua Neon Database.</p>
             </div>
-            
-            <div class="mb-6">
-                <p class="text-[11px] font-bold text-gray-500 uppercase mb-2">Thông tin Ngân hàng</p>
-                <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 mb-4">
-                    <p class="text-sm text-gray-600 mb-1">Ngân hàng: <strong id="bank-name">MB Bank</strong></p>
-                    <p class="text-sm text-gray-600 mb-1">Chủ tài khoản: <strong id="bank-account-name">PHAM VAN QUAN</strong></p>
-                    <p class="text-sm text-gray-600">Số tài khoản: <strong id="bank-account-number" class="text-slate-900">0981593935</strong></p>
-                </div>
-
-                <p class="text-[11px] font-bold text-gray-500 uppercase mb-2">Nội dung chuyển khoản (Bắt buộc ghi đúng)</p>
-                <div class="copy-box">
-                    <span class="copy-text" id="transfer-content">NAP SQDLand ...</span>
-                    <button class="copy-btn" onclick="copyText('transfer-content', this)" title="Copy nội dung"><i class="fa-regular fa-copy"></i></button>
-                </div>
+            <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 mb-6 text-sm text-gray-600 space-y-1">
+                <p>Ngân hàng: <strong id="bank-name">Đang tải...</strong></p>
+                <p>Chủ tài khoản: <strong id="bank-acc-name">Đang tải...</strong></p>
+                <p>Số tài khoản: <strong id="bank-acc-num" class="text-slate-900">...</strong></p>
             </div>
-
-            <button onclick="closeModal('modal-topup')" class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold text-sm uppercase hover:bg-slate-800 transition">Đã hiểu & Đóng</button>
+            <p class="text-[11px] font-bold text-gray-400 uppercase mb-2">Nội dung chuyển khoản (Bắt buộc)</p>
+            <div class="copy-box">
+                <span class="copy-text" id="transfer-content">NAP SQDLand ...</span>
+                <button class="copy-btn" onclick="copyTransferContent(this)"><i class="fa-regular fa-copy"></i></button>
+            </div>
+            <button onclick="closeModal('modal-topup')" class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold text-sm uppercase">Đóng</button>
         </div>
     </div>
 
     <footer class="bg-white border-t border-gray-200 pt-12 pb-6 lg:pb-12 mt-auto">
         <div class="container mx-auto px-4 lg:px-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10 text-sm text-gray-600">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-sm text-gray-600">
                 <div>
                     <img src="logo.jpg" class="h-10 mb-4" alt="SQDLand">
-                    <p class="mb-3 font-black text-slate-900 uppercase">CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ PHÁT TRIỂN BẤT ĐỘNG SẢN SQD LAND</p>
-                    <p class="mb-2"><i class="fa-solid fa-building w-5 text-red-600"></i> Mã Số Thuế: <strong>0111029283</strong></p>
-                    <p class="mb-2"><i class="fa-solid fa-location-dot w-5 text-red-600"></i> Trụ sở: Tầng 01, Căn S13, Tòa SA3, Vinhomes Smart City, Đại lộ Thăng Long, P. Tây Mỗ, TP. Hà Nội</p>
-                    <p class="mb-2"><i class="fa-solid fa-phone w-5 text-red-600"></i> SĐT Công ty: <strong>0981 593 935</strong></p>
+                    <p class="mb-3 font-black text-slate-900 uppercase">CÔNG TY CP ĐẦU TƯ VÀ PHÁT TRIỂN BĐS SQD LAND</p>
+                    <p class="mb-2"><i class="fa-solid fa-building w-5 text-red-600"></i> MST: <strong>0111029283</strong></p>
+                    <p class="mb-2"><i class="fa-solid fa-phone w-5 text-red-600"></i> Hotline: <strong>0981 593 935</strong></p>
                     <p class="mb-2"><i class="fa-solid fa-headset w-5 text-red-600"></i> CSKH: <strong>+84 971 82 82 36</strong></p>
-                    <p class="mb-2"><i class="fa-solid fa-envelope w-5 text-red-600"></i> Email: contact@sqdland.vn</p>
                 </div>
                 <div>
-                    <p class="font-bold text-slate-900 mb-4 uppercase">Về chúng tôi</p>
+                    <p class="font-bold text-slate-900 mb-4 uppercase">Quy định sàn</p>
                     <ul class="space-y-3 font-medium">
-                        <li><a href="#" class="hover:text-red-600 transition">Giới thiệu mạng lưới SQDLand</a></li>
-                        <li><a href="#" class="hover:text-red-600 transition">Quy chế hoạt động sàn</a></li>
-                        <li><a href="#" class="hover:text-red-600 transition">Chính sách bảo mật thông tin</a></li>
-                        <li><a href="#" class="hover:text-red-600 transition">Giải quyết tranh chấp/khiếu nại</a></li>
+                        <li><a href="#" class="hover:text-red-600">Giới thiệu SQDLand</a></li>
+                        <li><a href="#" class="hover:text-red-600">Quy chế hoạt động</a></li>
+                        <li><a href="#" class="hover:text-red-600">Chính sách bảo mật</a></li>
                     </ul>
                 </div>
                 <div>
-                    <p class="font-bold text-slate-900 mb-4 uppercase">Hỗ trợ đối tác & Khách hàng</p>
+                    <p class="font-bold text-slate-900 mb-4 uppercase">Hỗ trợ</p>
                     <ul class="space-y-3 font-medium">
-                        <li><a href="listing.html" class="hover:text-red-600 transition">Tìm kiếm Bất động sản</a></li>
-                        <li><a href="user-post-ad.html" class="hover:text-red-600 transition">Hướng dẫn niêm yết tài sản</a></li>
-                        <li><a href="#" onclick="showTopupModal()" class="hover:text-red-600 transition text-blue-600 font-bold"><i class="fa-solid fa-wallet mr-1"></i> Nạp tiền tự động</a></li>
-                        <li><a href="#" class="hover:text-red-600 transition">Dịch vụ sang tên Sổ đỏ</a></li>
+                        <li><a href="user-post-ad.html" class="hover:text-red-600">Hướng dẫn niêm yết</a></li>
+                        <li><button onclick="showTopupModal()" class="text-blue-600 font-bold hover:underline"><i class="fa-solid fa-wallet mr-1"></i> Nạp tiền tự động</button></li>
+                        <li><a href="#" class="hover:text-red-600">Dịch vụ sang tên Sổ đỏ</a></li>
                     </ul>
                 </div>
             </div>
-            
-            <div class="border-t border-gray-100 pt-6 flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4">
-                <p>&copy; 2026 SQDLand.vn. Đã đăng ký bản quyền.</p>
-                <div class="flex items-center gap-3 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200">
-                    <span class="text-slate-600">SQDLand.vn được cung cấp dịch vụ và vận hành bởi <strong>MTH Exchange</strong></span>
-                    <img src="logomth.jpg" alt="MTH Exchange" class="h-6 rounded object-contain bg-white shadow-sm">
-                </div>
+            <div class="border-t border-gray-100 pt-8 mt-10 flex flex-col lg:flex-row items-center justify-between text-xs text-gray-400 font-medium gap-4">
+                <p>&copy; 2026 SQDLand.vn. Được vận hành bởi <strong>MTH Exchange</strong></p>
+                <img src="logomth.jpg" alt="MTH" class="h-6 opacity-80">
             </div>
         </div>
     </footer>
 
-    <div class="chatbot-btn" onclick="toggleChat()" title="Hỗ trợ & Pháp lý">
-        <i class="fa-solid fa-headset"></i>
-    </div>
-
-    <div class="chatbot-window" id="chatbot">
-        <div class="chat-header">
-            <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span class="text-sm">Trợ lý Pháp lý SQD</span>
-            </div>
-            <i class="fa-solid fa-xmark cursor-pointer hover:text-red-300" onclick="toggleChat()"></i>
-        </div>
-        <div class="chat-body" id="chat-body">
-            <div class="chat-msg msg-bot">
-                Kính chào Quý khách! Tôi là trợ lý ảo của SQDLand. Tôi có thể hỗ trợ Quý khách tìm kiếm bất động sản, tra cứu quy hoạch hoặc tư vấn thủ tục pháp lý (Sổ đỏ, Hợp đồng cọc, Thuế...).<br><br>Quý khách cần hỗ trợ vấn đề gì ạ?
-            </div>
-        </div>
-        <div class="chat-input">
-            <input type="text" id="chat-input-field" placeholder="Nhập câu hỏi tại đây..." class="w-full outline-none text-sm text-slate-700 bg-transparent" onkeypress="handleChatEnter(event)">
-            <button onclick="sendMsg()" class="text-red-600 hover:text-red-800 px-2"><i class="fa-solid fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <nav class="mobile-bottom-nav">
-        <a href="index.html" class="nav-item-m active">
-            <i class="fa-solid fa-house text-[20px]"></i><span>Trang chủ</span>
-        </a>
-        <a href="listing.html" class="nav-item-m">
-            <i class="fa-solid fa-search text-[20px]"></i><span>Mua bán</span>
-        </a>
-        <a href="project-list.html" class="nav-item-m">
-            <i class="fa-solid fa-building text-[20px]"></i><span>Dự án</span>
-        </a>
-        <a href="news.html" class="nav-item-m">
-            <i class="fa-solid fa-newspaper text-[20px]"></i><span>Tin tức</span>
-        </a>
-        <a href="login.html" class="nav-item-m">
-            <i class="fa-solid fa-user text-[20px]"></i><span>Tài khoản</span>
-        </a>
+    <nav class="mobile-bottom-nav border-t border-gray-100">
+        <a href="index.html" class="nav-item-m active"><i class="fa-solid fa-house text-[20px]"></i><span>Trang chủ</span></a>
+        <a href="listing.html" class="nav-item-m"><i class="fa-solid fa-search text-[20px]"></i><span>Mua bán</span></a>
+        <a href="project-list.html" class="nav-item-m"><i class="fa-solid fa-building text-[20px]"></i><span>Dự án</span></a>
+        <a href="news.html" class="nav-item-m"><i class="fa-solid fa-newspaper text-[20px]"></i><span>Tin tức</span></a>
+        <a href="login.html" id="nav-auth-link-m" class="nav-item-m"><i class="fa-solid fa-user text-[20px]"></i><span>Tài khoản</span></a>
     </nav>
 
     <script>
-        // --- LOGIC LẤY DỮ LIỆU TỪ CƠ SỞ DỮ LIỆU ---
-        async function fetchFeaturedProperties() {
+        // --- ĐỒNG BỘ TRẠNG THÁI ĐĂNG NHẬP ---
+        const user = JSON.parse(localStorage.getItem('sqd_user'));
+        if (user) {
+            const authLink = document.getElementById('nav-auth-link');
+            authLink.innerText = "Quản lý";
+            authLink.href = "user-dashboard.html";
+            const authLinkM = document.getElementById('nav-auth-link-m');
+            authLinkM.href = "user-dashboard.html";
+        }
+
+        // --- LẤY DỮ LIỆU TỪ NEON DB ---
+        async function fetchFeatured() {
             const container = document.getElementById('featured-listings');
-            container.innerHTML = `
-                <div class="col-span-full text-center py-12">
-                    <i class="fa-solid fa-spinner fa-spin text-3xl text-red-600 mb-3"></i>
-                    <p class="text-gray-500 font-bold text-sm">Đang đồng bộ rổ hàng từ hệ thống...</p>
-                </div>
-            `;
+            container.innerHTML = `<div class="col-span-full text-center py-20 text-gray-400"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Đang tải dữ liệu Neon...</div>`;
 
             try {
-                const response = await fetch('/api/properties');
-                if (!response.ok) throw new Error('Network error');
-                
-                let properties = await response.json();
+                const res = await fetch('/api/properties');
+                const data = await res.json();
 
-                if (properties.length === 0) {
-                    container.innerHTML = `<p class="col-span-full text-center py-10 text-gray-500 font-medium text-sm">Chưa có tài sản nào được niêm yết. Hãy là người đầu tiên!</p>`;
+                if (data.length === 0) {
+                    container.innerHTML = `<p class="col-span-full text-center text-gray-500 py-10">Chưa có tài sản nào được niêm yết.</p>`;
                     return;
                 }
 
-                // Ưu tiên đưa bài VIP lên đầu danh sách
-                properties.sort((a, b) => {
-                    const isVipA = a.is_vip || false;
-                    const isVipB = b.is_vip || false;
-                    return (isVipB ? 1 : 0) - (isVipA ? 1 : 0);
-                });
-
-                // Chỉ render 8 sản phẩm mới nhất ra trang chủ
-                container.innerHTML = properties.slice(0, 8).map(item => {
-                    
+                container.innerHTML = data.slice(0, 8).map(p => {
                     let catLabel = 'Bất động sản';
                     let catColor = 'bg-gray-600';
-                    switch(item.category) {
-                        case 'datnen': catLabel = '1. Đất nền'; catColor = 'bg-green-600'; break;
-                        case 'nhapho': catLabel = '2. Nhà phố'; catColor = 'bg-red-600'; break;
-                        case 'bietthu': catLabel = '3. Biệt thự'; catColor = 'bg-purple-600'; break;
-                        case 'chungcu': catLabel = '4. Chung cư'; catColor = 'bg-blue-600'; break;
-                        case 'shophouse': catLabel = '5. Shophouse'; catColor = 'bg-orange-500'; break;
-                        case 'vanphong': catLabel = '6. Văn phòng'; catColor = 'bg-teal-600'; break;
-                        case 'khoxuong': catLabel = '7. Kho – xưởng'; catColor = 'bg-amber-700'; break;
-                        case 'khac': catLabel = '8. Khác'; catColor = 'bg-gray-600'; break;
+                    switch(p.category) {
+                        case 'datnen': catLabel = 'Đất nền'; catColor = 'bg-green-600'; break;
+                        case 'nhapho': catLabel = 'Nhà phố'; catColor = 'bg-red-600'; break;
+                        case 'bietthu': catLabel = 'Biệt thự'; catColor = 'bg-purple-600'; break;
+                        case 'chungcu': catLabel = 'Chung cư'; catColor = 'bg-blue-600'; break;
+                        case 'shophouse': catLabel = 'Shophouse'; catColor = 'bg-orange-500'; break;
+                        case 'vanphong': catLabel = 'Văn phòng'; catColor = 'bg-teal-600'; break;
+                        case 'khoxuong': catLabel = 'Kho – Xưởng'; catColor = 'bg-amber-700'; break;
+                        default: catLabel = 'Khác';
                     }
 
-                    // Hiển thị mác VIP nếu is_vip = true
-                    const isVip = item.is_vip || false; 
-                    const vipBadgeHtml = isVip ? `<span class="badge badge-vip"><i class="fa-solid fa-crown mr-1"></i> Tin VIP</span>` : '';
-                    const vipCardClass = isVip ? 'vip-card' : '';
-
                     return `
-                    <div class="prop-card ${vipCardClass} cursor-pointer" onclick="location.href='product-detail.html?id=${item.id}'">
+                    <div class="prop-card ${p.is_vip ? 'vip-card' : ''} cursor-pointer" onclick="location.href='product-detail.html?id=${p.id}'">
                         <div class="relative">
-                            <img src="${item.images?.[0] || 'logo.jpg'}" class="prop-img bg-gray-100" alt="${item.title}" onerror="this.src='logo.jpg'">
+                            <img src="${p.images?.[0] || 'logo.jpg'}" class="prop-img bg-gray-100" alt="img" onerror="this.src='logo.jpg'">
                             <span class="badge ${catColor}">${catLabel}</span>
-                            ${vipBadgeHtml}
+                            ${p.is_vip ? '<span class="badge-vip"><i class="fa-solid fa-crown mr-1"></i> VIP</span>' : ''}
                         </div>
                         <div class="p-5 flex flex-col flex-grow">
-                            <h3 class="font-bold text-slate-900 text-base leading-snug mb-2 line-clamp-2 hover:text-red-600 transition">${item.title}</h3>
-                            <div class="text-red-600 font-black text-lg mb-3">${item.price}</div>
-                            <div class="flex items-center gap-4 text-sm text-gray-600 font-medium border-t border-gray-100 pt-3 mt-auto">
-                                <span><i class="fa-solid fa-expand text-gray-400 mr-1"></i> ${item.area}m²</span>
-                                <span class="truncate"><i class="fa-solid fa-location-dot text-gray-400 mr-1"></i> ${item.location}</span>
+                            <h3 class="font-bold text-slate-900 text-sm leading-snug mb-2 line-clamp-2">${p.title}</h3>
+                            <div class="text-red-600 font-black text-lg mb-3">${p.price}</div>
+                            <div class="flex items-center gap-4 text-[10px] text-gray-500 font-bold border-t border-gray-50 pt-3 mt-auto uppercase tracking-tighter">
+                                <span><i class="fa-solid fa-expand mr-1"></i> ${p.area}m²</span>
+                                <span class="truncate"><i class="fa-solid fa-location-dot mr-1"></i> ${p.location}</span>
                             </div>
                         </div>
                     </div>
-                `}).join('');
-
-            } catch (error) {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-12 bg-red-50 rounded-2xl border border-red-100">
-                        <i class="fa-solid fa-server text-4xl text-red-300 mb-3"></i>
-                        <p class="text-red-600 font-bold text-sm mb-1">Máy chủ dữ liệu đang tạm thời gián đoạn.</p>
-                        <p class="text-gray-500 text-xs">Vui lòng đảm bảo bạn đã khởi chạy tệp server.js</p>
-                    </div>
-                `;
+                `;}).join('');
+            } catch (e) {
+                container.innerHTML = `<p class="col-span-full text-center text-red-400">Không thể kết nối Server.</p>`;
             }
         }
 
-        document.addEventListener('DOMContentLoaded', fetchFeaturedProperties);
+        // --- NẠP TIỀN & MODAL ---
+        async function showTopupModal() {
+            const modal = document.getElementById('modal-topup');
+            const currentUser = JSON.parse(localStorage.getItem('sqd_user'));
+            document.getElementById('transfer-content').innerText = `NAP SQDLand ${currentUser ? currentUser.phone : '09xxxxxxxx'}`;
 
-        // --- LOGIC HIỂN THỊ POPUP NẠP TIỀN (SEPAY) ---
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-        function showTopupModal() {
-            // Lấy SĐT để tạo mã chuyển khoản tự động
-            const userStr = localStorage.getItem('sqd_user');
-            const phone = userStr ? JSON.parse(userStr).phone : '09xxxx';
-            document.getElementById('transfer-content').innerText = `NAP SQDLand ${phone}`;
-            
-            // Lấy STK từ cấu hình Admin
-            const bankConfig = JSON.parse(localStorage.getItem('sqd_sepay_config')) || { bank: 'MB Bank', name: 'PHAM VAN QUAN', number: '0981593935' };
-            document.getElementById('bank-name').innerText = bankConfig.bank;
-            document.getElementById('bank-account-name').innerText = bankConfig.name;
-            document.getElementById('bank-account-number').innerText = bankConfig.number;
-            
-            openModal('modal-topup');
+            try {
+                const res = await fetch('/api/config-bank');
+                const cfg = await res.json();
+                if (cfg.bank) {
+                    document.getElementById('bank-name').innerText = cfg.bank;
+                    document.getElementById('bank-acc-name').innerText = cfg.account_name;
+                    document.getElementById('bank-acc-num').innerText = cfg.account_number;
+                }
+            } catch (e) {}
+            modal.classList.add('active');
         }
 
-        function copyText(elementId, btn) {
-            const textToCopy = document.getElementById(elementId).innerText;
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                const originalIcon = btn.innerHTML;
-                btn.innerHTML = '<i class="fa-solid fa-check"></i>';
-                btn.classList.add('copied');
-                setTimeout(() => { btn.innerHTML = originalIcon; btn.classList.remove('copied'); }, 2000);
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function copyTransferContent(btn) {
+            const text = document.getElementById('transfer-content').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const icon = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check text-green-500"></i>';
+                setTimeout(() => { btn.innerHTML = icon; }, 2000);
             });
         }
 
-        // --- LOGIC CHATBOT ---
-        function toggleChat() {
-            const chat = document.getElementById('chatbot');
-            chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex';
-        }
-
-        function handleChatEnter(e) {
-            if(e.key === 'Enter') sendMsg();
-        }
-
-        function sendMsg() {
-            const input = document.getElementById('chat-input-field');
-            const text = input.value.trim();
-            if(!text) return;
-
-            const chatBody = document.getElementById('chat-body');
-            chatBody.innerHTML += `<div class="chat-msg msg-user">${text}</div>`;
-            input.value = '';
-            chatBody.scrollTop = chatBody.scrollHeight;
-
-            setTimeout(() => {
-                let reply = "Cảm ơn Quý khách. Chuyên viên của SQDLand sẽ liên hệ lại qua số điện thoại trên hệ thống để tư vấn chi tiết hơn về vấn đề này.";
-                if(text.toLowerCase().includes("sổ đỏ") || text.toLowerCase().includes("pháp lý")) {
-                    reply = "Đối với thủ tục sang tên Sổ đỏ, Quý khách cần chuẩn bị: Hợp đồng công chứng, CMND/CCCD, Hộ khẩu và Giấy chứng nhận tình trạng hôn nhân. SQDLand hỗ trợ làm dịch vụ trọn gói chỉ từ 3-5 ngày làm việc.";
-                }
-                chatBody.innerHTML += `<div class="chat-msg msg-bot">${reply}</div>`;
-                chatBody.scrollTop = chatBody.scrollHeight;
-            }, 1000);
-        }
+        document.addEventListener('DOMContentLoaded', fetchFeatured);
     </script>
 </body>
 </html>
