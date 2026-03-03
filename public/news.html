@@ -30,7 +30,8 @@
         .news-card:hover .news-img { transform: scale(1.03); }
         
         /* ĐIỂM NHẤN TIN TỨC NỔI BẬT */
-        .featured-news { display: flex; flex-direction: column; lg:flex-row; gap: 24px; background: white; border-radius: 24px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-bottom: 32px; }
+        .featured-news { display: flex; flex-direction: column; lg:flex-row; gap: 24px; background: white; border-radius: 24px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-bottom: 32px; cursor: pointer; transition: 0.3s; }
+        .featured-news:hover { border-color: #cbd5e1; box-shadow: 0 15px 40px rgba(0,0,0,0.06); }
         @media (min-width: 1024px) { .featured-news { flex-direction: row; align-items: center; } .featured-img { width: 50%; height: 350px; border-radius: 16px; object-fit: cover; } .featured-content { width: 50%; padding: 20px; } }
         @media (max-width: 1023px) { .featured-img { width: 100%; height: 240px; border-radius: 16px; object-fit: cover; } }
 
@@ -92,8 +93,10 @@
                 <div>
                     <img src="logo.jpg" class="h-10 mb-4" alt="SQDLand">
                     <p class="mb-3 font-black text-slate-900 uppercase">CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ PHÁT TRIỂN BẤT ĐỘNG SẢN SQD LAND</p>
-                    <p class="mb-2"><i class="fa-solid fa-location-dot w-5 text-red-600"></i> Trụ sở: Tầng 01, Căn S13, Tòa SA3, Vinhomes Smart City, đường Đại lộ Thăng Long, Phường Tây Mỗ, Thành phố Hà Nội, Việt Nam</p>
-                    <p class="mb-2"><i class="fa-solid fa-phone w-5 text-red-600"></i> Hotline: 0971 82 82 36</p>
+                    <p class="mb-2"><i class="fa-solid fa-building w-5 text-red-600"></i> Mã Số Thuế: <strong>0111029283</strong></p>
+                    <p class="mb-2"><i class="fa-solid fa-location-dot w-5 text-red-600"></i> Trụ sở: Tầng 01, Căn S13, Tòa SA3, Vinhomes Smart City, Đại lộ Thăng Long, P. Tây Mỗ, TP. Hà Nội</p>
+                    <p class="mb-2"><i class="fa-solid fa-phone w-5 text-red-600"></i> SĐT Công ty: <strong>0981 593 935</strong></p>
+                    <p class="mb-2"><i class="fa-solid fa-headset w-5 text-red-600"></i> CSKH: <strong>+84 971 82 82 36</strong></p>
                     <p class="mb-2"><i class="fa-solid fa-envelope w-5 text-red-600"></i> Email: contact@sqdland.vn</p>
                 </div>
                 <div>
@@ -110,6 +113,7 @@
                     <ul class="space-y-3 font-medium">
                         <li><a href="listing.html" class="hover:text-red-600 transition">Tìm kiếm Bất động sản</a></li>
                         <li><a href="user-post-ad.html" class="hover:text-red-600 transition">Hướng dẫn niêm yết tài sản</a></li>
+                        <li><a href="#" onclick="alert('CHỨC NĂNG NẠP TIỀN TỰ ĐỘNG:\\n\\nĐể đẩy tin VIP, vui lòng chuyển khoản đến:\\nSTK: [STK_ADMIN] - Ngân hàng [TEN_NH]\\nNội dung: NAP SQDLand [SĐT_CUA_BAN]\\n\\nHệ thống Webhook Sepay sẽ tự động cộng tiền vào tài khoản của bạn trong 30 giây.')" class="hover:text-red-600 transition text-blue-600 font-bold"><i class="fa-solid fa-wallet mr-1"></i> Nạp tiền tự động (Sepay)</a></li>
                         <li><a href="#" class="hover:text-red-600 transition">Dịch vụ sang tên Sổ đỏ</a></li>
                     </ul>
                 </div>
@@ -186,7 +190,7 @@
 
                 // Tạo HTML cho bài Tiêu điểm
                 let htmlOutput = `
-                    <div class="featured-news cursor-pointer" onclick="location.href='news-detail.html?id=${featured.id}'">
+                    <div class="featured-news" onclick="location.href='news-detail.html?id=${featured.id}'">
                         <img src="${featured.thumbnail || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1000&auto=format&fit=crop'}" class="featured-img" alt="${featured.title}">
                         <div class="featured-content">
                             <span class="bg-red-50 text-red-600 px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest mb-4 inline-block">${featured.category || 'Tiêu điểm thị trường'}</span>
