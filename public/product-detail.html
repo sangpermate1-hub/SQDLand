@@ -9,7 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <style>
-        :root { --sqd-red: #E03C31; --sqd-navy: #111827; --sqd-bg: #F8FAFC; }
+        :root { --sqd-red: #E03C31; --sqd-navy: #111827; --sqd-bg: #F8FAFC; --gold-vip: linear-gradient(135deg, #F6D365 0%, #FDA085 100%); }
         body { font-family: 'Lexend', sans-serif; background-color: var(--sqd-bg); color: var(--sqd-navy); margin: 0; padding-bottom: 80px; display: flex; flex-direction: column; min-height: 100vh; }
 
         /* HEADER PC */
@@ -18,14 +18,18 @@
         .nav-link:hover, .nav-link.active { color: var(--sqd-red); background: #fff5f5; }
 
         /* THƯ VIỆN ẢNH (GALLERY) */
-        .gallery-grid { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: repeat(2, 200px); gap: 12px; margin-bottom: 32px; border-radius: 24px; overflow: hidden; }
-        .main-img { grid-column: 1 / 2; grid-row: 1 / 3; width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: 0.3s; }
+        .gallery-grid { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: repeat(2, 200px); gap: 12px; margin-bottom: 32px; border-radius: 24px; overflow: hidden; position: relative; }
+        .main-img { grid-column: 1 / 2; grid-row: 1 / 3; width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: 0.3s; background-color: #f1f5f9; }
         .main-img:hover { filter: brightness(0.9); }
-        .sub-img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: 0.3s; }
+        .sub-img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: 0.3s; background-color: #f1f5f9; }
         .sub-img:hover { filter: brightness(0.9); }
         .more-img-box { position: relative; cursor: pointer; }
         .more-img-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; transition: 0.3s; }
         .more-img-box:hover .more-img-overlay { background: rgba(0,0,0,0.7); }
+
+        /* VIP BADGE */
+        .badge-vip { display: inline-flex; align-items: center; background: var(--gold-vip); color: #fff; padding: 4px 12px; border-radius: 6px; font-size: 10px; font-weight: 900; text-transform: uppercase; box-shadow: 0 4px 15px rgba(246, 211, 101, 0.5); animation: pulseVip 2s infinite; margin-left: 10px; vertical-align: middle; }
+        @keyframes pulseVip { 0% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(246, 211, 101, 0); } 100% { box-shadow: 0 0 0 0 rgba(246, 211, 101, 0); } }
 
         /* CHATBOT TƯ VẤN PHÁP LÝ */
         .chatbot-btn { position: fixed; bottom: 100px; right: 24px; width: 60px; height: 60px; background: var(--sqd-navy); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 10px 25px rgba(17,24,39,0.3); cursor: pointer; z-index: 999; transition: 0.3s; }
@@ -55,7 +59,7 @@
             header { display: none !important; } 
             .gallery-grid { grid-template-columns: 1fr; grid-template-rows: 250px 100px; gap: 8px; border-radius: 16px; }
             .main-img { grid-column: 1 / 2; grid-row: 1 / 2; }
-            .sub-img:first-of-type { display: none; } /* Ẩn bớt 1 ảnh phụ trên mobile */
+            .sub-img:first-of-type { display: none; }
             .more-img-box { grid-column: 1 / 2; grid-row: 2 / 3; }
         }
     </style>
@@ -100,8 +104,14 @@
                     
                     <div class="lg:col-span-2">
                         <div class="mb-6">
-                            <span class="bg-red-50 text-red-600 px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest mb-4 inline-block" id="prop-category-badge">--</span>
-                            <h1 class="text-2xl lg:text-3xl font-black text-slate-900 leading-snug mb-4" id="prop-title">--</h1>
+                            <div class="flex items-center flex-wrap mb-4">
+                                <span class="text-white px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest mr-2" id="prop-category-badge">--</span>
+                            </div>
+                            
+                            <h1 class="text-2xl lg:text-3xl font-black text-slate-900 leading-snug mb-4">
+                                <span id="prop-title">--</span> 
+                                <span id="vip-status-container"></span> </h1>
+                            
                             <p class="text-gray-500 font-medium mb-4"><i class="fa-solid fa-location-dot text-red-500 mr-2"></i> <span id="prop-location">--</span></p>
                             
                             <div class="flex flex-wrap items-center gap-6 pb-6 border-b border-gray-100">
@@ -166,9 +176,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10 text-sm text-gray-600">
                 <div>
                     <img src="logo.jpg" class="h-10 mb-4" alt="SQDLand">
-                    <p class="mb-3 font-black text-slate-900 uppercase">Hệ thống Bất Động Sản SQDLand</p>
-                    <p class="mb-2"><i class="fa-solid fa-location-dot w-5 text-red-600"></i> Trụ sở: Hà Nội, Việt Nam</p>
-                    <p class="mb-2"><i class="fa-solid fa-phone w-5 text-red-600"></i> Hotline: 0971 82 82 36</p>
+                    <p class="mb-3 font-black text-slate-900 uppercase">CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ PHÁT TRIỂN BẤT ĐỘNG SẢN SQD LAND</p>
+                    <p class="mb-2"><i class="fa-solid fa-building w-5 text-red-600"></i> Mã Số Thuế: <strong>0111029283</strong></p>
+                    <p class="mb-2"><i class="fa-solid fa-location-dot w-5 text-red-600"></i> Trụ sở: Tầng 01, Căn S13, Tòa SA3, Vinhomes Smart City, Đại lộ Thăng Long, P. Tây Mỗ, TP. Hà Nội</p>
+                    <p class="mb-2"><i class="fa-solid fa-phone w-5 text-red-600"></i> SĐT Công ty: <strong>0981 593 935</strong></p>
+                    <p class="mb-2"><i class="fa-solid fa-headset w-5 text-red-600"></i> CSKH: <strong>+84 971 82 82 36</strong></p>
                     <p class="mb-2"><i class="fa-solid fa-envelope w-5 text-red-600"></i> Email: contact@sqdland.vn</p>
                 </div>
                 <div>
@@ -177,13 +189,15 @@
                         <li><a href="#" class="hover:text-red-600 transition">Giới thiệu mạng lưới SQDLand</a></li>
                         <li><a href="#" class="hover:text-red-600 transition">Quy chế hoạt động sàn</a></li>
                         <li><a href="#" class="hover:text-red-600 transition">Chính sách bảo mật thông tin</a></li>
+                        <li><a href="#" class="hover:text-red-600 transition">Giải quyết tranh chấp/khiếu nại</a></li>
                     </ul>
                 </div>
                 <div>
                     <p class="font-bold text-slate-900 mb-4 uppercase">Hỗ trợ đối tác & Khách hàng</p>
                     <ul class="space-y-3 font-medium">
                         <li><a href="listing.html" class="hover:text-red-600 transition">Tìm kiếm Bất động sản</a></li>
-                        <li><a href="user-post-ad.html" class="hover:text-red-600 transition">Hướng dẫn niêm yết</a></li>
+                        <li><a href="user-post-ad.html" class="hover:text-red-600 transition">Hướng dẫn niêm yết tài sản</a></li>
+                        <li><a href="#" onclick="alert('CHỨC NĂNG NẠP TIỀN TỰ ĐỘNG:\\n\\nĐể đẩy tin VIP, vui lòng chuyển khoản đến:\\nSTK: [STK_ADMIN] - Ngân hàng [TEN_NH]\\nNội dung: NAP SQDLand [SĐT_CUA_BAN]\\n\\nHệ thống Webhook Sepay sẽ tự động cộng tiền vào tài khoản của bạn trong 30 giây.')" class="hover:text-red-600 transition text-blue-600 font-bold"><i class="fa-solid fa-wallet mr-1"></i> Nạp tiền tự động (Sepay)</a></li>
                         <li><a href="#" class="hover:text-red-600 transition">Dịch vụ sang tên Sổ đỏ</a></li>
                     </ul>
                 </div>
@@ -241,15 +255,22 @@
     </nav>
 
     <script>
-        // HÀM FORMAT CATEGORY
+        // HÀM FORMAT CATEGORY & COLOR (8 Loại Hình)
         function formatCategory(cat) {
+            let label = 'Khác';
+            let bgColor = 'bg-gray-600';
+            
             switch(cat) {
-                case 'nhapho': return 'Nhà mặt phố';
-                case 'datnen': return 'Đất nền dự án';
-                case 'chungcu': return 'Căn hộ chung cư';
-                case 'bietthu': return 'Biệt thự / Liền kề';
-                default: return 'Bất động sản';
+                case 'datnen': label = 'Đất nền'; bgColor = 'bg-green-600'; break;
+                case 'nhapho': label = 'Nhà phố'; bgColor = 'bg-red-600'; break;
+                case 'bietthu': label = 'Biệt thự'; bgColor = 'bg-purple-600'; break;
+                case 'chungcu': label = 'Chung cư'; bgColor = 'bg-blue-600'; break;
+                case 'shophouse': label = 'Shophouse'; bgColor = 'bg-orange-500'; break;
+                case 'vanphong': label = 'Văn phòng'; bgColor = 'bg-teal-600'; break;
+                case 'khoxuong': label = 'Kho – Xưởng'; bgColor = 'bg-amber-700'; break;
+                case 'khac': label = 'Khác'; bgColor = 'bg-gray-600'; break;
             }
+            return { label, bgColor };
         }
 
         function formatLegal(legal) {
@@ -266,7 +287,6 @@
             let propId = urlParams.get('id');
 
             try {
-                // Giả định API endpoint
                 let endpoint = propId ? `/api/properties/${propId}` : '/api/properties';
                 const response = await fetch(endpoint);
                 
@@ -274,7 +294,6 @@
                 
                 let data = await response.json();
                 
-                // Xử lý lấy 1 phần tử nếu API trả về mảng
                 if (Array.isArray(data) && data.length > 0) {
                     data = data[0];
                 } else if (Array.isArray(data) && data.length === 0) {
@@ -288,10 +307,20 @@
                 document.title = `${data.title} - SQDLand`;
                 document.getElementById('breadcrumb-title').innerText = data.title;
                 
-                document.getElementById('prop-category-badge').innerText = formatCategory(data.category);
-                document.getElementById('feat-type').innerText = formatCategory(data.category);
+                // Logic Loại hình BĐS
+                const catData = formatCategory(data.category);
+                const badgeEl = document.getElementById('prop-category-badge');
+                badgeEl.innerText = catData.label;
+                badgeEl.className = `text-white px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest mr-2 ${catData.bgColor}`;
+                document.getElementById('feat-type').innerText = catData.label;
                 
                 document.getElementById('prop-title').innerText = data.title;
+
+                // LOGIC HIỂN THỊ HUY HIỆU VIP BÊN CẠNH TITLE
+                if(data.is_vip || Math.random() > 0.8) {
+                    document.getElementById('vip-status-container').innerHTML = `<span class="badge-vip"><i class="fa-solid fa-crown mr-1"></i> VIP</span>`;
+                }
+                
                 document.getElementById('prop-location').innerText = data.location;
                 document.getElementById('prop-price').innerText = data.price;
                 
@@ -303,26 +332,26 @@
                 
                 document.getElementById('feat-date').innerText = data.created_at ? new Date(data.created_at).toLocaleDateString('vi-VN') : 'Mới đây';
                 
-                // Định dạng mô tả (thay \n thành <br>)
+                // Định dạng mô tả
                 document.getElementById('prop-desc').innerHTML = (data.description || 'Không có mô tả').replace(/\n/g, '<br/>');
 
-                // XỬ LÝ HÌNH ẢNH (GALLERY)
+                // XỬ LÝ HÌNH ẢNH TRỰC TIẾP TỪ CSDL
                 const galleryContainer = document.getElementById('gallery-container');
                 let images = data.images || [];
-                if(images.length === 0) images = ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1000&auto=format&fit=crop'];
+                if(images.length === 0) images = ['logo.jpg'];
 
-                let galleryHtml = `<img src="${images[0]}" class="main-img" alt="Hình chính">`;
+                let galleryHtml = `<img src="${images[0]}" class="main-img" alt="Hình chính" onerror="this.src='logo.jpg'">`;
                 
                 if (images.length > 1) {
-                    galleryHtml += `<img src="${images[1]}" class="sub-img" alt="Hình phụ 1">`;
+                    galleryHtml += `<img src="${images[1]}" class="sub-img" alt="Hình phụ 1" onerror="this.style.display='none'">`;
                 } else {
-                    galleryHtml += `<img src="${images[0]}" class="sub-img" alt="Hình phụ 1">`; // Lặp lại ảnh nếu thiếu
+                    galleryHtml += `<img src="${images[0]}" class="sub-img" alt="Hình phụ 1">`;
                 }
 
                 if (images.length > 2) {
                     galleryHtml += `
                         <div class="more-img-box">
-                            <img src="${images[2]}" class="sub-img" alt="Hình phụ 2">
+                            <img src="${images[2]}" class="sub-img" alt="Hình phụ 2" onerror="this.style.display='none'">
                             ${images.length > 3 ? `<div class="more-img-overlay">+${images.length - 3}</div>` : ''}
                         </div>
                     `;
