@@ -216,6 +216,53 @@ app.post('/api/admin/topup', (req, res) => {
     }
 });
 
+// ==========================================
+// API WEBHOOK SEPAY (NẠP TIỀN TỰ ĐỘNG)
+// ==========================================
+app.post('/api/webhook/sepay', (req, res) => {
+    // 1. Lấy dữ liệu SePay đẩy về
+    const payload = req.body;
+    
+    // In ra log để anh dễ kiểm tra trên Railway
+    console.log("🔔 [Webhook SePay] Nhận giao dịch mới:", payload);
+
+    // SePay thường trả về số tiền ở biến transferAmount và nội dung ở content (hoặc transactionContent)
+    const amount = payload.transferAmount || payload.amountIn || 0; 
+    const content = payload.content || payload.transactionContent || "";
+
+    // Nếu không có tiền vào hoặc không có nội dung thì bỏ qua
+    if (amount <= 0 || !content) {
+        return res.status(200).json({ success: true, message: "Bỏ qua giao dịch không hợp lệ" });
+    }
+
+    // 2. Dùng Regex để quét tìm cú pháp: NAP SQDLand [SỐ_ĐIỆN_THOẠI]
+    // /NAP\s+SQDLand\s+(\d{10})/i : Không phân biệt hoa thường, cho phép khoảng trắng tùy ý, tìm đúng 10 số
+    const match = content.match(/NAP\s+SQDLand\s+(\d{10})/i);
+
+    if (match) {
+        const phone = match[1]; // Lấy ra số điện thoại từ nội dung
+        
+        const db = readDB();
+        const userIndex = db.users.findIndex(u => u.phone === phone);
+
+        if (userIndex !== -1) {
+            // 3. Cộng tiền vào tài khoản
+            db.users[userIndex].balance += Number(amount);
+            writeDB(db);
+            
+            console.log(`✅ [Webhook SePay] NẠP THÀNH CÔNG ${amount}đ cho tài khoản: ${phone}`);
+            return res.status(200).json({ success: true, message: "Nạp tiền thành công" });
+        } else {
+            console.log(`❌ [Webhook SePay] LỖI: Không tìm thấy SĐT ${phone} trong hệ thống!`);
+            return res.status(200).json({ success: false, message: "SĐT không tồn tại" }); 
+            // Vẫn trả về 200 để SePay hiểu là code đã chạy xong, không gửi lại nữa
+        }
+    }
+
+    // Giao dịch chuyển tiền với nội dung khác (Không phải nạp tiền)
+    return res.status(200).json({ success: true, message: "Giao dịch ngoài hệ thống SQDLand" });
+});
+
 // Chuyển hướng mọi route không tồn tại về index.html (Hỗ trợ SPA)
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
