@@ -46,7 +46,6 @@
             .mobile-bottom-nav { display: none; } 
         }
         @media (max-width: 1023px) { 
-            /* ẨN TOÀN BỘ HEADER TRÊN MOBILE */
             header { display: none !important; } 
         }
     </style>
@@ -62,7 +61,7 @@
                 <a href="listing.html" class="nav-link">Mua bán</a>
                 <a href="project-list.html" class="nav-link">Dự án</a>
                 <a href="news.html" class="nav-link active">Tin tức</a>
-                <a href="login.html" class="nav-link bg-red-600 text-white hover:bg-red-700 hover:text-white ml-2 shadow-sm">Tài khoản</a>
+                <a href="login.html" id="nav-auth-link" class="nav-link bg-red-600 text-white hover:bg-red-700 hover:text-white ml-2 shadow-sm">Tài khoản</a>
             </nav>
         </div>
     </header>
@@ -87,163 +86,100 @@
         </main>
     </div>
 
-    <footer class="bg-white border-t border-gray-200 pt-12 pb-6 lg:pb-12 mt-auto">
-        <div class="container mx-auto px-4 lg:px-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10 text-sm text-gray-600">
-                <div>
-                    <img src="logo.jpg" class="h-10 mb-4" alt="SQDLand">
-                    <p class="mb-3 font-black text-slate-900 uppercase">CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ PHÁT TRIỂN BẤT ĐỘNG SẢN SQD LAND</p>
-                    <p class="mb-2"><i class="fa-solid fa-building w-5 text-red-600"></i> Mã Số Thuế: <strong>0111029283</strong></p>
-                    <p class="mb-2"><i class="fa-solid fa-location-dot w-5 text-red-600"></i> Trụ sở: Tầng 01, Căn S13, Tòa SA3, Vinhomes Smart City, Đại lộ Thăng Long, P. Tây Mỗ, TP. Hà Nội</p>
-                    <p class="mb-2"><i class="fa-solid fa-phone w-5 text-red-600"></i> SĐT Công ty: <strong>0981 593 935</strong></p>
-                    <p class="mb-2"><i class="fa-solid fa-headset w-5 text-red-600"></i> CSKH: <strong>+84 971 82 82 36</strong></p>
-                    <p class="mb-2"><i class="fa-solid fa-envelope w-5 text-red-600"></i> Email: contact@sqdland.vn</p>
-                </div>
-                <div>
-                    <p class="font-bold text-slate-900 mb-4 uppercase">Về chúng tôi</p>
-                    <ul class="space-y-3 font-medium">
-                        <li><a href="#" class="hover:text-red-600 transition">Giới thiệu mạng lưới SQDLand</a></li>
-                        <li><a href="#" class="hover:text-red-600 transition">Quy chế hoạt động sàn</a></li>
-                        <li><a href="#" class="hover:text-red-600 transition">Chính sách bảo mật thông tin</a></li>
-                        <li><a href="#" class="hover:text-red-600 transition">Giải quyết tranh chấp/khiếu nại</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <p class="font-bold text-slate-900 mb-4 uppercase">Hỗ trợ đối tác & Khách hàng</p>
-                    <ul class="space-y-3 font-medium">
-                        <li><a href="listing.html" class="hover:text-red-600 transition">Tìm kiếm Bất động sản</a></li>
-                        <li><a href="user-post-ad.html" class="hover:text-red-600 transition">Hướng dẫn niêm yết tài sản</a></li>
-                        <li><a href="#" onclick="alert('CHỨC NĂNG NẠP TIỀN TỰ ĐỘNG:\\n\\nĐể đẩy tin VIP, vui lòng chuyển khoản đến:\\nSTK: [STK_ADMIN] - Ngân hàng [TEN_NH]\\nNội dung: NAP SQDLand [SĐT_CUA_BAN]\\n\\nHệ thống Webhook Sepay sẽ tự động cộng tiền vào tài khoản của bạn trong 30 giây.')" class="hover:text-red-600 transition text-blue-600 font-bold"><i class="fa-solid fa-wallet mr-1"></i> Nạp tiền tự động (Sepay)</a></li>
-                        <li><a href="#" class="hover:text-red-600 transition">Dịch vụ sang tên Sổ đỏ</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="border-t border-gray-100 pt-6 flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500 font-medium gap-4">
-                <p>&copy; 2026 SQDLand.vn. Đã đăng ký bản quyền.</p>
-                
-                <div class="flex items-center gap-3 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200">
-                    <span class="text-slate-600">SQDLand.vn được cung cấp dịch vụ và vận hành bởi <strong>MTH Exchange</strong></span>
-                    <img src="logomth.jpg" alt="MTH Exchange" class="h-6 rounded object-contain bg-white shadow-sm">
-                </div>
-            </div>
+    <footer class="bg-white border-t border-gray-200 pt-12 pb-6 lg:pb-12 mt-auto text-sm text-gray-600">
+        <div class="container mx-auto px-4 lg:px-6 text-center">
+            <p class="mb-2 uppercase font-black text-slate-900">CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ PHÁT TRIỂN BẤT ĐỘNG SẢN SQD LAND</p>
+            <p class="mb-6">&copy; 2026 SQDLand.vn. Bản tin chuyên sâu tích hợp Neon.tech Database.</p>
         </div>
     </footer>
 
     <nav class="mobile-bottom-nav">
-        <a href="index.html" class="nav-item-m">
-            <i class="fa-solid fa-house text-[20px]"></i><span>Trang chủ</span>
-        </a>
-        <a href="listing.html" class="nav-item-m">
-            <i class="fa-solid fa-search text-[20px]"></i><span>Mua bán</span>
-        </a>
-        <a href="project-list.html" class="nav-item-m">
-            <i class="fa-solid fa-building text-[20px]"></i><span>Dự án</span>
-        </a>
-        <a href="news.html" class="nav-item-m active">
-            <i class="fa-solid fa-newspaper text-[20px]"></i><span>Tin tức</span>
-        </a>
-        <a href="login.html" class="nav-item-m">
-            <i class="fa-solid fa-user text-[20px]"></i><span>Tài khoản</span>
-        </a>
+        <a href="index.html" class="nav-item-m"><i class="fa-solid fa-house text-[20px]"></i><span>Trang chủ</span></a>
+        <a href="listing.html" class="nav-item-m"><i class="fa-solid fa-search text-[20px]"></i><span>Mua bán</span></a>
+        <a href="project-list.html" class="nav-item-m"><i class="fa-solid fa-building text-[20px]"></i><span>Dự án</span></a>
+        <a href="news.html" class="nav-item-m active"><i class="fa-solid fa-newspaper text-[20px]"></i><span>Tin tức</span></a>
+        <a href="login.html" id="nav-auth-link-m" class="nav-item-m"><i class="fa-solid fa-user text-[20px]"></i><span>Tài khoản</span></a>
     </nav>
 
     <script>
-        // HÀM LOẠI BỎ THẺ HTML ĐỂ LẤY VĂN BẢN MÔ TẢ NGẮN (PREVIEW)
+        // KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP
+        const user = JSON.parse(localStorage.getItem('sqd_user'));
+        if (user) {
+            const authLink = document.getElementById('nav-auth-link');
+            authLink.innerText = "Quản lý";
+            authLink.href = "user-dashboard.html";
+            const authLinkM = document.getElementById('nav-auth-link-m');
+            authLinkM.href = "user-dashboard.html";
+        }
+
+        // HÀM LOẠI BỎ THẺ HTML ĐỂ LẤY VĂN BẢN MÔ TẢ NGẮN
         function stripHTML(html) {
             let doc = new DOMParser().parseFromString(html, 'text/html');
             return doc.body.textContent || "";
         }
 
-        // FETCH API: LẤY 100% DỮ LIỆU TỪ CƠ SỞ DỮ LIỆU
+        // FETCH API: TẢI DỮ LIỆU TIN TỨC TỪ NEON DB
         async function fetchNewsData() {
             const container = document.getElementById('dynamic-news-container');
-            
-            // Hiệu ứng Loading
-            container.innerHTML = `
-                <div class="text-center py-20">
-                    <i class="fa-solid fa-circle-notch fa-spin text-4xl text-red-600 mb-4"></i>
-                    <p class="text-gray-500 font-bold text-sm">Đang tải bản tin phân tích mới nhất...</p>
-                </div>
-            `;
+            container.innerHTML = `<div class="text-center py-20 text-gray-400"><i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3"></i><p>Đang truy xuất bản tin...</p></div>`;
 
             try {
-                // Gọi API tới server.js
                 const response = await fetch('/api/news');
-                if (!response.ok) throw new Error('Network error');
+                if (!response.ok) throw new Error('DB Error');
                 
                 const newsList = await response.json();
 
                 if (newsList.length === 0) {
-                    container.innerHTML = `
-                        <div class="text-center py-16 bg-gray-50 rounded-2xl border border-gray-100">
-                            <i class="fa-solid fa-newspaper text-4xl text-gray-300 mb-3"></i>
-                            <p class="text-gray-500 font-bold text-sm">Chưa có bài phân tích nào được xuất bản.</p>
-                        </div>
-                    `;
+                    container.innerHTML = `<div class="text-center py-16 bg-gray-50 rounded-2xl border border-gray-100"><p class="text-gray-500 font-bold">Chưa có bài viết nào được đăng tải.</p></div>`;
                     return;
                 }
 
-                // Bài đầu tiên sẽ được đưa lên làm Bài Tiêu Điểm (Featured)
                 const featured = newsList[0];
-                const gridNews = newsList.slice(1); // Các bài còn lại hiển thị dạng lưới
+                const gridNews = newsList.slice(1);
 
-                // Tạo HTML cho bài Tiêu điểm
+                // 1. Render Bài Tiêu Điểm
                 let htmlOutput = `
                     <div class="featured-news" onclick="location.href='news-detail.html?id=${featured.id}'">
-                        <img src="${featured.thumbnail || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1000&auto=format&fit=crop'}" class="featured-img" alt="${featured.title}">
+                        <img src="${featured.thumbnail || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1000'}" class="featured-img" alt="featured">
                         <div class="featured-content">
-                            <span class="bg-red-50 text-red-600 px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest mb-4 inline-block">${featured.category || 'Tiêu điểm thị trường'}</span>
+                            <span class="bg-red-50 text-red-600 px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest mb-4 inline-block">${featured.category || 'Thị trường'}</span>
                             <h2 class="text-2xl lg:text-3xl font-black text-slate-900 leading-snug mb-4 hover:text-red-600 transition">${featured.title}</h2>
                             <p class="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-3">${stripHTML(featured.content).substring(0, 200)}...</p>
-                            <div class="flex items-center gap-4 text-xs font-bold text-gray-500 uppercase tracking-wide border-t border-gray-100 pt-6">
-                                <span><i class="fa-solid fa-pen-nib mr-1"></i> ${featured.author || 'Phạm Văn Quân'}</span>
+                            <div class="flex items-center gap-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-t border-gray-100 pt-6">
+                                <span><i class="fa-solid fa-pen-nib mr-1"></i> ${featured.author || 'SQDLand'}</span>
                                 <span><i class="fa-regular fa-clock mr-1"></i> ${new Date(featured.created_at).toLocaleDateString('vi-VN')}</span>
                             </div>
                         </div>
                     </div>
                 `;
 
-                // Nếu có nhiều hơn 1 bài, tạo lưới (Grid) cho các bài còn lại
+                // 2. Render Lưới các bài còn lại
                 if (gridNews.length > 0) {
                     htmlOutput += `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">`;
-                    
                     htmlOutput += gridNews.map(n => `
                         <div class="news-card cursor-pointer" onclick="location.href='news-detail.html?id=${n.id}'">
-                            <div class="relative overflow-hidden">
-                                <img src="${n.thumbnail || 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&auto=format&fit=crop'}" class="news-img" alt="${n.title}">
-                            </div>
+                            <img src="${n.thumbnail || 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600'}" class="news-img" alt="news">
                             <div class="p-6 flex flex-col flex-grow">
                                 <span class="text-blue-600 text-[10px] font-black uppercase tracking-widest mb-3">${n.category || 'Tin tức'}</span>
                                 <h3 class="font-bold text-slate-900 text-lg leading-snug mb-3 hover:text-red-600 transition line-clamp-2">${n.title}</h3>
                                 <p class="text-gray-500 text-sm mb-6 line-clamp-2 flex-grow">${stripHTML(n.content)}</p>
-                                <div class="flex items-center justify-between text-xs font-bold text-gray-400 border-t border-gray-100 pt-4 mt-auto">
+                                <div class="flex items-center justify-between text-[10px] font-bold text-gray-400 border-t border-gray-100 pt-4 mt-auto">
                                     <span>${new Date(n.created_at).toLocaleDateString('vi-VN')}</span>
-                                    <span class="text-slate-900 group-hover:text-red-600 transition">Đọc tiếp <i class="fa-solid fa-arrow-right ml-1 text-[10px]"></i></span>
+                                    <span class="text-slate-900 uppercase">Chi tiết <i class="fa-solid fa-arrow-right ml-1"></i></span>
                                 </div>
                             </div>
                         </div>
                     `).join('');
-
-                    htmlOutput += `</div>`; // Đóng Grid
+                    htmlOutput += `</div>`;
                 }
 
-                // Gắn toàn bộ HTML vào giao diện
                 container.innerHTML = htmlOutput;
 
             } catch (error) {
-                // Xử lý khi Backend tắt
-                container.innerHTML = `
-                    <div class="text-center py-12 bg-red-50 rounded-2xl border border-red-100">
-                        <i class="fa-solid fa-server text-4xl text-red-300 mb-3"></i>
-                        <p class="text-red-600 font-bold text-sm mb-1">Máy chủ dữ liệu đang ngoại tuyến.</p>
-                        <p class="text-gray-500 text-xs">Vui lòng đảm bảo bạn đã khởi chạy tệp server.js</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="text-center py-12 text-red-600 font-bold">Lỗi kết nối máy chủ dữ liệu Neon.</div>`;
             }
         }
 
-        // Tự động tải tin tức khi vào trang
         document.addEventListener('DOMContentLoaded', fetchNewsData);
     </script>
 </body>
